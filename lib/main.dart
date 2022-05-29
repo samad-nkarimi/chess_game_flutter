@@ -1,8 +1,8 @@
-import 'dart:math' as math;
-
 import 'package:chess_flutter/common_widgets/cw_container.dart';
 import 'package:chess_flutter/common_widgets/cw_text.dart';
 import 'package:chess_flutter/constants/constant_images.dart';
+import 'package:chess_flutter/models/characters/abstract_character.dart';
+import 'package:chess_flutter/models/player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -35,6 +35,8 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final double squareLength = 350; // min(width , height)
+  late final PlayerWhite playerWhite;
+  late final PlayerBlack playerBlack;
 
   Color getBoxColor(int columnIndex, int rowIndex) {
     if (columnIndex % 2 == 0) {
@@ -48,11 +50,53 @@ class _MyHomePageState extends State<MyHomePage> {
         return Colors.amber;
       }
     }
-    return Colors.black;
+    return Colors.blue;
+  }
+
+  Widget getChessChar(int col, int row) {
+    late var c;
+    //whites
+    c = playerWhite.getCharacter(col, row);
+    if (c is! ChessCharacterNone) {
+      return SvgPicture.asset(
+        c.photoId,
+        color: Colors.white,
+        fit: BoxFit.fill,
+      );
+    }
+
+    //blacks
+    c = playerBlack.getCharacter(col, row);
+
+    if (c is! ChessCharacterNone) {
+      return SvgPicture.asset(
+        c.photoId,
+        color: Colors.black,
+        fit: BoxFit.fill,
+      );
+    } else {
+      //an empty box
+      return const SizedBox();
+    }
+  }
+
+  @override
+  void initState() {
+    playerWhite = PlayerWhite.initialize();
+    playerBlack = PlayerBlack.initialize();
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    SuperChessCharacter p = ChessCharacterPawn(ConstantImages.svgBlackPawn);
+    SuperChessCharacter pp =
+        ChessCharacterBishop(ConstantImages.svgBlackBishop);
+
+    // PlayerWhite playerWhite = PlayerWhite.initialize();
+    // print(playerWhite.pawns.pawn1.columnNumber);
+    // var pa = PlayerWhite.initialize();
+
     return Scaffold(
       appBar: AppBar(
         title: const Center(
@@ -72,25 +116,21 @@ class _MyHomePageState extends State<MyHomePage> {
             mainAxisAlignment: MainAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
             children: [
-              for (int columnIndex = 0; columnIndex < 8; columnIndex++)
+              for (int columnNumber = 1; columnNumber <= 8; columnNumber++)
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    for (int rowIndex = 0; rowIndex < 8; rowIndex++)
+                    for (int rowNumber = 1; rowNumber <= 8; rowNumber++)
                       Flexible(
                         flex: 1,
                         child: CWContainer(
-                          color: getBoxColor(columnIndex, rowIndex),
-                          w: squareLength / 9,
-                          h: squareLength / 9,
-                          pad: const [5, 5, 5, 5],
-                          // shape: BoxShape.circle,
-                          child: SvgPicture.asset(
-                            svgWhitePawn,
-                            color: Colors.white,
-                          ),
-                        ),
+                            color: getBoxColor(columnNumber, rowNumber),
+                            w: squareLength / 9,
+                            h: squareLength / 9,
+                            pad: const [5, 10, 5, 10],
+                            // shape: BoxShape.circle,
+                            child: getChessChar(columnNumber, rowNumber)),
                       ),
                   ],
                 ),

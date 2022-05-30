@@ -21,6 +21,10 @@ abstract class SuperChessCharacter {
   });
 
   MoveOptions preMove();
+  void move(int newCol, int newRow) {
+    columnNumber = newCol;
+    rowNumber = newRow;
+  }
 
   @override
   String toString() {

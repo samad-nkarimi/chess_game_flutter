@@ -177,7 +177,7 @@ class _MyHomePageState extends State<MyHomePage> {
     if (c is! ChessCharacterNone) {
       ChessBoard().addToBoardMap(col, row, c);
     }
-    print(ChessBoard().boardMap);
+    // print(ChessBoard().boardMap);
   }
 
   @override
@@ -228,9 +228,17 @@ class _MyHomePageState extends State<MyHomePage> {
                         flex: 1,
                         child: InkWell(
                           onTap: () {
-                            context
-                                .read<ChessCubit>()
-                                .characterClicked(columnNumber, rowNumber);
+                            if (ChessBoard()
+                                .hasCharacterAt(columnNumber, rowNumber)) {
+                              // ChessBoard().getcharacter(columnNumber, rowNumber);
+                              context
+                                  .read<ChessCubit>()
+                                  .characterClicked(columnNumber, rowNumber);
+                            } else {
+                              context
+                                  .read<ChessCubit>()
+                                  .boxClicked(columnNumber, rowNumber);
+                            }
                           },
                           child: BlocBuilder<ChessCubit, ChessState>(
                               builder: (context, state) {

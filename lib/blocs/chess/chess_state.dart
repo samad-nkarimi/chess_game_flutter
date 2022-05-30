@@ -17,3 +17,10 @@ class CharacterClickedState extends ChessState {
   @override
   List<Object?> get props => [moveOptions];
 }
+
+class CharacterMovedState extends ChessState {
+  CharacterMovedState();
+
+  @override
+  List<Object?> get props => [];
+}

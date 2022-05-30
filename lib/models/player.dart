@@ -130,8 +130,6 @@ import 'package:chess_flutter/models/enums/player.dart';
 //   }
 // }
 
-enum Rules { pawn, rock, knight, bishop, queen, king }
-
 class PlayerWhite {
   Map<String, SuperChessCharacter> characters = {};
   PlayerWhite.initialize() {

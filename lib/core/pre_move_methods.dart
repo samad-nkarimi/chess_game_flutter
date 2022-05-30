@@ -1,0 +1,66 @@
+import 'package:chess_flutter/models/board.dart';
+import 'package:chess_flutter/models/characters/abstract_character.dart';
+import 'package:chess_flutter/models/chess_box.dart';
+import 'package:chess_flutter/models/enums/player.dart';
+import 'package:chess_flutter/models/move_options.dart';
+import 'package:chess_flutter/models/player.dart';
+import 'package:flutter/material.dart';
+
+class PreMoveMethods {
+  static MoveOptions preMovePawn(Player player, int col, int row) {
+    ChessBox clickedBox = ChessBox(col, row);
+    List<ChessBox> onGoingBoxes = [];
+    List<ChessBox> onShotingBoxes = [];
+
+    //for white
+    int initialPawnCol = 7;
+    int nextCol = col - 1;
+    int next2Col = col - 2;
+    int finalCol = 1;
+    bool isThereNextCol = nextCol > 0;
+    //for black
+    if (player == Player.black) {
+      initialPawnCol = 2;
+      nextCol = col + 1;
+      next2Col = col + 2;
+      finalCol = 8;
+      isThereNextCol = nextCol < 9;
+    }
+
+    bool isInInitialPlace = true;
+    if (col != initialPawnCol) {
+      isInInitialPlace = false;
+    }
+    if (row - 1 > 0 && isThereNextCol) {
+      if (ChessBoard().isEnemyAt(player, nextCol, row - 1)) {
+        print("and to shoting");
+        onShotingBoxes.add(ChessBox(nextCol, row - 1));
+      }
+    }
+    if (row + 1 < 9 && isThereNextCol) {
+      if (ChessBoard().isEnemyAt(player, nextCol, row + 1)) {
+        print("and to shoting");
+        onShotingBoxes.add(ChessBox(nextCol, row + 1));
+      }
+    }
+
+    if (isThereNextCol) {
+      if (!ChessBoard().hasCharacterAt(nextCol, row)) {
+        print("add to ongoing");
+        onGoingBoxes.add(ChessBox(nextCol, row));
+        if (isInInitialPlace && !ChessBoard().hasCharacterAt(next2Col, row)) {
+          print("add to ongoing");
+          onGoingBoxes.add(ChessBox(next2Col, row));
+        }
+      }
+    }
+    if (col == finalCol) {
+      print("promote to queen");
+      /**
+       * promote to queen
+       */
+    }
+
+    return MoveOptions(clickedBox, onGoingBoxes, onShotingBoxes);
+  }
+}

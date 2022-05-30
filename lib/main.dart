@@ -3,7 +3,9 @@ import 'package:chess_flutter/blocs/chess/chess_state.dart';
 import 'package:chess_flutter/common_widgets/cw_container.dart';
 import 'package:chess_flutter/common_widgets/cw_text.dart';
 import 'package:chess_flutter/constants/constant_images.dart';
+import 'package:chess_flutter/models/board.dart';
 import 'package:chess_flutter/models/characters/abstract_character.dart';
+import 'package:chess_flutter/models/chess_box.dart';
 import 'package:chess_flutter/models/player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -52,6 +54,7 @@ class _MyHomePageState extends State<MyHomePage> {
   final double squareLength = 350; // min(width , height)
   late final PlayerWhite playerWhite;
   late final PlayerBlack playerBlack;
+  Map<int, SuperChessCharacter> singleChar = {};
 
   Color getDefaultBoxColor(int columnIndex, int rowIndex) {
     if (columnIndex % 2 == 0) {
@@ -73,21 +76,21 @@ class _MyHomePageState extends State<MyHomePage> {
       return getDefaultBoxColor(col, row);
     }
     if (state is CharacterClickedState) {
-      if (state.onGoingBoxes.isNotEmpty) {
-        for (var box in state.onGoingBoxes) {
+      if (state.moveOptions.onGoingBoxes.isNotEmpty) {
+        for (var box in state.moveOptions.onGoingBoxes) {
           if (box.isInCoordinate(col, row)) {
             return Colors.purple;
           }
         }
       }
-      if (state.onShotingBoxes.isNotEmpty) {
-        for (var box in state.onShotingBoxes) {
+      if (state.moveOptions.onShotingBoxes.isNotEmpty) {
+        for (var box in state.moveOptions.onShotingBoxes) {
           if (box.isInCoordinate(col, row)) {
             return Colors.red;
           }
         }
       }
-      if (state.clickedBox.isInCoordinate(col, row)) {
+      if (state.moveOptions.clickedBox.isInCoordinate(col, row)) {
         return Colors.pink;
       }
     }
@@ -99,8 +102,8 @@ class _MyHomePageState extends State<MyHomePage> {
       return null;
     }
     if (state is CharacterClickedState) {
-      if (state.onGoingBoxes.isNotEmpty) {
-        for (var box in state.onGoingBoxes) {
+      if (state.moveOptions.onGoingBoxes.isNotEmpty) {
+        for (var box in state.moveOptions.onGoingBoxes) {
           if (box.isInCoordinate(col, row)) {
             return const RadialGradient(
               colors: [Colors.yellow, Colors.deepPurple],
@@ -109,8 +112,8 @@ class _MyHomePageState extends State<MyHomePage> {
           }
         }
       }
-      if (state.onShotingBoxes.isNotEmpty) {
-        for (var box in state.onShotingBoxes) {
+      if (state.moveOptions.onShotingBoxes.isNotEmpty) {
+        for (var box in state.moveOptions.onShotingBoxes) {
           if (box.isInCoordinate(col, row)) {
             return const RadialGradient(
               colors: [Colors.yellow, Colors.red],
@@ -119,7 +122,7 @@ class _MyHomePageState extends State<MyHomePage> {
           }
         }
       }
-      if (state.clickedBox.isInCoordinate(col, row)) {
+      if (state.moveOptions.clickedBox.isInCoordinate(col, row)) {
         return const RadialGradient(
           colors: [Colors.blue, Colors.deepPurple],
           center: Alignment.center,
@@ -130,7 +133,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Widget getChessChar(int col, int row) {
-    late var c;
+    late SuperChessCharacter c;
     //whites
     c = playerWhite.getCharacter(col, row);
     if (c is! ChessCharacterNone) {
@@ -154,6 +157,27 @@ class _MyHomePageState extends State<MyHomePage> {
       //an empty box
       return const SizedBox();
     }
+  }
+
+  void setBoard(int col, int row) {
+    //form board
+    late SuperChessCharacter c;
+    //whites
+    c = playerWhite.getCharacter(col, row);
+    if (c is! ChessCharacterNone) {
+      // singleChar[row] = c;
+    } else {
+      //blacks
+      c = playerBlack.getCharacter(col, row);
+      if (c is! ChessCharacterNone) {
+        // singleChar[row] = c;
+      }
+    }
+
+    if (c is! ChessCharacterNone) {
+      ChessBoard().addToBoardMap(col, row, c);
+    }
+    print(ChessBoard().boardMap);
   }
 
   @override
@@ -210,6 +234,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           },
                           child: BlocBuilder<ChessCubit, ChessState>(
                               builder: (context, state) {
+                            setBoard(columnNumber, rowNumber);
                             return CWContainer(
                                 color:
                                     getDefaultBoxColor(columnNumber, rowNumber),

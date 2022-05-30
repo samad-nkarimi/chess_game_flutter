@@ -1,6 +1,7 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 
-class ChessBox {
+class ChessBox extends Equatable {
   final int columnNumber;
   final int rowNumber;
   // final Color color;
@@ -13,4 +14,7 @@ class ChessBox {
     }
     return false;
   }
+
+  @override
+  List<Object?> get props => [columnNumber, rowNumber];
 }

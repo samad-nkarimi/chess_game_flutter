@@ -83,9 +83,8 @@ class ChessCharacterBishop extends SuperChessCharacter {
 
   @override
   MoveOptions preMove() {
-    // TODO: implement preMove
     print(rule);
-    throw UnimplementedError();
+    return PreMoveMethods.preMoveBishop(player, columnNumber, rowNumber);
   }
 }
 

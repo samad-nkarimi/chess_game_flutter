@@ -23,6 +23,7 @@ class ChessBoard {
   }
 
   void createMap(PlayerWhite pw, PlayerBlack pb) {
+    //you can save all histoy here
     boardMap.clear();
     for (int col = 1; col <= 8; col++) {
       for (int row = 1; row <= 8; row++) {

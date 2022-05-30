@@ -95,9 +95,8 @@ class ChessCharacterKnight extends SuperChessCharacter {
 
   @override
   MoveOptions preMove() {
-    // TODO: implement preMove
     print(rule);
-    throw UnimplementedError();
+    return PreMoveMethods.preMoveKnight(player, columnNumber, rowNumber);
   }
 }
 

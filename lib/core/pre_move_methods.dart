@@ -152,4 +152,124 @@ class PreMoveMethods {
 
     return MoveOptions(clickedBox, onGoingBoxes, onShotingBoxes);
   }
+
+  //
+  //
+  //
+  //
+  //
+  static MoveOptions preMoveKnight(Player player, int col, int row) {
+    ChessBox clickedBox = ChessBox(col, row);
+    List<ChessBox> onGoingBoxes = [];
+    List<ChessBox> onShotingBoxes = [];
+
+    //col+2   row+1
+    if (col + 2 < 9 && row + 1 < 9) {
+      if (!ChessBoard().hasCharacterAt(col + 2, row + 1)) {
+        //add to ongoing
+        onGoingBoxes.add(ChessBox(col + 2, row + 1));
+      } else {
+        if (ChessBoard().isEnemyAt(player, col + 2, row + 1)) {
+          //add to onshoting
+          onShotingBoxes.add(ChessBox(col + 2, row + 1));
+        }
+      }
+    }
+
+    //col+1   row+2
+    if (col + 1 < 9 && row + 2 < 9) {
+      if (!ChessBoard().hasCharacterAt(col + 1, row + 2)) {
+        //add to ongoing
+        onGoingBoxes.add(ChessBox(col + 1, row + 2));
+      } else {
+        if (ChessBoard().isEnemyAt(player, col + 1, row + 2)) {
+          //add to onshoting
+          onShotingBoxes.add(ChessBox(col + 1, row + 2));
+        }
+      }
+    }
+
+    //
+    //col+2   row-1
+    if (col + 2 < 9 && row - 1 > 0) {
+      if (!ChessBoard().hasCharacterAt(col + 2, row - 1)) {
+        //add to ongoing
+        onGoingBoxes.add(ChessBox(col + 2, row - 1));
+      } else {
+        if (ChessBoard().isEnemyAt(player, col + 2, row - 1)) {
+          //add to onshoting
+          onShotingBoxes.add(ChessBox(col + 2, row - 1));
+        }
+      }
+    }
+
+    //col+1   row-2
+    if (col + 1 < 9 && row - 2 > 0) {
+      if (!ChessBoard().hasCharacterAt(col + 1, row - 2)) {
+        //add to ongoing
+        onGoingBoxes.add(ChessBox(col + 1, row - 2));
+      } else {
+        if (ChessBoard().isEnemyAt(player, col + 1, row - 2)) {
+          //add to onshoting
+          onShotingBoxes.add(ChessBox(col + 1, row - 2));
+        }
+      }
+    }
+
+    //
+    //col-2   row+1
+    if (col - 2 > 0 && row + 1 < 9) {
+      if (!ChessBoard().hasCharacterAt(col - 2, row + 1)) {
+        //add to ongoing
+        onGoingBoxes.add(ChessBox(col - 2, row + 1));
+      } else {
+        if (ChessBoard().isEnemyAt(player, col - 2, row + 1)) {
+          //add to onshoting
+          onShotingBoxes.add(ChessBox(col - 2, row + 1));
+        }
+      }
+    }
+
+    //col-1   row+2
+    if (col - 1 > 0 && row + 2 < 9) {
+      if (!ChessBoard().hasCharacterAt(col - 1, row + 2)) {
+        //add to ongoing
+        onGoingBoxes.add(ChessBox(col - 1, row + 2));
+      } else {
+        if (ChessBoard().isEnemyAt(player, col - 1, row + 2)) {
+          //add to onshoting
+          onShotingBoxes.add(ChessBox(col - 1, row + 2));
+        }
+      }
+    }
+
+    //
+    //col-2   row-1
+    if (col - 2 > 0 && row - 1 > 0) {
+      if (!ChessBoard().hasCharacterAt(col - 2, row - 1)) {
+        //add to ongoing
+        onGoingBoxes.add(ChessBox(col - 2, row - 1));
+      } else {
+        if (ChessBoard().isEnemyAt(player, col - 2, row - 1)) {
+          //add to onshoting
+          onShotingBoxes.add(ChessBox(col - 2, row - 1));
+        }
+      }
+    }
+
+    //col-1   row-2
+    if (col - 1 > 0 && row - 2 > 0) {
+      if (!ChessBoard().hasCharacterAt(col - 1, row - 2)) {
+        //add to ongoing
+        onGoingBoxes.add(ChessBox(col - 1, row - 2));
+      } else {
+        if (ChessBoard().isEnemyAt(player, col - 1, row - 2)) {
+          //add to onshoting
+          onShotingBoxes.add(ChessBox(col - 1, row - 2));
+        }
+      }
+    }
+
+    return MoveOptions(clickedBox, onGoingBoxes, onShotingBoxes);
+  }
 }

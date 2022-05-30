@@ -242,7 +242,10 @@ class _MyHomePageState extends State<MyHomePage> {
                           },
                           child: BlocBuilder<ChessCubit, ChessState>(
                               builder: (context, state) {
-                            setBoard(columnNumber, rowNumber);
+                            // setBoard(columnNumber, rowNumber);
+                            if (columnNumber == 8 && rowNumber == 8) {
+                              ChessBoard().createMap(playerWhite, playerBlack);
+                            }
                             return CWContainer(
                                 color:
                                     getDefaultBoxColor(columnNumber, rowNumber),

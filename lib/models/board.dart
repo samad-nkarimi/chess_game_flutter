@@ -1,6 +1,7 @@
 import 'package:chess_flutter/models/characters/abstract_character.dart';
 import 'package:chess_flutter/models/chess_box.dart';
 import 'package:chess_flutter/models/enums/player.dart';
+import 'package:chess_flutter/models/player.dart';
 
 class ChessBoard {
   static final ChessBoard _singleton = ChessBoard._internal();
@@ -16,14 +17,28 @@ class ChessBoard {
   void addToBoardMap(int col, int row, SuperChessCharacter scc) {
     if (boardMap.containsKey(ChessBox(col, row))) {
       boardMap.remove(ChessBox(col, row));
+      print('object');
     }
     boardMap[ChessBox(col, row)] = scc;
-    // for (var element in boardMap.keys) {
-    //   if (element.isInCoordinate(col, row)) {
-    //     boardMap.remove(element);
-    //     boardMap[ChessBox(col, row)] = scc;
-    //   }
-    // }
+  }
+
+  void createMap(PlayerWhite pw, PlayerBlack pb) {
+    boardMap.clear();
+    for (int col = 1; col <= 8; col++) {
+      for (int row = 1; row <= 8; row++) {
+        late SuperChessCharacter c;
+        //whites
+        c = pw.getCharacter(col, row);
+        if (c is ChessCharacterNone) {
+          //blacks
+          c = pb.getCharacter(col, row);
+        }
+
+        if (c is! ChessCharacterNone) {
+          boardMap[ChessBox(col, row)] = c;
+        }
+      }
+    }
   }
 
   SuperChessCharacter getcharacter(int col, int row) {

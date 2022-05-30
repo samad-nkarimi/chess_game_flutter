@@ -272,4 +272,69 @@ class PreMoveMethods {
 
     return MoveOptions(clickedBox, onGoingBoxes, onShotingBoxes);
   }
+
+  //
+  //
+  //
+  //
+  //
+  static MoveOptions preMoveRock(Player player, int col, int row) {
+    ChessBox clickedBox = ChessBox(col, row);
+    List<ChessBox> onGoingBoxes = [];
+    List<ChessBox> onShotingBoxes = [];
+
+    //col-   row
+    for (int i = 1; i <= 8; i++) {
+      if (!ChessBoard().hasCharacterAt(col - i, row)) {
+        onGoingBoxes.add(ChessBox(col - i, row));
+      } else {
+        if (ChessBoard().isEnemyAt(player, col - i, row)) {
+          onShotingBoxes.add(ChessBox(col - i, row));
+          break;
+        }
+        break;
+      }
+    }
+
+    //col+   row
+    for (int i = 1; i <= 8; i++) {
+      if (!ChessBoard().hasCharacterAt(col + i, row)) {
+        onGoingBoxes.add(ChessBox(col + i, row));
+      } else {
+        if (ChessBoard().isEnemyAt(player, col + i, row)) {
+          onShotingBoxes.add(ChessBox(col + i, row));
+          break;
+        }
+        break;
+      }
+    }
+
+    //col   row+
+    for (int i = 1; i <= 8; i++) {
+      if (!ChessBoard().hasCharacterAt(col, row + i)) {
+        onGoingBoxes.add(ChessBox(col, row + i));
+      } else {
+        if (ChessBoard().isEnemyAt(player, col, row + i)) {
+          onShotingBoxes.add(ChessBox(col, row + i));
+          break;
+        }
+        break;
+      }
+    }
+
+    //col   row-
+    for (int i = 1; i <= 8; i++) {
+      if (!ChessBoard().hasCharacterAt(col, row - i)) {
+        onGoingBoxes.add(ChessBox(col, row - i));
+      } else {
+        if (ChessBoard().isEnemyAt(player, col, row - i)) {
+          onShotingBoxes.add(ChessBox(col, row - i));
+          break;
+        }
+        break;
+      }
+    }
+
+    return MoveOptions(clickedBox, onGoingBoxes, onShotingBoxes);
+  }
 }

@@ -70,9 +70,8 @@ class ChessCharacterRock extends SuperChessCharacter {
 
   @override
   MoveOptions preMove() {
-    // TODO: implement preMove
     print(rule);
-    throw UnimplementedError();
+    return PreMoveMethods.preMoveRock(player, columnNumber, rowNumber);
   }
 }
 

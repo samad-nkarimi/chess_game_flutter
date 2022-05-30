@@ -1,5 +1,6 @@
 import 'package:chess_flutter/constants/constant_images.dart';
 import 'package:chess_flutter/models/characters/abstract_character.dart';
+import 'package:chess_flutter/models/enums/player.dart';
 
 // class SuperPlayer {
 //   final Map<String, SuperChessCharacter> characters = {};
@@ -185,37 +186,37 @@ class PlayerBlack {
   PlayerBlack.initialize() {
     characters = {
       "pawn1": ChessCharacterPawn(ConstantImages.svgWhitePawn,
-          columnNumber: 2, rowNumber: 8),
+          player: Player.black, columnNumber: 2, rowNumber: 8),
       "pawn2": ChessCharacterPawn(ConstantImages.svgWhitePawn,
-          columnNumber: 2, rowNumber: 7),
+          player: Player.black, columnNumber: 2, rowNumber: 7),
       "pawn3": ChessCharacterPawn(ConstantImages.svgWhitePawn,
-          columnNumber: 2, rowNumber: 6),
+          player: Player.black, columnNumber: 2, rowNumber: 6),
       "pawn4": ChessCharacterPawn(ConstantImages.svgWhitePawn,
-          columnNumber: 2, rowNumber: 5),
+          player: Player.black, columnNumber: 2, rowNumber: 5),
       "pawn5": ChessCharacterPawn(ConstantImages.svgWhitePawn,
-          columnNumber: 2, rowNumber: 4),
+          player: Player.black, columnNumber: 2, rowNumber: 4),
       "pawn6": ChessCharacterPawn(ConstantImages.svgWhitePawn,
-          columnNumber: 2, rowNumber: 3),
+          player: Player.black, columnNumber: 2, rowNumber: 3),
       "pawn7": ChessCharacterPawn(ConstantImages.svgWhitePawn,
-          columnNumber: 2, rowNumber: 2),
+          player: Player.black, columnNumber: 2, rowNumber: 2),
       "pawn8": ChessCharacterPawn(ConstantImages.svgWhitePawn,
-          columnNumber: 2, rowNumber: 1),
+          player: Player.black, columnNumber: 2, rowNumber: 1),
       "rock1": ChessCharacterRock(ConstantImages.svgWhiteRock,
-          columnNumber: 1, rowNumber: 8),
+          player: Player.black, columnNumber: 1, rowNumber: 8),
       "knight1": ChessCharacterKnight(ConstantImages.svgWhiteKnight,
-          columnNumber: 1, rowNumber: 7),
+          player: Player.black, columnNumber: 1, rowNumber: 7),
       "bishop1": ChessCharacterBishop(ConstantImages.svgWhiteBishop,
-          columnNumber: 1, rowNumber: 6),
+          player: Player.black, columnNumber: 1, rowNumber: 6),
       "queen": ChessCharacterQueen(ConstantImages.svgWhiteQueen,
-          columnNumber: 1, rowNumber: 5),
+          player: Player.black, columnNumber: 1, rowNumber: 5),
       "king": ChessCharacterKing(ConstantImages.svgWhiteKing,
-          columnNumber: 1, rowNumber: 4),
+          player: Player.black, columnNumber: 1, rowNumber: 4),
       "bishop2": ChessCharacterBishop(ConstantImages.svgWhiteBishop,
-          columnNumber: 1, rowNumber: 3),
+          player: Player.black, columnNumber: 1, rowNumber: 3),
       "knight2": ChessCharacterKnight(ConstantImages.svgWhiteKnight,
-          columnNumber: 1, rowNumber: 2),
+          player: Player.black, columnNumber: 1, rowNumber: 2),
       "rock2": ChessCharacterRock(ConstantImages.svgWhiteRock,
-          columnNumber: 1, rowNumber: 1),
+          player: Player.black, columnNumber: 1, rowNumber: 1),
     };
   }
 

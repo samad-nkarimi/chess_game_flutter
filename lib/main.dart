@@ -1,13 +1,28 @@
+import 'package:chess_flutter/blocs/chess/chess_bloc.dart';
+import 'package:chess_flutter/blocs/chess/chess_state.dart';
 import 'package:chess_flutter/common_widgets/cw_container.dart';
 import 'package:chess_flutter/common_widgets/cw_text.dart';
 import 'package:chess_flutter/constants/constant_images.dart';
 import 'package:chess_flutter/models/characters/abstract_character.dart';
 import 'package:chess_flutter/models/player.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 void main() {
-  runApp(const MyApp());
+  BlocOverrides.runZoned(
+    () {
+      runApp(
+        MultiBlocProvider(
+          providers: [
+            BlocProvider(create: (context) => ChessCubit()),
+          ],
+          child: const MyApp(),
+        ),
+      );
+    },
+    // blocObserver: SimpleBlocObserver(),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -38,7 +53,7 @@ class _MyHomePageState extends State<MyHomePage> {
   late final PlayerWhite playerWhite;
   late final PlayerBlack playerBlack;
 
-  Color getBoxColor(int columnIndex, int rowIndex) {
+  Color getDefaultBoxColor(int columnIndex, int rowIndex) {
     if (columnIndex % 2 == 0) {
       // even columns
       if (rowIndex % 2 == 0) {
@@ -51,6 +66,67 @@ class _MyHomePageState extends State<MyHomePage> {
       }
     }
     return Colors.blue;
+  }
+
+  Color getBoxColor(ChessState state, int col, int row) {
+    if (state is ChessInitialState) {
+      return getDefaultBoxColor(col, row);
+    }
+    if (state is CharacterClickedState) {
+      if (state.onGoingBoxes.isNotEmpty) {
+        for (var box in state.onGoingBoxes) {
+          if (box.isInCoordinate(col, row)) {
+            return Colors.purple;
+          }
+        }
+      }
+      if (state.onShotingBoxes.isNotEmpty) {
+        for (var box in state.onShotingBoxes) {
+          if (box.isInCoordinate(col, row)) {
+            return Colors.red;
+          }
+        }
+      }
+      if (state.clickedBox.isInCoordinate(col, row)) {
+        return Colors.pink;
+      }
+    }
+    return getDefaultBoxColor(col, row);
+  }
+
+  Gradient? getBoxGradient(ChessState state, int col, int row) {
+    if (state is ChessInitialState) {
+      return null;
+    }
+    if (state is CharacterClickedState) {
+      if (state.onGoingBoxes.isNotEmpty) {
+        for (var box in state.onGoingBoxes) {
+          if (box.isInCoordinate(col, row)) {
+            return const RadialGradient(
+              colors: [Colors.yellow, Colors.deepPurple],
+              center: Alignment.center,
+            );
+          }
+        }
+      }
+      if (state.onShotingBoxes.isNotEmpty) {
+        for (var box in state.onShotingBoxes) {
+          if (box.isInCoordinate(col, row)) {
+            return const RadialGradient(
+              colors: [Colors.yellow, Colors.red],
+              center: Alignment.center,
+            );
+          }
+        }
+      }
+      if (state.clickedBox.isInCoordinate(col, row)) {
+        return const RadialGradient(
+          colors: [Colors.blue, Colors.deepPurple],
+          center: Alignment.center,
+        );
+      }
+    }
+    return null;
   }
 
   Widget getChessChar(int col, int row) {
@@ -86,6 +162,8 @@ class _MyHomePageState extends State<MyHomePage> {
     playerBlack = PlayerBlack.initialize();
     super.initState();
   }
+
+  bool clicked = false;
 
   @override
   Widget build(BuildContext context) {
@@ -124,13 +202,26 @@ class _MyHomePageState extends State<MyHomePage> {
                     for (int rowNumber = 1; rowNumber <= 8; rowNumber++)
                       Flexible(
                         flex: 1,
-                        child: CWContainer(
-                            color: getBoxColor(columnNumber, rowNumber),
-                            w: squareLength / 9,
-                            h: squareLength / 9,
-                            pad: const [5, 10, 5, 10],
-                            // shape: BoxShape.circle,
-                            child: getChessChar(columnNumber, rowNumber)),
+                        child: InkWell(
+                          onTap: () {
+                            context
+                                .read<ChessCubit>()
+                                .characterClicked(columnNumber, rowNumber);
+                          },
+                          child: BlocBuilder<ChessCubit, ChessState>(
+                              builder: (context, state) {
+                            return CWContainer(
+                                color:
+                                    getDefaultBoxColor(columnNumber, rowNumber),
+                                w: squareLength / 9,
+                                h: squareLength / 9,
+                                gradient: getBoxGradient(
+                                    state, columnNumber, rowNumber),
+                                pad: const [5, 10, 5, 10],
+                                // shape: BoxShape.circle,
+                                child: getChessChar(columnNumber, rowNumber));
+                          }),
+                        ),
                       ),
                   ],
                 ),

@@ -106,9 +106,8 @@ class ChessCharacterKing extends SuperChessCharacter {
 
   @override
   MoveOptions preMove() {
-    // TODO: implement preMove
     print(rule);
-    throw UnimplementedError();
+    return PreMoveMethods.preMoveKing(player, columnNumber, rowNumber);
   }
 }
 
@@ -119,8 +118,7 @@ class ChessCharacterQueen extends SuperChessCharacter {
 
   @override
   MoveOptions preMove() {
-    // TODO: implement preMove
     print(rule);
-    throw UnimplementedError();
+    return PreMoveMethods.preMoveQueen(player, columnNumber, rowNumber);
   }
 }

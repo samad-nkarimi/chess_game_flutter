@@ -51,7 +51,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final double squareLength = 350; // min(width , height)
+  double squareLength = 350; // min(width , height)
   late final PlayerWhite playerWhite;
   late final PlayerBlack playerBlack;
   Map<int, SuperChessCharacter> singleChar = {};
@@ -140,7 +140,7 @@ class _MyHomePageState extends State<MyHomePage> {
       return SvgPicture.asset(
         c.photoId,
         color: Colors.white,
-        fit: BoxFit.fill,
+        // fit: BoxFit.fill,
       );
     }
 
@@ -151,7 +151,7 @@ class _MyHomePageState extends State<MyHomePage> {
       return SvgPicture.asset(
         c.photoId,
         color: Colors.black,
-        fit: BoxFit.fill,
+        // fit: BoxFit.fill,
       );
     } else {
       //an empty box
@@ -191,25 +191,31 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    SuperChessCharacter p = ChessCharacterPawn(ConstantImages.svgBlackPawn);
-    SuperChessCharacter pp =
-        ChessCharacterBishop(ConstantImages.svgBlackBishop);
+    Size size = MediaQuery.of(context).size;
+    print(size.height);
+    print(size.width);
+    print(size.shortestSide);
+    squareLength = size.shortestSide;
+
+    // SuperChessCharacter p = ChessCharacterPawn(ConstantImages.svgBlackPawn);
+    // SuperChessCharacter pp =
+    //     ChessCharacterBishop(ConstantImages.svgBlackBishop);
 
     // PlayerWhite playerWhite = PlayerWhite.initialize();
     // print(playerWhite.pawns.pawn1.columnNumber);
     // var pa = PlayerWhite.initialize();
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Center(
-          child: CWText(
-            "..C.H.E.S.S..",
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-            fontSize: 20,
-          ),
-        ),
-      ),
+      // appBar: AppBar(
+      //   title: const Center(
+      //     child: CWText(
+      //       "..C.H.E.S.S..",
+      //       color: Colors.white,
+      //       fontWeight: FontWeight.bold,
+      //       fontSize: 20,
+      //     ),
+      //   ),
+      // ),
       body: Center(
         child: CWContainer(
           h: squareLength,

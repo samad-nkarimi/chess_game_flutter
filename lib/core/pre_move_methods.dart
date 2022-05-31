@@ -70,87 +70,7 @@ class PreMoveMethods {
   //
   //
   static MoveOptions preMoveBishop(Player player, int col, int row) {
-    ChessBox clickedBox = ChessBox(col, row);
-    List<ChessBox> onGoingBoxes = [];
-    List<ChessBox> onShotingBoxes = [];
-
-    //col+    row+
-    for (int i = 1; i <= 8; i++) {
-      if (col + i > 8 || row + i > 8) {
-        break;
-      }
-      if (!ChessBoard().hasCharacterAt(col + i, row + i)) {
-        //add to ongoing
-        onGoingBoxes.add(ChessBox(col + i, row + i));
-      } else {
-        if (ChessBoard().isEnemyAt(player, col + i, row + i)) {
-          //add to onshoting
-          onShotingBoxes.add(ChessBox(col + i, row + i));
-          break;
-        } else {
-          break;
-        }
-      }
-    }
-
-    //col-    row+
-    for (int i = 1; i <= 8; i++) {
-      if (col - i < 1 || row + i > 8) {
-        break;
-      }
-      if (!ChessBoard().hasCharacterAt(col - i, row + i)) {
-        //add to ongoing
-        onGoingBoxes.add(ChessBox(col - i, row + i));
-      } else {
-        if (ChessBoard().isEnemyAt(player, col - i, row + i)) {
-          //add to onshoting
-          onShotingBoxes.add(ChessBox(col - i, row + i));
-          break;
-        } else {
-          break;
-        }
-      }
-    }
-
-    //col+    row-
-    for (int i = 1; i <= 8; i++) {
-      if (col + i > 8 || row - i < 1) {
-        break;
-      }
-      if (!ChessBoard().hasCharacterAt(col + i, row - i)) {
-        //add to ongoing
-        onGoingBoxes.add(ChessBox(col + i, row - i));
-      } else {
-        if (ChessBoard().isEnemyAt(player, col + i, row - i)) {
-          //add to onshoting
-          onShotingBoxes.add(ChessBox(col + i, row - i));
-          break;
-        } else {
-          break;
-        }
-      }
-    }
-
-    //col-    row-
-    for (int i = 1; i <= 8; i++) {
-      if (col - i < 1 || row - i < 1) {
-        break;
-      }
-      if (!ChessBoard().hasCharacterAt(col - i, row - i)) {
-        //add to ongoing
-        onGoingBoxes.add(ChessBox(col - i, row - i));
-      } else {
-        if (ChessBoard().isEnemyAt(player, col - i, row - i)) {
-          //add to onshoting
-          onShotingBoxes.add(ChessBox(col - i, row - i));
-          break;
-        } else {
-          break;
-        }
-      }
-    }
-
-    return MoveOptions(clickedBox, onGoingBoxes, onShotingBoxes);
+    return getBishopMoveOptions(8, col, row, player);
   }
 
   //
@@ -279,12 +199,137 @@ class PreMoveMethods {
   //
   //
   static MoveOptions preMoveRock(Player player, int col, int row) {
+    return getRockMoveOptions(8, col, row, player);
+  }
+
+  //
+  //
+  //
+  //
+  //
+  static MoveOptions preMoveQueen(Player player, int col, int row) {
+    ChessBox clickedBox = ChessBox(col, row);
+
+    MoveOptions moBishop = getBishopMoveOptions(8, col, row, player);
+    MoveOptions moRock = getRockMoveOptions(8, col, row, player);
+
+    return MoveOptions(
+      clickedBox,
+      [...moBishop.onGoingBoxes, ...moRock.onGoingBoxes],
+      [...moBishop.onShotingBoxes, ...moRock.onShotingBoxes],
+    );
+  }
+
+  //
+  //
+  //
+  //
+  //
+  static MoveOptions preMoveKing(Player player, int col, int row) {
+    ChessBox clickedBox = ChessBox(col, row);
+
+    MoveOptions moBishop = getBishopMoveOptions(1, col, row, player);
+    MoveOptions moRock = getRockMoveOptions(1, col, row, player);
+
+    return MoveOptions(
+      clickedBox,
+      [...moBishop.onGoingBoxes, ...moRock.onGoingBoxes],
+      [...moBishop.onShotingBoxes, ...moRock.onShotingBoxes],
+    );
+  }
+
+  static MoveOptions getBishopMoveOptions(
+      int count, int col, int row, Player player) {
+    ChessBox clickedBox = ChessBox(col, row);
+    List<ChessBox> onGoingBoxes = [];
+    List<ChessBox> onShotingBoxes = [];
+
+    //col+    row+
+    for (int i = 1; i <= count; i++) {
+      if (col + i > 8 || row + i > 8) {
+        break;
+      }
+      if (!ChessBoard().hasCharacterAt(col + i, row + i)) {
+        //add to ongoing
+        onGoingBoxes.add(ChessBox(col + i, row + i));
+      } else {
+        if (ChessBoard().isEnemyAt(player, col + i, row + i)) {
+          //add to onshoting
+          onShotingBoxes.add(ChessBox(col + i, row + i));
+          break;
+        } else {
+          break;
+        }
+      }
+    }
+
+    //col-    row+
+    for (int i = 1; i <= count; i++) {
+      if (col - i < 1 || row + i > 8) {
+        break;
+      }
+      if (!ChessBoard().hasCharacterAt(col - i, row + i)) {
+        //add to ongoing
+        onGoingBoxes.add(ChessBox(col - i, row + i));
+      } else {
+        if (ChessBoard().isEnemyAt(player, col - i, row + i)) {
+          //add to onshoting
+          onShotingBoxes.add(ChessBox(col - i, row + i));
+          break;
+        } else {
+          break;
+        }
+      }
+    }
+
+    //col+    row-
+    for (int i = 1; i <= count; i++) {
+      if (col + i > 8 || row - i < 1) {
+        break;
+      }
+      if (!ChessBoard().hasCharacterAt(col + i, row - i)) {
+        //add to ongoing
+        onGoingBoxes.add(ChessBox(col + i, row - i));
+      } else {
+        if (ChessBoard().isEnemyAt(player, col + i, row - i)) {
+          //add to onshoting
+          onShotingBoxes.add(ChessBox(col + i, row - i));
+          break;
+        } else {
+          break;
+        }
+      }
+    }
+
+    //col-    row-
+    for (int i = 1; i <= count; i++) {
+      if (col - i < 1 || row - i < 1) {
+        break;
+      }
+      if (!ChessBoard().hasCharacterAt(col - i, row - i)) {
+        //add to ongoing
+        onGoingBoxes.add(ChessBox(col - i, row - i));
+      } else {
+        if (ChessBoard().isEnemyAt(player, col - i, row - i)) {
+          //add to onshoting
+          onShotingBoxes.add(ChessBox(col - i, row - i));
+          break;
+        } else {
+          break;
+        }
+      }
+    }
+
+    return MoveOptions(clickedBox, onGoingBoxes, onShotingBoxes);
+  }
+
+  static getRockMoveOptions(int count, int col, int row, Player player) {
     ChessBox clickedBox = ChessBox(col, row);
     List<ChessBox> onGoingBoxes = [];
     List<ChessBox> onShotingBoxes = [];
 
     //col-   row
-    for (int i = 1; i <= 8; i++) {
+    for (int i = 1; i <= count; i++) {
       if (!ChessBoard().hasCharacterAt(col - i, row)) {
         onGoingBoxes.add(ChessBox(col - i, row));
       } else {
@@ -297,7 +342,7 @@ class PreMoveMethods {
     }
 
     //col+   row
-    for (int i = 1; i <= 8; i++) {
+    for (int i = 1; i <= count; i++) {
       if (!ChessBoard().hasCharacterAt(col + i, row)) {
         onGoingBoxes.add(ChessBox(col + i, row));
       } else {
@@ -310,7 +355,7 @@ class PreMoveMethods {
     }
 
     //col   row+
-    for (int i = 1; i <= 8; i++) {
+    for (int i = 1; i <= count; i++) {
       if (!ChessBoard().hasCharacterAt(col, row + i)) {
         onGoingBoxes.add(ChessBox(col, row + i));
       } else {
@@ -323,7 +368,7 @@ class PreMoveMethods {
     }
 
     //col   row-
-    for (int i = 1; i <= 8; i++) {
+    for (int i = 1; i <= count; i++) {
       if (!ChessBoard().hasCharacterAt(col, row - i)) {
         onGoingBoxes.add(ChessBox(col, row - i));
       } else {

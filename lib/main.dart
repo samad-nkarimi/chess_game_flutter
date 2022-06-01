@@ -134,6 +134,17 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Widget getChessChar(int col, int row) {
     late SuperChessCharacter c;
+    // c = ChessBoard().getcharacter(col, row);
+    // if (c is ChessCharacterNone) {
+    //   //an empty box
+    //   return const SizedBox();
+    // } else {
+    //   return SvgPicture.asset(
+    //     c.photoId,
+    //     color: Colors.white,
+    //     // // fit: BoxFit.fill,
+    //   );
+    // }
     //whites
     c = playerWhite.getCharacter(col, row);
     if (c is! ChessCharacterNone) {
@@ -204,6 +215,10 @@ class _MyHomePageState extends State<MyHomePage> {
     // PlayerWhite playerWhite = PlayerWhite.initialize();
     // print(playerWhite.pawns.pawn1.columnNumber);
     // var pa = PlayerWhite.initialize();
+    var t = playerWhite.characters.values.fold<List<ChessBox>>([], (p, e) {
+      return [...e.preMove().onShotingBoxes, ...p];
+    });
+    print("t: $t");
 
     return Scaffold(
       // appBar: AppBar(

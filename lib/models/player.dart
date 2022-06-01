@@ -172,7 +172,9 @@ class PlayerWhite {
   SuperChessCharacter getCharacter(int col, int row) {
     for (SuperChessCharacter ch in characters.values) {
       if (ch.columnNumber == col && ch.rowNumber == row) {
-        return ch;
+        if (ch.isInGame) {
+          return ch;
+        }
       }
     }
     return ChessCharacterNone("photo");
@@ -221,7 +223,9 @@ class PlayerBlack {
   SuperChessCharacter getCharacter(int col, int row) {
     for (SuperChessCharacter ch in characters.values) {
       if (ch.columnNumber == col && ch.rowNumber == row) {
-        return ch;
+        if (ch.isInGame) {
+          return ch;
+        }
       }
     }
     return ChessCharacterNone("photo");

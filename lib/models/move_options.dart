@@ -6,4 +6,9 @@ class MoveOptions {
   final List<ChessBox> onShotingBoxes;
 
   MoveOptions(this.clickedBox, this.onGoingBoxes, this.onShotingBoxes);
+
+  void clear() {
+    onGoingBoxes.clear();
+    onShotingBoxes.clear();
+  }
 }

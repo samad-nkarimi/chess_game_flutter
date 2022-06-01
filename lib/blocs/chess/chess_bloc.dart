@@ -10,13 +10,25 @@ class ChessCubit extends Cubit<ChessState> {
   MoveOptions moveOptions = MoveOptions(ChessBox(0, 0), [], []);
   ChessCubit() : super(ChessInitialState());
   void characterClicked(int col, int row) {
-    print("clicked");
-    scc = ChessBoard().getcharacter(col, row);
-    moveOptions = ChessBoard().getcharacter(col, row).preMove();
-    emit(CharacterClickedState(moveOptions));
+    if (moveOptions.onShotingBoxes.contains(ChessBox(col, row))) {
+      //shot
+      SuperChessCharacter shottedChar = ChessBoard().getcharacter(col, row);
+      shottedChar.isInGame = false;
+      print(shottedChar);
+      print(scc);
+      if (scc != null) {
+        scc!.move(col, row);
+      }
+      emit(CharacterMovedState());
+      moveOptions.clear();
+    } else {
+      scc = ChessBoard().getcharacter(col, row);
+      moveOptions = ChessBoard().getcharacter(col, row).preMove();
+      emit(CharacterClickedState(moveOptions));
+    }
   }
 
-  boxClicked(int col, int row) {
+  void boxClicked(int col, int row) {
     for (var box in moveOptions.onGoingBoxes) {
       if (box.isInCoordinate(col, row)) {
         if (scc != null) {

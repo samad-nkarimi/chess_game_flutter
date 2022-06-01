@@ -45,7 +45,9 @@ class ChessBoard {
   SuperChessCharacter getcharacter(int col, int row) {
     for (var element in boardMap.keys) {
       if (element.isInCoordinate(col, row)) {
-        return boardMap[element]!;
+        if (boardMap[element]!.isInGame) {
+          return boardMap[element]!;
+        }
       }
     }
     return ChessCharacterNone("photoId");

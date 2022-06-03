@@ -1,9 +1,11 @@
+import 'dart:math' as math;
 import 'package:chess_flutter/common_widgets/cw_container.dart';
 import 'package:chess_flutter/feature/home/bloc/chess/chess_bloc.dart';
 import 'package:chess_flutter/feature/home/bloc/chess/chess_state.dart';
 import 'package:chess_flutter/models/board.dart';
 import 'package:chess_flutter/models/characters/abstract_character.dart';
 import 'package:chess_flutter/models/chess_box.dart';
+import 'package:chess_flutter/models/enums/player.dart';
 import 'package:chess_flutter/models/player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -210,58 +212,160 @@ class _HomeScreenState extends State<HomeScreen> {
       //   ),
       // ),
       body: Center(
-        child: CWContainer(
-          h: squareLength,
-          w: squareLength,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              for (int columnNumber = 1; columnNumber <= 8; columnNumber++)
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    for (int rowNumber = 1; rowNumber <= 8; rowNumber++)
-                      Flexible(
-                        flex: 1,
-                        child: InkWell(
-                          onTap: () {
-                            if (ChessBoard()
-                                .hasCharacterAt(columnNumber, rowNumber)) {
-                              // ChessBoard().getcharacter(columnNumber, rowNumber);
-                              context
-                                  .read<ChessCubit>()
-                                  .characterClicked(columnNumber, rowNumber);
-                            } else {
-                              context
-                                  .read<ChessCubit>()
-                                  .boxClicked(columnNumber, rowNumber);
-                            }
-                          },
-                          child: BlocBuilder<ChessCubit, ChessState>(
-                              builder: (context, state) {
-                            // setBoard(columnNumber, rowNumber);
-                            if (columnNumber == 8 && rowNumber == 8) {
-                              ChessBoard().createMap();
-                            }
-                            return CWContainer(
-                                color:
-                                    getDefaultBoxColor(columnNumber, rowNumber),
-                                w: squareLength / 9,
-                                h: squareLength / 9,
-                                gradient: getBoxGradient(
-                                    state, columnNumber, rowNumber),
-                                pad: const [5, 10, 5, 10],
-                                // shape: BoxShape.circle,
-                                child: getChessChar(columnNumber, rowNumber));
-                          }),
-                        ),
-                      ),
-                  ],
-                ),
-            ],
-          ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            BlocBuilder<ChessCubit, ChessState>(
+              buildWhen: (previous, current) {
+                if (current is CharacterShottedState) {
+                  return true;
+                }
+                return false;
+              },
+              builder: (context, state) {
+                if (state is CharacterShottedState) {
+                  List<SuperChessCharacter> outBlacks = state.outChars
+                      .where((e) => e.player == Player.black)
+                      .toList();
+                  return CWContainer(
+                    h: squareLength,
+                    w: 120,
+                    mar: const [50, 0, 50, 0],
+                    color: Colors.grey,
+                    child: Row(
+                      children: [
+                        for (int j = 0; j <= outBlacks.length ~/ 8; j++)
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              for (int i = 0;
+                                  i < math.min(outBlacks.length - j * 8, 8);
+                                  i++)
+                                CWContainer(
+                                  w: squareLength / 12,
+                                  h: squareLength / 12,
+                                  child: SvgPicture.asset(
+                                    outBlacks[j * 8 + i].photoId,
+                                    color: Colors.black,
+                                    // fit: BoxFit.fill,
+                                  ),
+                                )
+                            ],
+                          ),
+                      ],
+                    ),
+                  );
+                } else {
+                  return const SizedBox();
+                }
+              },
+            ),
+            CWContainer(
+              h: squareLength,
+              w: squareLength,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  for (int columnNumber = 1; columnNumber <= 8; columnNumber++)
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        for (int rowNumber = 1; rowNumber <= 8; rowNumber++)
+                          Flexible(
+                            flex: 1,
+                            child: InkWell(
+                              onTap: () {
+                                if (ChessBoard()
+                                    .hasCharacterAt(columnNumber, rowNumber)) {
+                                  // ChessBoard().getcharacter(columnNumber, rowNumber);
+                                  context.read<ChessCubit>().characterClicked(
+                                      columnNumber, rowNumber);
+                                } else {
+                                  context
+                                      .read<ChessCubit>()
+                                      .boxClicked(columnNumber, rowNumber);
+                                }
+                              },
+                              child: BlocBuilder<ChessCubit, ChessState>(
+                                  buildWhen: (previous, current) {
+                                if (current is! CharacterShottedState) {
+                                  return true;
+                                }
+                                return false;
+                              }, builder: (context, state) {
+                                // setBoard(columnNumber, rowNumber);
+                                if (columnNumber == 8 && rowNumber == 8) {
+                                  ChessBoard().createMap();
+                                }
+                                return CWContainer(
+                                    color: getDefaultBoxColor(
+                                        columnNumber, rowNumber),
+                                    w: squareLength / 9,
+                                    h: squareLength / 9,
+                                    gradient: getBoxGradient(
+                                        state, columnNumber, rowNumber),
+                                    pad: const [5, 10, 5, 10],
+                                    // shape: BoxShape.circle,
+                                    child:
+                                        getChessChar(columnNumber, rowNumber));
+                              }),
+                            ),
+                          ),
+                      ],
+                    ),
+                ],
+              ),
+            ),
+            BlocBuilder<ChessCubit, ChessState>(
+              buildWhen: (previous, current) {
+                if (current is CharacterShottedState) {
+                  return true;
+                }
+                return false;
+              },
+              builder: (context, state) {
+                if (state is CharacterShottedState) {
+                  List<SuperChessCharacter> outWhites = state.outChars
+                      .where((e) => e.player == Player.white)
+                      .toList();
+                  return CWContainer(
+                    h: squareLength,
+                    w: 120,
+                    mar: const [50, 0, 50, 0],
+                    color: Colors.grey,
+                    child: Row(
+                      children: [
+                        for (int j = 0; j <= outWhites.length ~/ 8; j++)
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              for (int i = 0;
+                                  i < math.min(outWhites.length - j * 8, 8);
+                                  i++)
+                                CWContainer(
+                                  w: squareLength / 12,
+                                  h: squareLength / 12,
+                                  child: SvgPicture.asset(
+                                    outWhites[j * 8 + i].photoId,
+                                    color: Colors.white,
+                                    // fit: BoxFit.fill,
+                                  ),
+                                )
+                            ],
+                          ),
+                      ],
+                    ),
+                  );
+                } else {
+                  return const SizedBox();
+                }
+              },
+            ),
+          ],
         ),
       ),
     );

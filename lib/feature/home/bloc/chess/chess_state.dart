@@ -1,3 +1,4 @@
+import 'package:chess_flutter/models/characters/abstract_character.dart';
 import 'package:chess_flutter/models/chess_box.dart';
 import 'package:chess_flutter/models/move_options.dart';
 import 'package:equatable/equatable.dart';
@@ -29,4 +30,13 @@ class CharacterMovedState extends ChessState {
 
   @override
   List<Object?> get props => [isKingInCheck, kingBox];
+}
+
+//
+class CharacterShottedState extends ChessState {
+  final List<SuperChessCharacter> outChars;
+  CharacterShottedState(this.outChars);
+
+  @override
+  List<Object?> get props => [outChars];
 }

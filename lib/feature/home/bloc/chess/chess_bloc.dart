@@ -10,10 +10,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class ChessCubit extends Cubit<ChessState> {
   SuperChessCharacter? scc;
   bool isKingInCheck = false;
+  Player shift = Player.white;
+  List<SuperChessCharacter> outChars = [];
   ChessBox kingBox = const ChessBox(0, 0);
   MoveOptions moveOptions = MoveOptions(const ChessBox(0, 0), [], []);
   ChessCubit() : super(ChessInitialState());
-  void characterClicked(int col, int row) {
+  void characterClicked(int col, int row) async {
     if (moveOptions.onShotingBoxes.contains(ChessBox(col, row))) {
       //shot
       SuperChessCharacter shottedChar = ChessBoard().getcharacter(col, row);
@@ -30,20 +32,28 @@ class ChessCubit extends Cubit<ChessState> {
         } else {
           isKingInCheck = PlayerBlack().isMyKingInCheck();
           kingBox = ChessBox(
-            PlayerWhite().characters["king"]!.columnNumber,
-            PlayerWhite().characters["king"]!.rowNumber,
+            PlayerBlack().characters["king"]!.columnNumber,
+            PlayerBlack().characters["king"]!.rowNumber,
           );
         }
       }
+      outChars.add(shottedChar);
+      emit(CharacterShottedState(outChars));
+      await Future.delayed(Duration.zero);
+
       emit(CharacterMovedState(isKingInCheck, kingBox: kingBox));
+      shiftPlayer();
       moveOptions.clear();
     } else {
-      scc = ChessBoard().getcharacter(col, row);
-      moveOptions = ChessBoard()
-          .getcharacter(col, row)
-          .preMove()
-          .verification(ChessBoard().getPlayer(col, row));
-      emit(CharacterClickedState(moveOptions, isKingInCheck, kingBox: kingBox));
+      if (shift == ChessBoard().getcharacter(col, row).player) {
+        scc = ChessBoard().getcharacter(col, row);
+        moveOptions = ChessBoard()
+            .getcharacter(col, row)
+            .preMove()
+            .verification(ChessBoard().getPlayer(col, row));
+        emit(CharacterClickedState(moveOptions, isKingInCheck,
+            kingBox: kingBox));
+      }
     }
   }
 
@@ -61,12 +71,13 @@ class ChessCubit extends Cubit<ChessState> {
           } else {
             isKingInCheck = PlayerBlack().isMyKingInCheck();
             kingBox = ChessBox(
-              PlayerWhite().characters["king"]!.columnNumber,
-              PlayerWhite().characters["king"]!.rowNumber,
+              PlayerBlack().characters["king"]!.columnNumber,
+              PlayerBlack().characters["king"]!.rowNumber,
             );
           }
         }
         emit(CharacterMovedState(isKingInCheck, kingBox: kingBox));
+        shiftPlayer();
       }
     }
 
@@ -79,5 +90,13 @@ class ChessCubit extends Cubit<ChessState> {
     }
     moveOptions.clear();
     scc = null;
+  }
+
+  void shiftPlayer() {
+    if (shift == Player.black) {
+      shift = Player.white;
+    } else {
+      shift = Player.black;
+    }
   }
 }

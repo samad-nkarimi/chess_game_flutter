@@ -78,6 +78,7 @@ class _HomeScreenState extends State<HomeScreen> {
           }
         }
       }
+
       if (state.moveOptions.onShotingBoxes.isNotEmpty) {
         for (var box in state.moveOptions.onShotingBoxes) {
           if (box.isInCoordinate(col, row)) {
@@ -88,9 +89,24 @@ class _HomeScreenState extends State<HomeScreen> {
           }
         }
       }
+
       if (state.moveOptions.clickedBox.isInCoordinate(col, row)) {
         return const RadialGradient(
           colors: [Colors.blue, Colors.deepPurple],
+          center: Alignment.center,
+        );
+      }
+      if (state.isKingInCheck && state.kingBox.isInCoordinate(col, row)) {
+        return const RadialGradient(
+          colors: [Colors.yellow, Colors.red],
+          center: Alignment.center,
+        );
+      }
+    }
+    if (state is CharacterMovedState) {
+      if (state.isKingInCheck && state.kingBox.isInCoordinate(col, row)) {
+        return const RadialGradient(
+          colors: [Colors.yellow, Colors.red],
           center: Alignment.center,
         );
       }

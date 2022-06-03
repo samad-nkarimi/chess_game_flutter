@@ -11,16 +11,22 @@ class ChessInitialState extends ChessState {
 
 class CharacterClickedState extends ChessState {
   final MoveOptions moveOptions;
+  final bool isKingInCheck;
+  final ChessBox kingBox;
 
-  CharacterClickedState(this.moveOptions);
+  CharacterClickedState(this.moveOptions, this.isKingInCheck,
+      {this.kingBox = const ChessBox(0, 0)});
 
   @override
-  List<Object?> get props => [moveOptions];
+  List<Object?> get props => [moveOptions, isKingInCheck, kingBox];
 }
 
 class CharacterMovedState extends ChessState {
-  CharacterMovedState();
+  final bool isKingInCheck;
+  final ChessBox kingBox;
+  CharacterMovedState(this.isKingInCheck,
+      {this.kingBox = const ChessBox(0, 0)});
 
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [isKingInCheck, kingBox];
 }

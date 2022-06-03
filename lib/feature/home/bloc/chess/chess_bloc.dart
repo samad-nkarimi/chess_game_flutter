@@ -2,12 +2,16 @@ import 'package:chess_flutter/feature/home/bloc/chess/chess_state.dart';
 import 'package:chess_flutter/models/board.dart';
 import 'package:chess_flutter/models/characters/abstract_character.dart';
 import 'package:chess_flutter/models/chess_box.dart';
+import 'package:chess_flutter/models/enums/player.dart';
 import 'package:chess_flutter/models/move_options.dart';
+import 'package:chess_flutter/models/player.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ChessCubit extends Cubit<ChessState> {
   SuperChessCharacter? scc;
-  MoveOptions moveOptions = MoveOptions(ChessBox(0, 0), [], []);
+  bool isKingInCheck = false;
+  ChessBox kingBox = const ChessBox(0, 0);
+  MoveOptions moveOptions = MoveOptions(const ChessBox(0, 0), [], []);
   ChessCubit() : super(ChessInitialState());
   void characterClicked(int col, int row) {
     if (moveOptions.onShotingBoxes.contains(ChessBox(col, row))) {
@@ -17,8 +21,21 @@ class ChessCubit extends Cubit<ChessState> {
       print("==> $scc shotted $shottedChar");
       if (scc != null) {
         scc!.move(col, row);
+        if (scc!.player == Player.black) {
+          isKingInCheck = PlayerWhite().isMyKingInCheck();
+          kingBox = ChessBox(
+            PlayerWhite().characters["king"]!.columnNumber,
+            PlayerWhite().characters["king"]!.rowNumber,
+          );
+        } else {
+          isKingInCheck = PlayerBlack().isMyKingInCheck();
+          kingBox = ChessBox(
+            PlayerWhite().characters["king"]!.columnNumber,
+            PlayerWhite().characters["king"]!.rowNumber,
+          );
+        }
       }
-      emit(CharacterMovedState());
+      emit(CharacterMovedState(isKingInCheck, kingBox: kingBox));
       moveOptions.clear();
     } else {
       scc = ChessBoard().getcharacter(col, row);
@@ -26,7 +43,7 @@ class ChessCubit extends Cubit<ChessState> {
           .getcharacter(col, row)
           .preMove()
           .verification(ChessBoard().getPlayer(col, row));
-      emit(CharacterClickedState(moveOptions));
+      emit(CharacterClickedState(moveOptions, isKingInCheck, kingBox: kingBox));
     }
   }
 
@@ -35,8 +52,21 @@ class ChessCubit extends Cubit<ChessState> {
       if (box.isInCoordinate(col, row)) {
         if (scc != null) {
           scc!.move(col, row);
+          if (scc!.player == Player.black) {
+            isKingInCheck = PlayerWhite().isMyKingInCheck();
+            kingBox = ChessBox(
+              PlayerWhite().characters["king"]!.columnNumber,
+              PlayerWhite().characters["king"]!.rowNumber,
+            );
+          } else {
+            isKingInCheck = PlayerBlack().isMyKingInCheck();
+            kingBox = ChessBox(
+              PlayerWhite().characters["king"]!.columnNumber,
+              PlayerWhite().characters["king"]!.rowNumber,
+            );
+          }
         }
-        emit(CharacterMovedState());
+        emit(CharacterMovedState(isKingInCheck, kingBox: kingBox));
       }
     }
 
@@ -47,7 +77,7 @@ class ChessCubit extends Cubit<ChessState> {
         */
       }
     }
-    moveOptions = MoveOptions(ChessBox(0, 0), [], []);
+    moveOptions.clear();
     scc = null;
   }
 }

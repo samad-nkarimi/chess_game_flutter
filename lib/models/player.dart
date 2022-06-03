@@ -201,11 +201,7 @@ class PlayerWhite extends SuperPlayer {
   }
 
   bool isMyKingInCheck() {
-    print("checking king");
     List<ChessBox> shotting = PlayerBlack().getOnShottingMoves();
-    print(shotting);
-    print(
-        '${characters["king"]!.columnNumber}, ${characters["king"]!.rowNumber}');
     for (var chessBox in shotting) {
       if (chessBox.isInCoordinate(
           characters["king"]!.columnNumber, characters["king"]!.rowNumber)) {

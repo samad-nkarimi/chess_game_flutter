@@ -1,5 +1,6 @@
 import 'package:chess_flutter/constants/constant_images.dart';
 import 'package:chess_flutter/models/characters/abstract_character.dart';
+import 'package:chess_flutter/models/chess_box.dart';
 import 'package:chess_flutter/models/enums/player.dart';
 
 // class SuperPlayer {
@@ -130,9 +131,19 @@ import 'package:chess_flutter/models/enums/player.dart';
 //   }
 // }
 
-class PlayerWhite {
+class SuperPlayer {}
+
+class PlayerWhite extends SuperPlayer {
+  static final PlayerWhite _singleton = PlayerWhite._internal();
+
+  factory PlayerWhite() {
+    return _singleton;
+  }
+
+  PlayerWhite._internal();
+
   Map<String, SuperChessCharacter> characters = {};
-  PlayerWhite.initialize() {
+  void initialize() {
     characters = {
       "pawn1": ChessCharacterPawn(ConstantImages.svgWhitePawn,
           columnNumber: 7, rowNumber: 1),
@@ -179,11 +190,44 @@ class PlayerWhite {
     }
     return ChessCharacterNone("photo");
   }
+
+  List<ChessBox> getOnShottingMoves() {
+    return characters.values
+        .where((element) => element.isInGame == true)
+        .fold<List<ChessBox>>(<ChessBox>[],
+            (List<ChessBox> p, SuperChessCharacter e) {
+      return [...e.preMove().onShotingBoxes, ...p];
+    });
+  }
+
+  bool isMyKingInCheck() {
+    print("checking king");
+    List<ChessBox> shotting = PlayerBlack().getOnShottingMoves();
+    print(shotting);
+    print(
+        '${characters["king"]!.columnNumber}, ${characters["king"]!.rowNumber}');
+    for (var chessBox in shotting) {
+      if (chessBox.isInCoordinate(
+          characters["king"]!.columnNumber, characters["king"]!.rowNumber)) {
+        return true;
+      }
+    }
+
+    return false;
+  }
 }
 
-class PlayerBlack {
+class PlayerBlack extends SuperPlayer {
+  static final PlayerBlack _singleton = PlayerBlack._internal();
+
+  factory PlayerBlack() {
+    return _singleton;
+  }
+
+  PlayerBlack._internal();
+
   Map<String, SuperChessCharacter> characters = {};
-  PlayerBlack.initialize() {
+  void initialize() {
     characters = {
       "pawn1": ChessCharacterPawn(ConstantImages.svgWhitePawn,
           player: Player.black, columnNumber: 2, rowNumber: 8),
@@ -229,5 +273,26 @@ class PlayerBlack {
       }
     }
     return ChessCharacterNone("photo");
+  }
+
+  List<ChessBox> getOnShottingMoves() {
+    return characters.values
+        .where((element) => element.isInGame == true)
+        .fold<List<ChessBox>>(<ChessBox>[],
+            (List<ChessBox> p, SuperChessCharacter e) {
+      return [...e.preMove().onShotingBoxes, ...p];
+    });
+  }
+
+  bool isMyKingInCheck() {
+    List<ChessBox> shotting = PlayerWhite().getOnShottingMoves();
+    for (var chessBox in shotting) {
+      if (chessBox.isInCoordinate(
+          characters["king"]!.columnNumber, characters["king"]!.rowNumber)) {
+        return true;
+      }
+    }
+
+    return false;
   }
 }

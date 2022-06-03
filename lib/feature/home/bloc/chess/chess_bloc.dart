@@ -1,4 +1,4 @@
-import 'package:chess_flutter/blocs/chess/chess_state.dart';
+import 'package:chess_flutter/feature/home/bloc/chess/chess_state.dart';
 import 'package:chess_flutter/models/board.dart';
 import 'package:chess_flutter/models/characters/abstract_character.dart';
 import 'package:chess_flutter/models/chess_box.dart';
@@ -14,8 +14,7 @@ class ChessCubit extends Cubit<ChessState> {
       //shot
       SuperChessCharacter shottedChar = ChessBoard().getcharacter(col, row);
       shottedChar.isInGame = false;
-      print(shottedChar);
-      print(scc);
+      print("==> $scc shotted $shottedChar");
       if (scc != null) {
         scc!.move(col, row);
       }
@@ -23,7 +22,10 @@ class ChessCubit extends Cubit<ChessState> {
       moveOptions.clear();
     } else {
       scc = ChessBoard().getcharacter(col, row);
-      moveOptions = ChessBoard().getcharacter(col, row).preMove();
+      moveOptions = ChessBoard()
+          .getcharacter(col, row)
+          .preMove()
+          .verification(ChessBoard().getPlayer(col, row));
       emit(CharacterClickedState(moveOptions));
     }
   }

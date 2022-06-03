@@ -1,4 +1,5 @@
 import 'package:chess_flutter/core/pre_move_methods.dart';
+import 'package:chess_flutter/models/board.dart';
 import 'package:chess_flutter/models/chess_box.dart';
 import 'package:chess_flutter/models/enums/player.dart';
 import 'package:chess_flutter/models/enums/rule.dart';
@@ -22,6 +23,7 @@ abstract class SuperChessCharacter {
 
   MoveOptions preMove();
   void move(int newCol, int newRow) {
+    ChessBoard().exChange(columnNumber, rowNumber, newCol, newRow);
     columnNumber = newCol;
     rowNumber = newRow;
   }
@@ -43,7 +45,7 @@ class ChessCharacterNone extends SuperChessCharacter {
   @override
   MoveOptions preMove() {
     // TODO: implement preMove
-    print(rule);
+    // print(rule);
     throw UnimplementedError();
   }
 }
@@ -58,7 +60,7 @@ class ChessCharacterPawn extends SuperChessCharacter {
 
   @override
   MoveOptions preMove() {
-    print(rule);
+    // print(rule);
     return PreMoveMethods.preMovePawn(player, columnNumber, rowNumber);
   }
 }
@@ -70,7 +72,7 @@ class ChessCharacterRock extends SuperChessCharacter {
 
   @override
   MoveOptions preMove() {
-    print(rule);
+    // print(rule);
     return PreMoveMethods.preMoveRock(player, columnNumber, rowNumber);
   }
 }
@@ -82,7 +84,7 @@ class ChessCharacterBishop extends SuperChessCharacter {
 
   @override
   MoveOptions preMove() {
-    print(rule);
+    // print(rule);
     return PreMoveMethods.preMoveBishop(player, columnNumber, rowNumber);
   }
 }
@@ -94,7 +96,7 @@ class ChessCharacterKnight extends SuperChessCharacter {
 
   @override
   MoveOptions preMove() {
-    print(rule);
+    // print(rule);
     return PreMoveMethods.preMoveKnight(player, columnNumber, rowNumber);
   }
 }
@@ -106,7 +108,7 @@ class ChessCharacterKing extends SuperChessCharacter {
 
   @override
   MoveOptions preMove() {
-    print(rule);
+    // print(rule);
     return PreMoveMethods.preMoveKing(player, columnNumber, rowNumber);
   }
 }
@@ -118,7 +120,7 @@ class ChessCharacterQueen extends SuperChessCharacter {
 
   @override
   MoveOptions preMove() {
-    print(rule);
+    // print(rule);
     return PreMoveMethods.preMoveQueen(player, columnNumber, rowNumber);
   }
 }

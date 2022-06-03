@@ -33,29 +33,29 @@ class PreMoveMethods {
     }
     if (row - 1 > 0 && isThereNextCol) {
       if (ChessBoard().isEnemyAt(player, nextCol, row - 1)) {
-        print("and to shoting");
+        // print("and to shoting");
         onShotingBoxes.add(ChessBox(nextCol, row - 1));
       }
     }
     if (row + 1 < 9 && isThereNextCol) {
       if (ChessBoard().isEnemyAt(player, nextCol, row + 1)) {
-        print("and to shoting");
+        // print("and to shoting");
         onShotingBoxes.add(ChessBox(nextCol, row + 1));
       }
     }
 
     if (isThereNextCol) {
       if (!ChessBoard().hasCharacterAt(nextCol, row)) {
-        print("add to ongoing");
+        // print("add to ongoing");
         onGoingBoxes.add(ChessBox(nextCol, row));
         if (isInInitialPlace && !ChessBoard().hasCharacterAt(next2Col, row)) {
-          print("add to ongoing");
+          // print("add to ongoing");
           onGoingBoxes.add(ChessBox(next2Col, row));
         }
       }
     }
     if (col == finalCol) {
-      print("promote to queen");
+      // print("promote to queen");
       /**
        * promote to queen
        */
@@ -230,13 +230,50 @@ class PreMoveMethods {
 
     MoveOptions moBishop = getBishopMoveOptions(1, col, row, player);
     MoveOptions moRock = getRockMoveOptions(1, col, row, player);
-
-    return MoveOptions(
+    MoveOptions kingMoveOptions = MoveOptions(
       clickedBox,
       [...moBishop.onGoingBoxes, ...moRock.onGoingBoxes],
       [...moBishop.onShotingBoxes, ...moRock.onShotingBoxes],
     );
+
+    // MoveOptions enemyMoveOptions = getEnemyMoveOptions(player);
+    // kingMoveOptions.onGoingBoxes.forEach((element) {
+    //   if (enemyMoveOptions.onGoingBoxes.contains(element)) {
+    //     kingMoveOptions.onGoingBoxes.remove(element);
+    //   }
+    // });
+
+    return kingMoveOptions;
   }
+
+  // static MoveOptions getEnemyMoveOptions(Player playerName) {
+  //   late var superPlayer;
+  //   if (playerName == Player.black) {
+  //     superPlayer = PlayerWhite();
+  //   } else {
+  //     superPlayer = PlayerBlack();
+  //   }
+
+  //   List<ChessBox> onShottingMoves = superPlayer.characters.values
+  //       .fold<List<ChessBox>>(<ChessBox>[],
+  //           (List<ChessBox> p, SuperChessCharacter e) {
+  //     return [...e.preMove().onShotingBoxes, ...p];
+  //   });
+
+  //   List<ChessBox> onGoingMoves = superPlayer.characters.values
+  //       .fold<List<ChessBox>>(<ChessBox>[],
+  //           (List<ChessBox> p, SuperChessCharacter e) {
+  //     return [...e.preMove().onGoingBoxes, ...p];
+  //   });
+
+  //   MoveOptions moveOptions = MoveOptions(
+  //     ChessBox(0, 0),
+  //     onGoingMoves,
+  //     onShottingMoves,
+  //   );
+
+  //   return moveOptions;
+  // }
 
   static MoveOptions getBishopMoveOptions(
       int count, int col, int row, Player player) {

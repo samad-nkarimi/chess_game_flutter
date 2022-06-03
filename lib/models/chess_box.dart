@@ -6,7 +6,7 @@ class ChessBox extends Equatable {
   final int rowNumber;
   // final Color color;
 
-  ChessBox(this.columnNumber, this.rowNumber);
+  const ChessBox(this.columnNumber, this.rowNumber);
 
   bool isInCoordinate(int col, int row) {
     if (columnNumber == col && rowNumber == row) {

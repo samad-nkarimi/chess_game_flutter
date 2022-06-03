@@ -22,17 +22,17 @@ class ChessBoard {
     boardMap[ChessBox(col, row)] = scc;
   }
 
-  void createMap(PlayerWhite pw, PlayerBlack pb) {
+  void createMap() {
     //you can save all histoy here
     boardMap.clear();
     for (int col = 1; col <= 8; col++) {
       for (int row = 1; row <= 8; row++) {
         late SuperChessCharacter c;
         //whites
-        c = pw.getCharacter(col, row);
+        c = PlayerWhite().getCharacter(col, row);
         if (c is ChessCharacterNone) {
           //blacks
-          c = pb.getCharacter(col, row);
+          c = PlayerBlack().getCharacter(col, row);
         }
 
         if (c is! ChessCharacterNone) {
@@ -40,6 +40,13 @@ class ChessBoard {
         }
       }
     }
+  }
+
+  void exChange(int col, int row, int newCol, int newRow) {
+    SuperChessCharacter scc = getcharacter(col, row);
+    boardMap.removeWhere(
+        (key, value) => key.columnNumber == col && key.rowNumber == row);
+    addToBoardMap(newCol, newRow, scc);
   }
 
   SuperChessCharacter getcharacter(int col, int row) {
@@ -68,5 +75,9 @@ class ChessBoard {
       return true;
     }
     return false;
+  }
+
+  Player getPlayer(int col, int row) {
+    return getcharacter(col, row).player;
   }
 }

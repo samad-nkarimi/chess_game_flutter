@@ -100,7 +100,10 @@ class _HomeScreenState extends State<HomeScreen> {
       }
       if (state.isKingInCheck && state.kingBox.isInCoordinate(col, row)) {
         return const RadialGradient(
-          colors: [Colors.yellow, Colors.red],
+          colors: [
+            Color.fromARGB(255, 250, 103, 255),
+            Color.fromARGB(255, 219, 22, 8)
+          ],
           center: Alignment.center,
         );
       }
@@ -108,7 +111,10 @@ class _HomeScreenState extends State<HomeScreen> {
     if (state is CharacterMovedState) {
       if (state.isKingInCheck && state.kingBox.isInCoordinate(col, row)) {
         return const RadialGradient(
-          colors: [Colors.yellow, Colors.red],
+          colors: [
+            Color.fromARGB(255, 250, 103, 255),
+            Color.fromARGB(255, 219, 22, 8)
+          ],
           center: Alignment.center,
         );
       }

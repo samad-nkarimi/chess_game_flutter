@@ -180,6 +180,17 @@ class PlayerWhite extends SuperPlayer {
     };
   }
 
+  int getEntityIndex(int col, int row) {
+    int index = 0;
+    for (SuperChessCharacter ch in characters.values) {
+      if (ch.columnNumber == col && ch.rowNumber == row) {
+        return index;
+      }
+      index++;
+    }
+    return -1;
+  }
+
   SuperChessCharacter getCharacter(int col, int row) {
     for (SuperChessCharacter ch in characters.values) {
       if (ch.columnNumber == col && ch.rowNumber == row) {
@@ -258,6 +269,17 @@ class PlayerBlack extends SuperPlayer {
       "rock2": ChessCharacterRock(ConstantImages.svgWhiteRock,
           player: Player.black, columnNumber: 1, rowNumber: 1),
     };
+  }
+
+  int getEntityIndex(int col, int row) {
+    int index = 0;
+    for (SuperChessCharacter ch in characters.values) {
+      if (ch.columnNumber == col && ch.rowNumber == row) {
+        return index;
+      }
+      index++;
+    }
+    return -1;
   }
 
   SuperChessCharacter getCharacter(int col, int row) {

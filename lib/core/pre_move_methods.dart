@@ -1,10 +1,10 @@
+import 'package:chess_flutter/constants/constant_images.dart';
 import 'package:chess_flutter/models/board.dart';
 import 'package:chess_flutter/models/characters/abstract_character.dart';
 import 'package:chess_flutter/models/chess_box.dart';
 import 'package:chess_flutter/models/enums/player.dart';
 import 'package:chess_flutter/models/move_options.dart';
 import 'package:chess_flutter/models/player.dart';
-import 'package:flutter/material.dart';
 
 class PreMoveMethods {
   static MoveOptions preMovePawn(Player player, int col, int row) {
@@ -55,10 +55,30 @@ class PreMoveMethods {
       }
     }
     if (col == finalCol) {
-      // print("promote to queen");
+      print("promoted to queen");
       /**
        * promote to queen
        */
+      if (player == Player.white) {
+        int index = PlayerWhite().getEntityIndex(col, row);
+        String key = PlayerWhite().characters.keys.toList()[index];
+        PlayerWhite().characters[key] = ChessCharacterQueen(
+            ConstantImages.svgWhiteQueen,
+            columnNumber: col,
+            rowNumber: row);
+      } else {
+        int index = PlayerBlack().getEntityIndex(col, row);
+        String key = PlayerBlack().characters.keys.toList()[index];
+        PlayerBlack().characters[key] = ChessCharacterQueen(
+            ConstantImages.svgBlackQueen,
+            player: Player.black,
+            columnNumber: col,
+            rowNumber: row);
+      }
+      var black = PlayerBlack();
+      var white = PlayerWhite();
+
+      return preMoveQueen(player, col, row);
     }
 
     return MoveOptions(clickedBox, onGoingBoxes, onShotingBoxes);

@@ -1,5 +1,6 @@
 import 'package:chess_flutter/models/characters/abstract_character.dart';
 import 'package:chess_flutter/models/chess_box.dart';
+import 'package:chess_flutter/models/enums/player.dart';
 import 'package:chess_flutter/models/move_options.dart';
 import 'package:equatable/equatable.dart';
 
@@ -39,4 +40,13 @@ class CharacterShottedState extends ChessState {
 
   @override
   List<Object?> get props => [outChars];
+}
+
+//
+class PlayerWonState extends ChessState {
+  final Player winner;
+  PlayerWonState(this.winner);
+
+  @override
+  List<Object?> get props => [winner];
 }

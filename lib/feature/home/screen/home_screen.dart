@@ -267,46 +267,50 @@ class _HomeScreenState extends State<HomeScreen> {
                 }
               },
             ),
-            CWContainer(
-              h: squareLength,
-              w: squareLength,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  for (int columnNumber = 1; columnNumber <= 8; columnNumber++)
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        for (int rowNumber = 1; rowNumber <= 8; rowNumber++)
-                          Flexible(
-                            flex: 1,
-                            child: InkWell(
-                              onTap: () {
-                                if (ChessBoard()
-                                    .hasCharacterAt(columnNumber, rowNumber)) {
-                                  // ChessBoard().getcharacter(columnNumber, rowNumber);
-                                  context.read<ChessCubit>().characterClicked(
-                                      columnNumber, rowNumber);
-                                } else {
-                                  context
-                                      .read<ChessCubit>()
-                                      .boxClicked(columnNumber, rowNumber);
-                                }
-                              },
-                              child: BlocBuilder<ChessCubit, ChessState>(
-                                  buildWhen: (previous, current) {
-                                if (current is! CharacterShottedState) {
-                                  return true;
-                                }
-                                return false;
-                              }, builder: (context, state) {
-                                // setBoard(columnNumber, rowNumber);
-                                if (columnNumber == 8 && rowNumber == 8) {
-                                  ChessBoard().createMap();
-                                }
-                                return CWContainer(
+            BlocBuilder<ChessCubit, ChessState>(buildWhen: (previous, current) {
+              if (current is! CharacterShottedState) {
+                return true;
+              }
+              return false;
+            }, builder: (context, state) {
+              // setBoard(columnNumber, rowNumber);
+
+              ChessBoard().createMap();
+
+              if (state is PlayerWonState) {
+                print("winner ==> ${state.winner}");
+              }
+              return CWContainer(
+                h: squareLength,
+                w: squareLength,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    for (int columnNumber = 1;
+                        columnNumber <= 8;
+                        columnNumber++)
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          for (int rowNumber = 1; rowNumber <= 8; rowNumber++)
+                            Flexible(
+                              flex: 1,
+                              child: InkWell(
+                                onTap: () {
+                                  if (ChessBoard().hasCharacterAt(
+                                      columnNumber, rowNumber)) {
+                                    // ChessBoard().getcharacter(columnNumber, rowNumber);
+                                    context.read<ChessCubit>().characterClicked(
+                                        columnNumber, rowNumber);
+                                  } else {
+                                    context
+                                        .read<ChessCubit>()
+                                        .boxClicked(columnNumber, rowNumber);
+                                  }
+                                },
+                                child: CWContainer(
                                     color: getDefaultBoxColor(
                                         columnNumber, rowNumber),
                                     w: squareLength / 9,
@@ -316,15 +320,15 @@ class _HomeScreenState extends State<HomeScreen> {
                                     pad: const [5, 10, 5, 10],
                                     // shape: BoxShape.circle,
                                     child:
-                                        getChessChar(columnNumber, rowNumber));
-                              }),
+                                        getChessChar(columnNumber, rowNumber)),
+                              ),
                             ),
-                          ),
-                      ],
-                    ),
-                ],
-              ),
-            ),
+                        ],
+                      ),
+                  ],
+                ),
+              );
+            }),
             BlocBuilder<ChessCubit, ChessState>(
               buildWhen: (previous, current) {
                 if (current is CharacterShottedState) {

@@ -75,8 +75,8 @@ class PreMoveMethods {
             columnNumber: col,
             rowNumber: row);
       }
-      var black = PlayerBlack();
-      var white = PlayerWhite();
+      // var black = PlayerBlack();
+      // var white = PlayerWhite();
 
       return preMoveQueen(player, col, row);
     }
@@ -387,6 +387,9 @@ class PreMoveMethods {
 
     //col-   row
     for (int i = 1; i <= count; i++) {
+      if (col - i < 1) {
+        break;
+      }
       if (!ChessBoard().hasCharacterAt(col - i, row)) {
         onGoingBoxes.add(ChessBox(col - i, row));
       } else {
@@ -400,6 +403,9 @@ class PreMoveMethods {
 
     //col+   row
     for (int i = 1; i <= count; i++) {
+      if (col + i > 8) {
+        break;
+      }
       if (!ChessBoard().hasCharacterAt(col + i, row)) {
         onGoingBoxes.add(ChessBox(col + i, row));
       } else {
@@ -413,6 +419,9 @@ class PreMoveMethods {
 
     //col   row+
     for (int i = 1; i <= count; i++) {
+      if (row + i > 8) {
+        break;
+      }
       if (!ChessBoard().hasCharacterAt(col, row + i)) {
         onGoingBoxes.add(ChessBox(col, row + i));
       } else {
@@ -426,6 +435,9 @@ class PreMoveMethods {
 
     //col   row-
     for (int i = 1; i <= count; i++) {
+      if (row - i < 1) {
+        break;
+      }
       if (!ChessBoard().hasCharacterAt(col, row - i)) {
         onGoingBoxes.add(ChessBox(col, row - i));
       } else {

@@ -13,6 +13,8 @@ class ChessCubit extends Cubit<ChessState> {
   Player shift = Player.white;
   List<SuperChessCharacter> outChars = [];
   ChessBox kingBox = const ChessBox(0, 0);
+  bool isCheckMate = false;
+  Player? winner;
   MoveOptions moveOptions = MoveOptions(const ChessBox(0, 0), [], []);
   ChessCubit() : super(ChessInitialState());
   void characterClicked(int col, int row) async {
@@ -29,12 +31,23 @@ class ChessCubit extends Cubit<ChessState> {
             PlayerWhite().characters["king"]!.columnNumber,
             PlayerWhite().characters["king"]!.rowNumber,
           );
+          isCheckMate = PlayerWhite().isCheckMate(col, row);
+          winner = Player.black;
         } else {
           isKingInCheck = PlayerBlack().isMyKingInCheck();
           kingBox = ChessBox(
             PlayerBlack().characters["king"]!.columnNumber,
             PlayerBlack().characters["king"]!.rowNumber,
           );
+          isCheckMate = PlayerBlack().isCheckMate(col, row);
+          winner = Player.white;
+        }
+      }
+      if (isCheckMate) {
+        // send state to show winner
+        if (winner != null) {
+          print("winner ==> ${winner}");
+          emit(PlayerWonState(winner!));
         }
       }
       outChars.add(shottedChar);
@@ -57,7 +70,7 @@ class ChessCubit extends Cubit<ChessState> {
     }
   }
 
-  void boxClicked(int col, int row) {
+  void boxClicked(int col, int row) async {
     for (var box in moveOptions.onGoingBoxes) {
       if (box.isInCoordinate(col, row)) {
         if (scc != null) {
@@ -68,12 +81,24 @@ class ChessCubit extends Cubit<ChessState> {
               PlayerWhite().characters["king"]!.columnNumber,
               PlayerWhite().characters["king"]!.rowNumber,
             );
+            isCheckMate = PlayerWhite().isCheckMate(col, row);
+            winner = Player.black;
           } else {
             isKingInCheck = PlayerBlack().isMyKingInCheck();
             kingBox = ChessBox(
               PlayerBlack().characters["king"]!.columnNumber,
               PlayerBlack().characters["king"]!.rowNumber,
             );
+            isCheckMate = PlayerBlack().isCheckMate(col, row);
+            winner = Player.white;
+          }
+        }
+        if (isCheckMate) {
+          // send state to show winner
+          if (winner != null) {
+            print("winner ==> ${winner}");
+            emit(PlayerWonState(winner!));
+            await Future.delayed(Duration.zero);
           }
         }
         emit(CharacterMovedState(isKingInCheck, kingBox: kingBox));

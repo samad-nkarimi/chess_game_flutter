@@ -17,6 +17,14 @@ class MoveOptions {
     onShotingBoxes.clear();
   }
 
+  //when onGoing and onShotting are empty
+  bool isEmpty() {
+    if (onGoingBoxes.isEmpty && onShotingBoxes.isEmpty) {
+      return true;
+    }
+    return false;
+  }
+
   //we don't want a move that put the king in check
   MoveOptions verification(Player player) {
     MoveOptions moveOptions = MoveOptions(

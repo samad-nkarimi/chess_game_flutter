@@ -2,6 +2,7 @@ import 'package:chess_flutter/constants/constant_images.dart';
 import 'package:chess_flutter/models/characters/abstract_character.dart';
 import 'package:chess_flutter/models/chess_box.dart';
 import 'package:chess_flutter/models/enums/player.dart';
+import 'package:chess_flutter/models/move_options.dart';
 
 // class SuperPlayer {
 //   final Map<String, SuperChessCharacter> characters = {};
@@ -211,6 +212,43 @@ class PlayerWhite extends SuperPlayer {
     });
   }
 
+  bool isCheckMate(int col, int row) {
+    MoveOptions mo = MoveOptions(
+        ChessBox(col, row),
+        characters.values
+            .where((element) => element.isInGame == true)
+            .fold<List<ChessBox>>(<ChessBox>[],
+                (List<ChessBox> p, SuperChessCharacter e) {
+          return [...e.preMove().verification(Player.white).onGoingBoxes, ...p];
+        }),
+        characters.values
+            .where((element) => element.isInGame == true)
+            .fold<List<ChessBox>>(<ChessBox>[],
+                (List<ChessBox> p, SuperChessCharacter e) {
+          return [
+            ...e.preMove().verification(Player.white).onShotingBoxes,
+            ...p
+          ];
+        }));
+    print(mo.onGoingBoxes);
+    print(mo.onShotingBoxes);
+    return mo.isEmpty();
+  }
+
+  // List<ChessBox> getOnGoingMoves() {
+  //   return characters.values
+  //       .where((element) => element.isInGame == true)
+  //       .fold<List<ChessBox>>(<ChessBox>[],
+  //           (List<ChessBox> p, SuperChessCharacter e) {
+  //     return [...e.preMove().verification(Player.white).onGoingBoxes, ...p];
+  //   });
+  // }
+
+  // MoveOptions gettotalMoveOptions(int col, int row) {
+  //   return MoveOptions(
+  //       ChessBox(col, row), getOnGoingMoves(), getOnShottingMoves());
+  // }
+
   bool isMyKingInCheck() {
     List<ChessBox> shotting = PlayerBlack().getOnShottingMoves();
     for (var chessBox in shotting) {
@@ -301,6 +339,43 @@ class PlayerBlack extends SuperPlayer {
       return [...e.preMove().onShotingBoxes, ...p];
     });
   }
+
+  bool isCheckMate(int col, int row) {
+    MoveOptions mo = MoveOptions(
+        ChessBox(col, row),
+        characters.values
+            .where((element) => element.isInGame == true)
+            .fold<List<ChessBox>>(<ChessBox>[],
+                (List<ChessBox> p, SuperChessCharacter e) {
+          return [...e.preMove().verification(Player.black).onGoingBoxes, ...p];
+        }),
+        characters.values
+            .where((element) => element.isInGame == true)
+            .fold<List<ChessBox>>(<ChessBox>[],
+                (List<ChessBox> p, SuperChessCharacter e) {
+          return [
+            ...e.preMove().verification(Player.black).onShotingBoxes,
+            ...p
+          ];
+        }));
+    print(mo.onGoingBoxes);
+    print(mo.onShotingBoxes);
+    return mo.isEmpty();
+  }
+
+  // List<ChessBox> getOnGoingMoves() {
+  //   return characters.values
+  //       .where((element) => element.isInGame == true)
+  //       .fold<List<ChessBox>>(<ChessBox>[],
+  //           (List<ChessBox> p, SuperChessCharacter e) {
+  //     return [...e.preMove().onGoingBoxes, ...p];
+  //   });
+  // }
+
+  // MoveOptions gettotalMoveOptions(int col, int row) {
+  //   return MoveOptions(
+  //       ChessBox(col, row), getOnGoingMoves(), getOnShottingMoves());
+  // }
 
   bool isMyKingInCheck() {
     List<ChessBox> shotting = PlayerWhite().getOnShottingMoves();

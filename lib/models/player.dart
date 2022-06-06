@@ -132,8 +132,80 @@ import 'package:chess_flutter/models/move_options.dart';
 //   }
 // }
 
-class SuperPlayer {}
+abstract class SuperPlayer {
+  Map<String, SuperChessCharacter> characters = {};
+  final Player player;
 
+  SuperPlayer(this.player);
+  void initialize();
+
+  int getEntityIndex(int col, int row) {
+    int index = 0;
+    for (SuperChessCharacter ch in characters.values) {
+      if (ch.columnNumber == col && ch.rowNumber == row) {
+        return index;
+      }
+      index++;
+    }
+    return -1;
+  }
+
+  SuperChessCharacter getCharacter(int col, int row) {
+    for (SuperChessCharacter ch in characters.values) {
+      if (ch.columnNumber == col && ch.rowNumber == row) {
+        if (ch.isInGame) {
+          return ch;
+        }
+      }
+    }
+    return ChessCharacterNone("photo");
+  }
+
+  List<ChessBox> getOnShottingMoves() {
+    return characters.values
+        .where((element) => element.isInGame == true)
+        .fold<List<ChessBox>>(<ChessBox>[],
+            (List<ChessBox> p, SuperChessCharacter e) {
+      return [...e.preMove().onShotingBoxes, ...p];
+    });
+  }
+
+  bool isCheckMate(int col, int row) {
+    MoveOptions mo = MoveOptions(
+        ChessBox(col, row),
+        characters.values
+            .where((element) => element.isInGame == true)
+            .fold<List<ChessBox>>(<ChessBox>[],
+                (List<ChessBox> p, SuperChessCharacter e) {
+          return [...e.preMove().verification(player).onGoingBoxes, ...p];
+        }),
+        characters.values
+            .where((element) => element.isInGame == true)
+            .fold<List<ChessBox>>(<ChessBox>[],
+                (List<ChessBox> p, SuperChessCharacter e) {
+          return [...e.preMove().verification(player).onShotingBoxes, ...p];
+        }));
+    return mo.isEmpty();
+  }
+
+  SuperPlayer getEnemyPlayer(Player player) {
+    return player == Player.white ? PlayerBlack() : PlayerWhite();
+  }
+
+  bool isMyKingInCheck() {
+    List<ChessBox> shotting = getEnemyPlayer(player).getOnShottingMoves();
+    for (var chessBox in shotting) {
+      if (chessBox.isInCoordinate(
+          characters["king"]!.columnNumber, characters["king"]!.rowNumber)) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+}
+
+//implementation for player white
 class PlayerWhite extends SuperPlayer {
   static final PlayerWhite _singleton = PlayerWhite._internal();
 
@@ -141,9 +213,10 @@ class PlayerWhite extends SuperPlayer {
     return _singleton;
   }
 
-  PlayerWhite._internal();
+  PlayerWhite._internal() : super(Player.white);
 
-  Map<String, SuperChessCharacter> characters = {};
+  // Map<String, SuperChessCharacter> characters = {};
+  @override
   void initialize() {
     characters = {
       "pawn1": ChessCharacterPawn(ConstantImages.svgWhitePawn,
@@ -181,60 +254,6 @@ class PlayerWhite extends SuperPlayer {
     };
   }
 
-  int getEntityIndex(int col, int row) {
-    int index = 0;
-    for (SuperChessCharacter ch in characters.values) {
-      if (ch.columnNumber == col && ch.rowNumber == row) {
-        return index;
-      }
-      index++;
-    }
-    return -1;
-  }
-
-  SuperChessCharacter getCharacter(int col, int row) {
-    for (SuperChessCharacter ch in characters.values) {
-      if (ch.columnNumber == col && ch.rowNumber == row) {
-        if (ch.isInGame) {
-          return ch;
-        }
-      }
-    }
-    return ChessCharacterNone("photo");
-  }
-
-  List<ChessBox> getOnShottingMoves() {
-    return characters.values
-        .where((element) => element.isInGame == true)
-        .fold<List<ChessBox>>(<ChessBox>[],
-            (List<ChessBox> p, SuperChessCharacter e) {
-      return [...e.preMove().onShotingBoxes, ...p];
-    });
-  }
-
-  bool isCheckMate(int col, int row) {
-    MoveOptions mo = MoveOptions(
-        ChessBox(col, row),
-        characters.values
-            .where((element) => element.isInGame == true)
-            .fold<List<ChessBox>>(<ChessBox>[],
-                (List<ChessBox> p, SuperChessCharacter e) {
-          return [...e.preMove().verification(Player.white).onGoingBoxes, ...p];
-        }),
-        characters.values
-            .where((element) => element.isInGame == true)
-            .fold<List<ChessBox>>(<ChessBox>[],
-                (List<ChessBox> p, SuperChessCharacter e) {
-          return [
-            ...e.preMove().verification(Player.white).onShotingBoxes,
-            ...p
-          ];
-        }));
-    print(mo.onGoingBoxes);
-    print(mo.onShotingBoxes);
-    return mo.isEmpty();
-  }
-
   // List<ChessBox> getOnGoingMoves() {
   //   return characters.values
   //       .where((element) => element.isInGame == true)
@@ -249,17 +268,6 @@ class PlayerWhite extends SuperPlayer {
   //       ChessBox(col, row), getOnGoingMoves(), getOnShottingMoves());
   // }
 
-  bool isMyKingInCheck() {
-    List<ChessBox> shotting = PlayerBlack().getOnShottingMoves();
-    for (var chessBox in shotting) {
-      if (chessBox.isInCoordinate(
-          characters["king"]!.columnNumber, characters["king"]!.rowNumber)) {
-        return true;
-      }
-    }
-
-    return false;
-  }
 }
 
 class PlayerBlack extends SuperPlayer {
@@ -269,9 +277,10 @@ class PlayerBlack extends SuperPlayer {
     return _singleton;
   }
 
-  PlayerBlack._internal();
+  PlayerBlack._internal() : super(Player.black);
 
-  Map<String, SuperChessCharacter> characters = {};
+  // Map<String, SuperChessCharacter> characters = {};
+  @override
   void initialize() {
     characters = {
       "pawn1": ChessCharacterPawn(ConstantImages.svgWhitePawn,
@@ -309,60 +318,6 @@ class PlayerBlack extends SuperPlayer {
     };
   }
 
-  int getEntityIndex(int col, int row) {
-    int index = 0;
-    for (SuperChessCharacter ch in characters.values) {
-      if (ch.columnNumber == col && ch.rowNumber == row) {
-        return index;
-      }
-      index++;
-    }
-    return -1;
-  }
-
-  SuperChessCharacter getCharacter(int col, int row) {
-    for (SuperChessCharacter ch in characters.values) {
-      if (ch.columnNumber == col && ch.rowNumber == row) {
-        if (ch.isInGame) {
-          return ch;
-        }
-      }
-    }
-    return ChessCharacterNone("photo");
-  }
-
-  List<ChessBox> getOnShottingMoves() {
-    return characters.values
-        .where((element) => element.isInGame == true)
-        .fold<List<ChessBox>>(<ChessBox>[],
-            (List<ChessBox> p, SuperChessCharacter e) {
-      return [...e.preMove().onShotingBoxes, ...p];
-    });
-  }
-
-  bool isCheckMate(int col, int row) {
-    MoveOptions mo = MoveOptions(
-        ChessBox(col, row),
-        characters.values
-            .where((element) => element.isInGame == true)
-            .fold<List<ChessBox>>(<ChessBox>[],
-                (List<ChessBox> p, SuperChessCharacter e) {
-          return [...e.preMove().verification(Player.black).onGoingBoxes, ...p];
-        }),
-        characters.values
-            .where((element) => element.isInGame == true)
-            .fold<List<ChessBox>>(<ChessBox>[],
-                (List<ChessBox> p, SuperChessCharacter e) {
-          return [
-            ...e.preMove().verification(Player.black).onShotingBoxes,
-            ...p
-          ];
-        }));
-    print(mo.onGoingBoxes);
-    print(mo.onShotingBoxes);
-    return mo.isEmpty();
-  }
-
   // List<ChessBox> getOnGoingMoves() {
   //   return characters.values
   //       .where((element) => element.isInGame == true)
@@ -377,15 +332,4 @@ class PlayerBlack extends SuperPlayer {
   //       ChessBox(col, row), getOnGoingMoves(), getOnShottingMoves());
   // }
 
-  bool isMyKingInCheck() {
-    List<ChessBox> shotting = PlayerWhite().getOnShottingMoves();
-    for (var chessBox in shotting) {
-      if (chessBox.isInCoordinate(
-          characters["king"]!.columnNumber, characters["king"]!.rowNumber)) {
-        return true;
-      }
-    }
-
-    return false;
-  }
 }

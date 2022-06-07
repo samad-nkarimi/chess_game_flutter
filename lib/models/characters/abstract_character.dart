@@ -4,18 +4,19 @@ import 'package:chess_flutter/models/chess_box.dart';
 import 'package:chess_flutter/models/enums/player.dart';
 import 'package:chess_flutter/models/enums/rule.dart';
 import 'package:chess_flutter/models/move_options.dart';
+import 'package:chess_flutter/models/player.dart';
 
 abstract class SuperChessCharacter {
   int columnNumber = 1; //not index!
   int rowNumber = 1; //not index!
   bool isInGame = true;
   final String photoId;
-  final Player player;
+  final SuperPlayer player;
   final Rule rule;
 
   SuperChessCharacter(
-    this.photoId, {
-    this.player = Player.white,
+    this.photoId,
+    this.player, {
     this.columnNumber = 1,
     this.rowNumber = 1,
     this.rule = Rule.none,
@@ -30,14 +31,14 @@ abstract class SuperChessCharacter {
 
   @override
   String toString() {
-    return "(${player.name},${rule.name})";
+    return "(${player.player.name},${rule.name})";
   }
 }
 
 class ChessCharacterNone extends SuperChessCharacter {
   ChessCharacterNone(
-    super.photoId, {
-    super.player,
+    super.photoId,
+    super.player, {
     super.columnNumber,
     super.rowNumber,
   }) : super(rule: Rule.none);
@@ -52,8 +53,8 @@ class ChessCharacterNone extends SuperChessCharacter {
 
 class ChessCharacterPawn extends SuperChessCharacter {
   ChessCharacterPawn(
-    super.photoId, {
-    super.player,
+    super.photoId,
+    super.player, {
     super.columnNumber,
     super.rowNumber,
   }) : super(rule: Rule.pawn);
@@ -66,8 +67,8 @@ class ChessCharacterPawn extends SuperChessCharacter {
 }
 
 class ChessCharacterRock extends SuperChessCharacter {
-  ChessCharacterRock(super.photoId,
-      {super.player, super.columnNumber, super.rowNumber})
+  ChessCharacterRock(super.photoId, super.player,
+      {super.columnNumber, super.rowNumber})
       : super(rule: Rule.rock);
 
   @override
@@ -78,8 +79,8 @@ class ChessCharacterRock extends SuperChessCharacter {
 }
 
 class ChessCharacterBishop extends SuperChessCharacter {
-  ChessCharacterBishop(super.photoId,
-      {super.player, super.columnNumber, super.rowNumber})
+  ChessCharacterBishop(super.photoId, super.player,
+      {super.columnNumber, super.rowNumber})
       : super(rule: Rule.bishop);
 
   @override
@@ -90,8 +91,8 @@ class ChessCharacterBishop extends SuperChessCharacter {
 }
 
 class ChessCharacterKnight extends SuperChessCharacter {
-  ChessCharacterKnight(super.photoId,
-      {super.player, super.columnNumber, super.rowNumber})
+  ChessCharacterKnight(super.photoId, super.player,
+      {super.columnNumber, super.rowNumber})
       : super(rule: Rule.knight);
 
   @override
@@ -102,8 +103,8 @@ class ChessCharacterKnight extends SuperChessCharacter {
 }
 
 class ChessCharacterKing extends SuperChessCharacter {
-  ChessCharacterKing(super.photoId,
-      {super.player, super.columnNumber, super.rowNumber})
+  ChessCharacterKing(super.photoId, super.player,
+      {super.columnNumber, super.rowNumber})
       : super(rule: Rule.king);
 
   @override
@@ -114,8 +115,8 @@ class ChessCharacterKing extends SuperChessCharacter {
 }
 
 class ChessCharacterQueen extends SuperChessCharacter {
-  ChessCharacterQueen(super.photoId,
-      {super.player, super.columnNumber, super.rowNumber})
+  ChessCharacterQueen(super.photoId, super.player,
+      {super.columnNumber, super.rowNumber})
       : super(rule: Rule.queen);
 
   @override

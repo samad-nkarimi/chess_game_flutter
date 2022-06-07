@@ -183,8 +183,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
-    PlayerWhite().initialize();
-    PlayerBlack().initialize();
+    // PlayerWhite().initialize();
+    // PlayerBlack().initialize();
+    PlayerWhite().testinitialize();
+    PlayerBlack().testinitialize();
     super.initState();
   }
 
@@ -231,7 +233,7 @@ class _HomeScreenState extends State<HomeScreen> {
               builder: (context, state) {
                 if (state is CharacterShottedState) {
                   List<SuperChessCharacter> outBlacks = state.outChars
-                      .where((e) => e.player == Player.black)
+                      .where((e) => e.player.player == Player.black)
                       .toList();
                   return CWContainer(
                     h: squareLength,
@@ -339,7 +341,7 @@ class _HomeScreenState extends State<HomeScreen> {
               builder: (context, state) {
                 if (state is CharacterShottedState) {
                   List<SuperChessCharacter> outWhites = state.outChars
-                      .where((e) => e.player == Player.white)
+                      .where((e) => e.player.player == Player.white)
                       .toList();
                   return CWContainer(
                     h: squareLength,

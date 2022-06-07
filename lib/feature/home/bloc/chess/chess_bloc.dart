@@ -10,11 +10,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class ChessCubit extends Cubit<ChessState> {
   SuperChessCharacter? scc;
   bool isKingInCheck = false;
-  Player shift = Player.white;
+  SuperPlayer shift = PlayerWhite();
   List<SuperChessCharacter> outChars = [];
   ChessBox kingBox = const ChessBox(0, 0);
   bool isCheckMate = false;
-  Player? winner;
+  SuperPlayer? winner;
   MoveOptions moveOptions = MoveOptions(const ChessBox(0, 0), [], []);
   ChessCubit() : super(ChessInitialState());
   void characterClicked(int col, int row) async {
@@ -25,28 +25,20 @@ class ChessCubit extends Cubit<ChessState> {
       print("==> $scc shotted $shottedChar");
       if (scc != null) {
         scc!.move(col, row);
-        if (scc!.player == Player.black) {
-          isKingInCheck = PlayerWhite().isMyKingInCheck();
-          kingBox = ChessBox(
-            PlayerWhite().characters["king"]!.columnNumber,
-            PlayerWhite().characters["king"]!.rowNumber,
-          );
-          isCheckMate = PlayerWhite().isCheckMate(col, row);
-          winner = Player.black;
-        } else {
-          isKingInCheck = PlayerBlack().isMyKingInCheck();
-          kingBox = ChessBox(
-            PlayerBlack().characters["king"]!.columnNumber,
-            PlayerBlack().characters["king"]!.rowNumber,
-          );
-          isCheckMate = PlayerBlack().isCheckMate(col, row);
-          winner = Player.white;
-        }
+
+        scc!.player.getEnemyPlayer();
+        isKingInCheck = scc!.player.getEnemyPlayer().isMyKingInCheck();
+        kingBox = ChessBox(
+          scc!.player.getEnemyPlayer().characters["king"]!.columnNumber,
+          scc!.player.getEnemyPlayer().characters["king"]!.rowNumber,
+        );
+        isCheckMate = scc!.player.getEnemyPlayer().isCheckMate(col, row);
+        winner = scc!.player;
       }
       if (isCheckMate) {
         // send state to show winner
         if (winner != null) {
-          print("winner ==> ${winner}");
+          print("winner ==> $winner");
           emit(PlayerWonState(winner!));
         }
       }
@@ -63,7 +55,7 @@ class ChessCubit extends Cubit<ChessState> {
         moveOptions = ChessBoard()
             .getcharacter(col, row)
             .preMove()
-            .verification(ChessBoard().getPlayer(col, row));
+            .verification(scc!.player);
         emit(CharacterClickedState(moveOptions, isKingInCheck,
             kingBox: kingBox));
       }
@@ -75,28 +67,19 @@ class ChessCubit extends Cubit<ChessState> {
       if (box.isInCoordinate(col, row)) {
         if (scc != null) {
           scc!.move(col, row);
-          if (scc!.player == Player.black) {
-            isKingInCheck = PlayerWhite().isMyKingInCheck();
-            kingBox = ChessBox(
-              PlayerWhite().characters["king"]!.columnNumber,
-              PlayerWhite().characters["king"]!.rowNumber,
-            );
-            isCheckMate = PlayerWhite().isCheckMate(col, row);
-            winner = Player.black;
-          } else {
-            isKingInCheck = PlayerBlack().isMyKingInCheck();
-            kingBox = ChessBox(
-              PlayerBlack().characters["king"]!.columnNumber,
-              PlayerBlack().characters["king"]!.rowNumber,
-            );
-            isCheckMate = PlayerBlack().isCheckMate(col, row);
-            winner = Player.white;
-          }
+
+          isKingInCheck = scc!.player.getEnemyPlayer().isMyKingInCheck();
+          kingBox = ChessBox(
+            scc!.player.getEnemyPlayer().characters["king"]!.columnNumber,
+            scc!.player.getEnemyPlayer().characters["king"]!.rowNumber,
+          );
+          isCheckMate = scc!.player.getEnemyPlayer().isCheckMate(col, row);
+          winner = scc!.player;
         }
         if (isCheckMate) {
           // send state to show winner
           if (winner != null) {
-            print("winner ==> ${winner}");
+            print("winner ==> $winner");
             emit(PlayerWonState(winner!));
             await Future.delayed(Duration.zero);
           }
@@ -118,10 +101,6 @@ class ChessCubit extends Cubit<ChessState> {
   }
 
   void shiftPlayer() {
-    if (shift == Player.black) {
-      shift = Player.white;
-    } else {
-      shift = Player.black;
-    }
+    shift = shift.getEnemyPlayer();
   }
 }

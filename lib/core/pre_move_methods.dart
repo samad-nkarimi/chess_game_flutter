@@ -7,7 +7,7 @@ import 'package:chess_flutter/models/move_options.dart';
 import 'package:chess_flutter/models/player.dart';
 
 class PreMoveMethods {
-  static MoveOptions preMovePawn(Player player, int col, int row) {
+  static MoveOptions preMovePawn(SuperPlayer superPlayer, int col, int row) {
     ChessBox clickedBox = ChessBox(col, row);
     List<ChessBox> onGoingBoxes = [];
     List<ChessBox> onShotingBoxes = [];
@@ -19,7 +19,7 @@ class PreMoveMethods {
     int finalCol = 1;
     bool isThereNextCol = nextCol > 0;
     //for black
-    if (player == Player.black) {
+    if (superPlayer.player == Player.black) {
       initialPawnCol = 2;
       nextCol = col + 1;
       next2Col = col + 2;
@@ -32,13 +32,13 @@ class PreMoveMethods {
       isInInitialPlace = false;
     }
     if (row - 1 > 0 && isThereNextCol) {
-      if (ChessBoard().isEnemyAt(player, nextCol, row - 1)) {
+      if (ChessBoard().isEnemyAt(superPlayer, nextCol, row - 1)) {
         // print("and to shoting");
         onShotingBoxes.add(ChessBox(nextCol, row - 1));
       }
     }
     if (row + 1 < 9 && isThereNextCol) {
-      if (ChessBoard().isEnemyAt(player, nextCol, row + 1)) {
+      if (ChessBoard().isEnemyAt(superPlayer, nextCol, row + 1)) {
         // print("and to shoting");
         onShotingBoxes.add(ChessBox(nextCol, row + 1));
       }
@@ -59,26 +59,14 @@ class PreMoveMethods {
       /**
        * promote to queen
        */
-      if (player == Player.white) {
-        int index = PlayerWhite().getEntityIndex(col, row);
-        String key = PlayerWhite().characters.keys.toList()[index];
-        PlayerWhite().characters[key] = ChessCharacterQueen(
-            ConstantImages.svgWhiteQueen,
-            columnNumber: col,
-            rowNumber: row);
-      } else {
-        int index = PlayerBlack().getEntityIndex(col, row);
-        String key = PlayerBlack().characters.keys.toList()[index];
-        PlayerBlack().characters[key] = ChessCharacterQueen(
-            ConstantImages.svgBlackQueen,
-            player: Player.black,
-            columnNumber: col,
-            rowNumber: row);
-      }
-      // var black = PlayerBlack();
-      // var white = PlayerWhite();
 
-      return preMoveQueen(player, col, row);
+      int index = superPlayer.getEntityIndex(col, row);
+      String key = superPlayer.characters.keys.toList()[index];
+      superPlayer.characters[key] = ChessCharacterQueen(
+          ConstantImages.svgWhiteQueen, superPlayer,
+          columnNumber: col, rowNumber: row);
+
+      return preMoveQueen(superPlayer, col, row);
     }
 
     return MoveOptions(clickedBox, onGoingBoxes, onShotingBoxes);
@@ -89,8 +77,8 @@ class PreMoveMethods {
   //
   //
   //
-  static MoveOptions preMoveBishop(Player player, int col, int row) {
-    return getBishopMoveOptions(8, col, row, player);
+  static MoveOptions preMoveBishop(SuperPlayer superPlayer, int col, int row) {
+    return getBishopMoveOptions(8, col, row, superPlayer);
   }
 
   //
@@ -98,7 +86,7 @@ class PreMoveMethods {
   //
   //
   //
-  static MoveOptions preMoveKnight(Player player, int col, int row) {
+  static MoveOptions preMoveKnight(SuperPlayer superPlayer, int col, int row) {
     ChessBox clickedBox = ChessBox(col, row);
     List<ChessBox> onGoingBoxes = [];
     List<ChessBox> onShotingBoxes = [];
@@ -109,7 +97,7 @@ class PreMoveMethods {
         //add to ongoing
         onGoingBoxes.add(ChessBox(col + 2, row + 1));
       } else {
-        if (ChessBoard().isEnemyAt(player, col + 2, row + 1)) {
+        if (ChessBoard().isEnemyAt(superPlayer, col + 2, row + 1)) {
           //add to onshoting
           onShotingBoxes.add(ChessBox(col + 2, row + 1));
         }
@@ -122,7 +110,7 @@ class PreMoveMethods {
         //add to ongoing
         onGoingBoxes.add(ChessBox(col + 1, row + 2));
       } else {
-        if (ChessBoard().isEnemyAt(player, col + 1, row + 2)) {
+        if (ChessBoard().isEnemyAt(superPlayer, col + 1, row + 2)) {
           //add to onshoting
           onShotingBoxes.add(ChessBox(col + 1, row + 2));
         }
@@ -136,7 +124,7 @@ class PreMoveMethods {
         //add to ongoing
         onGoingBoxes.add(ChessBox(col + 2, row - 1));
       } else {
-        if (ChessBoard().isEnemyAt(player, col + 2, row - 1)) {
+        if (ChessBoard().isEnemyAt(superPlayer, col + 2, row - 1)) {
           //add to onshoting
           onShotingBoxes.add(ChessBox(col + 2, row - 1));
         }
@@ -149,7 +137,7 @@ class PreMoveMethods {
         //add to ongoing
         onGoingBoxes.add(ChessBox(col + 1, row - 2));
       } else {
-        if (ChessBoard().isEnemyAt(player, col + 1, row - 2)) {
+        if (ChessBoard().isEnemyAt(superPlayer, col + 1, row - 2)) {
           //add to onshoting
           onShotingBoxes.add(ChessBox(col + 1, row - 2));
         }
@@ -163,7 +151,7 @@ class PreMoveMethods {
         //add to ongoing
         onGoingBoxes.add(ChessBox(col - 2, row + 1));
       } else {
-        if (ChessBoard().isEnemyAt(player, col - 2, row + 1)) {
+        if (ChessBoard().isEnemyAt(superPlayer, col - 2, row + 1)) {
           //add to onshoting
           onShotingBoxes.add(ChessBox(col - 2, row + 1));
         }
@@ -176,7 +164,7 @@ class PreMoveMethods {
         //add to ongoing
         onGoingBoxes.add(ChessBox(col - 1, row + 2));
       } else {
-        if (ChessBoard().isEnemyAt(player, col - 1, row + 2)) {
+        if (ChessBoard().isEnemyAt(superPlayer, col - 1, row + 2)) {
           //add to onshoting
           onShotingBoxes.add(ChessBox(col - 1, row + 2));
         }
@@ -190,7 +178,7 @@ class PreMoveMethods {
         //add to ongoing
         onGoingBoxes.add(ChessBox(col - 2, row - 1));
       } else {
-        if (ChessBoard().isEnemyAt(player, col - 2, row - 1)) {
+        if (ChessBoard().isEnemyAt(superPlayer, col - 2, row - 1)) {
           //add to onshoting
           onShotingBoxes.add(ChessBox(col - 2, row - 1));
         }
@@ -203,7 +191,7 @@ class PreMoveMethods {
         //add to ongoing
         onGoingBoxes.add(ChessBox(col - 1, row - 2));
       } else {
-        if (ChessBoard().isEnemyAt(player, col - 1, row - 2)) {
+        if (ChessBoard().isEnemyAt(superPlayer, col - 1, row - 2)) {
           //add to onshoting
           onShotingBoxes.add(ChessBox(col - 1, row - 2));
         }
@@ -218,8 +206,8 @@ class PreMoveMethods {
   //
   //
   //
-  static MoveOptions preMoveRock(Player player, int col, int row) {
-    return getRockMoveOptions(8, col, row, player);
+  static MoveOptions preMoveRock(SuperPlayer superPlayer, int col, int row) {
+    return getRockMoveOptions(8, col, row, superPlayer);
   }
 
   //
@@ -227,11 +215,11 @@ class PreMoveMethods {
   //
   //
   //
-  static MoveOptions preMoveQueen(Player player, int col, int row) {
+  static MoveOptions preMoveQueen(SuperPlayer superPlayer, int col, int row) {
     ChessBox clickedBox = ChessBox(col, row);
 
-    MoveOptions moBishop = getBishopMoveOptions(8, col, row, player);
-    MoveOptions moRock = getRockMoveOptions(8, col, row, player);
+    MoveOptions moBishop = getBishopMoveOptions(8, col, row, superPlayer);
+    MoveOptions moRock = getRockMoveOptions(8, col, row, superPlayer);
 
     return MoveOptions(
       clickedBox,
@@ -245,11 +233,11 @@ class PreMoveMethods {
   //
   //
   //
-  static MoveOptions preMoveKing(Player player, int col, int row) {
+  static MoveOptions preMoveKing(SuperPlayer superPlayer, int col, int row) {
     ChessBox clickedBox = ChessBox(col, row);
 
-    MoveOptions moBishop = getBishopMoveOptions(1, col, row, player);
-    MoveOptions moRock = getRockMoveOptions(1, col, row, player);
+    MoveOptions moBishop = getBishopMoveOptions(1, col, row, superPlayer);
+    MoveOptions moRock = getRockMoveOptions(1, col, row, superPlayer);
     MoveOptions kingMoveOptions = MoveOptions(
       clickedBox,
       [...moBishop.onGoingBoxes, ...moRock.onGoingBoxes],
@@ -296,7 +284,7 @@ class PreMoveMethods {
   // }
 
   static MoveOptions getBishopMoveOptions(
-      int count, int col, int row, Player player) {
+      int count, int col, int row, SuperPlayer superPlayer) {
     ChessBox clickedBox = ChessBox(col, row);
     List<ChessBox> onGoingBoxes = [];
     List<ChessBox> onShotingBoxes = [];
@@ -310,7 +298,7 @@ class PreMoveMethods {
         //add to ongoing
         onGoingBoxes.add(ChessBox(col + i, row + i));
       } else {
-        if (ChessBoard().isEnemyAt(player, col + i, row + i)) {
+        if (ChessBoard().isEnemyAt(superPlayer, col + i, row + i)) {
           //add to onshoting
           onShotingBoxes.add(ChessBox(col + i, row + i));
           break;
@@ -329,7 +317,7 @@ class PreMoveMethods {
         //add to ongoing
         onGoingBoxes.add(ChessBox(col - i, row + i));
       } else {
-        if (ChessBoard().isEnemyAt(player, col - i, row + i)) {
+        if (ChessBoard().isEnemyAt(superPlayer, col - i, row + i)) {
           //add to onshoting
           onShotingBoxes.add(ChessBox(col - i, row + i));
           break;
@@ -348,7 +336,7 @@ class PreMoveMethods {
         //add to ongoing
         onGoingBoxes.add(ChessBox(col + i, row - i));
       } else {
-        if (ChessBoard().isEnemyAt(player, col + i, row - i)) {
+        if (ChessBoard().isEnemyAt(superPlayer, col + i, row - i)) {
           //add to onshoting
           onShotingBoxes.add(ChessBox(col + i, row - i));
           break;
@@ -367,7 +355,7 @@ class PreMoveMethods {
         //add to ongoing
         onGoingBoxes.add(ChessBox(col - i, row - i));
       } else {
-        if (ChessBoard().isEnemyAt(player, col - i, row - i)) {
+        if (ChessBoard().isEnemyAt(superPlayer, col - i, row - i)) {
           //add to onshoting
           onShotingBoxes.add(ChessBox(col - i, row - i));
           break;
@@ -380,7 +368,8 @@ class PreMoveMethods {
     return MoveOptions(clickedBox, onGoingBoxes, onShotingBoxes);
   }
 
-  static getRockMoveOptions(int count, int col, int row, Player player) {
+  static getRockMoveOptions(
+      int count, int col, int row, SuperPlayer superPlayer) {
     ChessBox clickedBox = ChessBox(col, row);
     List<ChessBox> onGoingBoxes = [];
     List<ChessBox> onShotingBoxes = [];
@@ -393,7 +382,7 @@ class PreMoveMethods {
       if (!ChessBoard().hasCharacterAt(col - i, row)) {
         onGoingBoxes.add(ChessBox(col - i, row));
       } else {
-        if (ChessBoard().isEnemyAt(player, col - i, row)) {
+        if (ChessBoard().isEnemyAt(superPlayer, col - i, row)) {
           onShotingBoxes.add(ChessBox(col - i, row));
           break;
         }
@@ -409,7 +398,7 @@ class PreMoveMethods {
       if (!ChessBoard().hasCharacterAt(col + i, row)) {
         onGoingBoxes.add(ChessBox(col + i, row));
       } else {
-        if (ChessBoard().isEnemyAt(player, col + i, row)) {
+        if (ChessBoard().isEnemyAt(superPlayer, col + i, row)) {
           onShotingBoxes.add(ChessBox(col + i, row));
           break;
         }
@@ -425,7 +414,7 @@ class PreMoveMethods {
       if (!ChessBoard().hasCharacterAt(col, row + i)) {
         onGoingBoxes.add(ChessBox(col, row + i));
       } else {
-        if (ChessBoard().isEnemyAt(player, col, row + i)) {
+        if (ChessBoard().isEnemyAt(superPlayer, col, row + i)) {
           onShotingBoxes.add(ChessBox(col, row + i));
           break;
         }
@@ -441,7 +430,7 @@ class PreMoveMethods {
       if (!ChessBoard().hasCharacterAt(col, row - i)) {
         onGoingBoxes.add(ChessBox(col, row - i));
       } else {
-        if (ChessBoard().isEnemyAt(player, col, row - i)) {
+        if (ChessBoard().isEnemyAt(superPlayer, col, row - i)) {
           onShotingBoxes.add(ChessBox(col, row - i));
           break;
         }

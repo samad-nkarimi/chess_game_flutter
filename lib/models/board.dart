@@ -17,12 +17,12 @@ class ChessBoard {
   void addToBoardMap(int col, int row, SuperChessCharacter scc) {
     if (boardMap.containsKey(ChessBox(col, row))) {
       boardMap.remove(ChessBox(col, row));
-      print('object');
     }
     boardMap[ChessBox(col, row)] = scc;
   }
 
   void createMap() {
+    //
     //you can save all histoy here
     boardMap.clear();
     for (int col = 1; col <= 8; col++) {
@@ -57,13 +57,13 @@ class ChessBoard {
         }
       }
     }
-    return ChessCharacterNone("photoId");
+    return ChessCharacterNone("photoId", PlayerWhite());
   }
 
-  bool isEnemyAt(Player player, int col, int row) {
+  bool isEnemyAt(SuperPlayer superPlayer, int col, int row) {
     SuperChessCharacter char = getcharacter(col, row);
     if (char is! ChessCharacterNone) {
-      if (player != char.player) {
+      if (superPlayer != char.player) {
         return true;
       }
     }
@@ -77,7 +77,7 @@ class ChessBoard {
     return false;
   }
 
-  Player getPlayer(int col, int row) {
-    return getcharacter(col, row).player;
-  }
+  // Player getPlayer(int col, int row) {
+  //   return getcharacter(col, row).player;
+  // }
 }

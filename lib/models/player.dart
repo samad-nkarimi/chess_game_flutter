@@ -158,7 +158,7 @@ abstract class SuperPlayer {
         }
       }
     }
-    return ChessCharacterNone("photo");
+    return ChessCharacterNone("photo", this);
   }
 
   List<ChessBox> getOnShottingMoves() {
@@ -171,29 +171,57 @@ abstract class SuperPlayer {
   }
 
   bool isCheckMate(int col, int row) {
-    MoveOptions mo = MoveOptions(
-        ChessBox(col, row),
-        characters.values
-            .where((element) => element.isInGame == true)
-            .fold<List<ChessBox>>(<ChessBox>[],
-                (List<ChessBox> p, SuperChessCharacter e) {
-          return [...e.preMove().verification(player).onGoingBoxes, ...p];
-        }),
-        characters.values
-            .where((element) => element.isInGame == true)
-            .fold<List<ChessBox>>(<ChessBox>[],
-                (List<ChessBox> p, SuperChessCharacter e) {
-          return [...e.preMove().verification(player).onShotingBoxes, ...p];
-        }));
-    return mo.isEmpty();
+    MoveOptions moveOptions = MoveOptions(ChessBox(col, row), [], []);
+    MoveOptions mo;
+    for (var char in characters.values) {
+      if (char.isInGame) {
+        mo = char.preMove().verification(getPlayer());
+        moveOptions.onGoingBoxes.addAll(mo.onGoingBoxes);
+        moveOptions.onShotingBoxes.addAll(mo.onShotingBoxes);
+      }
+    }
+
+    // for (var char in characters.values) {
+    //   if (char.isInGame) {
+    //     moveOptions.onShotingBoxes
+    //         .addAll(char.preMove().verification(getPlayer()).onShotingBoxes);
+    //   }
+    // }
+
+    print("going: ${moveOptions.onGoingBoxes}");
+    print("shotting: ${moveOptions.onShotingBoxes}");
+    // MoveOptions mo = MoveOptions(
+    //     ChessBox(col, row),
+    //     characters.values
+    //         .where((element) => element.isInGame == true)
+    //         .fold<List<ChessBox>>(<ChessBox>[],
+    //             (List<ChessBox> p, SuperChessCharacter e) {
+    //       return [...e.preMove().verification(getPlayer()).onGoingBoxes, ...p];
+    //     }),
+    //     characters.values
+    //         .where((element) => element.isInGame == true)
+    //         .fold<List<ChessBox>>(<ChessBox>[],
+    //             (List<ChessBox> p, SuperChessCharacter e) {
+    //       return [
+    //         ...e.preMove().verification(getPlayer()).onShotingBoxes,
+    //         ...p
+    //       ];
+    //     }));
+    // print("mo: ${mo.onShotingBoxes}");
+    return moveOptions.isEmpty();
   }
 
-  SuperPlayer getEnemyPlayer(Player player) {
+  SuperPlayer getEnemyPlayer() {
     return player == Player.white ? PlayerBlack() : PlayerWhite();
   }
 
+  SuperPlayer getPlayer() {
+    return player == Player.white ? PlayerWhite() : PlayerBlack();
+  }
+
   bool isMyKingInCheck() {
-    List<ChessBox> shotting = getEnemyPlayer(player).getOnShottingMoves();
+    List<ChessBox> shotting = getEnemyPlayer().getOnShottingMoves();
+
     for (var chessBox in shotting) {
       if (chessBox.isInCoordinate(
           characters["king"]!.columnNumber, characters["king"]!.rowNumber)) {
@@ -219,37 +247,74 @@ class PlayerWhite extends SuperPlayer {
   @override
   void initialize() {
     characters = {
-      "pawn1": ChessCharacterPawn(ConstantImages.svgWhitePawn,
+      "pawn1": ChessCharacterPawn(ConstantImages.svgWhitePawn, this,
           columnNumber: 7, rowNumber: 1),
-      "pawn2": ChessCharacterPawn(ConstantImages.svgWhitePawn,
+      "pawn2": ChessCharacterPawn(ConstantImages.svgWhitePawn, this,
           columnNumber: 7, rowNumber: 2),
-      "pawn3": ChessCharacterPawn(ConstantImages.svgWhitePawn,
+      "pawn3": ChessCharacterPawn(ConstantImages.svgWhitePawn, this,
           columnNumber: 7, rowNumber: 3),
-      "pawn4": ChessCharacterPawn(ConstantImages.svgWhitePawn,
+      "pawn4": ChessCharacterPawn(ConstantImages.svgWhitePawn, this,
           columnNumber: 7, rowNumber: 4),
-      "pawn5": ChessCharacterPawn(ConstantImages.svgWhitePawn,
+      "pawn5": ChessCharacterPawn(ConstantImages.svgWhitePawn, this,
           columnNumber: 7, rowNumber: 5),
-      "pawn6": ChessCharacterPawn(ConstantImages.svgWhitePawn,
+      "pawn6": ChessCharacterPawn(ConstantImages.svgWhitePawn, this,
           columnNumber: 7, rowNumber: 6),
-      "pawn7": ChessCharacterPawn(ConstantImages.svgWhitePawn,
+      "pawn7": ChessCharacterPawn(ConstantImages.svgWhitePawn, this,
           columnNumber: 7, rowNumber: 7),
-      "pawn8": ChessCharacterPawn(ConstantImages.svgWhitePawn,
+      "pawn8": ChessCharacterPawn(ConstantImages.svgWhitePawn, this,
           columnNumber: 7, rowNumber: 8),
-      "rock1": ChessCharacterRock(ConstantImages.svgWhiteRock,
+      "rock1": ChessCharacterRock(ConstantImages.svgWhiteRock, this,
           columnNumber: 8, rowNumber: 1),
-      "knight1": ChessCharacterKnight(ConstantImages.svgWhiteKnight,
+      "knight1": ChessCharacterKnight(ConstantImages.svgWhiteKnight, this,
           columnNumber: 8, rowNumber: 2),
-      "bishop1": ChessCharacterBishop(ConstantImages.svgWhiteBishop,
+      "bishop1": ChessCharacterBishop(ConstantImages.svgWhiteBishop, this,
           columnNumber: 8, rowNumber: 3),
-      "queen": ChessCharacterQueen(ConstantImages.svgWhiteQueen,
+      "queen": ChessCharacterQueen(ConstantImages.svgWhiteQueen, this,
           columnNumber: 8, rowNumber: 4),
-      "king": ChessCharacterKing(ConstantImages.svgWhiteKing,
+      "king": ChessCharacterKing(ConstantImages.svgWhiteKing, this,
           columnNumber: 8, rowNumber: 5),
-      "bishop2": ChessCharacterBishop(ConstantImages.svgWhiteBishop,
+      "bishop2": ChessCharacterBishop(ConstantImages.svgWhiteBishop, this,
           columnNumber: 8, rowNumber: 6),
-      "knight2": ChessCharacterKnight(ConstantImages.svgWhiteKnight,
+      "knight2": ChessCharacterKnight(ConstantImages.svgWhiteKnight, this,
           columnNumber: 8, rowNumber: 7),
-      "rock2": ChessCharacterRock(ConstantImages.svgWhiteRock,
+      "rock2": ChessCharacterRock(ConstantImages.svgWhiteRock, this,
+          columnNumber: 8, rowNumber: 8),
+    };
+  }
+
+  void testinitialize() {
+    characters = {
+      "pawn1": ChessCharacterPawn(ConstantImages.svgWhitePawn, this,
+          columnNumber: 7, rowNumber: 1),
+      "pawn2": ChessCharacterPawn(ConstantImages.svgWhitePawn, this,
+          columnNumber: 7, rowNumber: 2),
+      "pawn3": ChessCharacterPawn(ConstantImages.svgWhitePawn, this,
+          columnNumber: 7, rowNumber: 3),
+      "pawn4": ChessCharacterPawn(ConstantImages.svgWhitePawn, this,
+          columnNumber: 7, rowNumber: 4),
+      "pawn5": ChessCharacterPawn(ConstantImages.svgWhitePawn, this,
+          columnNumber: 7, rowNumber: 5),
+      "pawn6": ChessCharacterPawn(ConstantImages.svgWhitePawn, this,
+          columnNumber: 7, rowNumber: 6),
+      "pawn7": ChessCharacterPawn(ConstantImages.svgWhitePawn, this,
+          columnNumber: 7, rowNumber: 7),
+      "pawn8": ChessCharacterPawn(ConstantImages.svgWhitePawn, this,
+          columnNumber: 7, rowNumber: 8),
+      "rock1": ChessCharacterRock(ConstantImages.svgWhiteRock, this,
+          columnNumber: 8, rowNumber: 1),
+      "knight1": ChessCharacterKnight(ConstantImages.svgWhiteKnight, this,
+          columnNumber: 8, rowNumber: 2),
+      "bishop1": ChessCharacterBishop(ConstantImages.svgWhiteBishop, this,
+          columnNumber: 8, rowNumber: 3),
+      "queen": ChessCharacterQueen(ConstantImages.svgWhiteQueen, this,
+          columnNumber: 4, rowNumber: 3),
+      "king": ChessCharacterKing(ConstantImages.svgWhiteKing, this,
+          columnNumber: 8, rowNumber: 5),
+      "bishop2": ChessCharacterBishop(ConstantImages.svgWhiteBishop, this,
+          columnNumber: 8, rowNumber: 6),
+      "knight2": ChessCharacterKnight(ConstantImages.svgWhiteKnight, this,
+          columnNumber: 8, rowNumber: 7),
+      "rock2": ChessCharacterRock(ConstantImages.svgWhiteRock, this,
           columnNumber: 8, rowNumber: 8),
     };
   }
@@ -283,38 +348,75 @@ class PlayerBlack extends SuperPlayer {
   @override
   void initialize() {
     characters = {
-      "pawn1": ChessCharacterPawn(ConstantImages.svgWhitePawn,
-          player: Player.black, columnNumber: 2, rowNumber: 8),
-      "pawn2": ChessCharacterPawn(ConstantImages.svgWhitePawn,
-          player: Player.black, columnNumber: 2, rowNumber: 7),
-      "pawn3": ChessCharacterPawn(ConstantImages.svgWhitePawn,
-          player: Player.black, columnNumber: 2, rowNumber: 6),
-      "pawn4": ChessCharacterPawn(ConstantImages.svgWhitePawn,
-          player: Player.black, columnNumber: 2, rowNumber: 5),
-      "pawn5": ChessCharacterPawn(ConstantImages.svgWhitePawn,
-          player: Player.black, columnNumber: 2, rowNumber: 4),
-      "pawn6": ChessCharacterPawn(ConstantImages.svgWhitePawn,
-          player: Player.black, columnNumber: 2, rowNumber: 3),
-      "pawn7": ChessCharacterPawn(ConstantImages.svgWhitePawn,
-          player: Player.black, columnNumber: 2, rowNumber: 2),
-      "pawn8": ChessCharacterPawn(ConstantImages.svgWhitePawn,
-          player: Player.black, columnNumber: 2, rowNumber: 1),
-      "rock1": ChessCharacterRock(ConstantImages.svgWhiteRock,
-          player: Player.black, columnNumber: 1, rowNumber: 8),
-      "knight1": ChessCharacterKnight(ConstantImages.svgWhiteKnight,
-          player: Player.black, columnNumber: 1, rowNumber: 7),
-      "bishop1": ChessCharacterBishop(ConstantImages.svgWhiteBishop,
-          player: Player.black, columnNumber: 1, rowNumber: 6),
-      "queen": ChessCharacterQueen(ConstantImages.svgWhiteQueen,
-          player: Player.black, columnNumber: 1, rowNumber: 5),
-      "king": ChessCharacterKing(ConstantImages.svgWhiteKing,
-          player: Player.black, columnNumber: 1, rowNumber: 4),
-      "bishop2": ChessCharacterBishop(ConstantImages.svgWhiteBishop,
-          player: Player.black, columnNumber: 1, rowNumber: 3),
-      "knight2": ChessCharacterKnight(ConstantImages.svgWhiteKnight,
-          player: Player.black, columnNumber: 1, rowNumber: 2),
-      "rock2": ChessCharacterRock(ConstantImages.svgWhiteRock,
-          player: Player.black, columnNumber: 1, rowNumber: 1),
+      "pawn1": ChessCharacterPawn(ConstantImages.svgWhitePawn, this,
+          columnNumber: 2, rowNumber: 8),
+      "pawn2": ChessCharacterPawn(ConstantImages.svgWhitePawn, this,
+          columnNumber: 2, rowNumber: 7),
+      "pawn3": ChessCharacterPawn(ConstantImages.svgWhitePawn, this,
+          columnNumber: 2, rowNumber: 6),
+      "pawn4": ChessCharacterPawn(ConstantImages.svgWhitePawn, this,
+          columnNumber: 2, rowNumber: 5),
+      "pawn5": ChessCharacterPawn(ConstantImages.svgWhitePawn, this,
+          columnNumber: 2, rowNumber: 4),
+      "pawn6": ChessCharacterPawn(ConstantImages.svgWhitePawn, this,
+          columnNumber: 2, rowNumber: 3),
+      "pawn7": ChessCharacterPawn(ConstantImages.svgWhitePawn, this,
+          columnNumber: 2, rowNumber: 2),
+      "pawn8": ChessCharacterPawn(ConstantImages.svgWhitePawn, this,
+          columnNumber: 2, rowNumber: 1),
+      "rock1": ChessCharacterRock(ConstantImages.svgWhiteRock, this,
+          columnNumber: 1, rowNumber: 8),
+      "knight1": ChessCharacterKnight(ConstantImages.svgWhiteKnight, this,
+          columnNumber: 1, rowNumber: 7),
+      "bishop1": ChessCharacterBishop(ConstantImages.svgWhiteBishop, this,
+          columnNumber: 1, rowNumber: 6),
+      "queen": ChessCharacterQueen(ConstantImages.svgWhiteQueen, this,
+          columnNumber: 1, rowNumber: 5),
+      "king": ChessCharacterKing(ConstantImages.svgWhiteKing, this,
+          columnNumber: 1, rowNumber: 4),
+      "bishop2": ChessCharacterBishop(ConstantImages.svgWhiteBishop, this,
+          columnNumber: 1, rowNumber: 3),
+      "knight2": ChessCharacterKnight(ConstantImages.svgWhiteKnight, this,
+          columnNumber: 1, rowNumber: 2),
+      "rock2": ChessCharacterRock(ConstantImages.svgWhiteRock, this,
+          columnNumber: 1, rowNumber: 1),
+    };
+  }
+
+  void testinitialize() {
+    characters = {
+      "pawn1": ChessCharacterPawn(ConstantImages.svgWhitePawn, this,
+          columnNumber: 2, rowNumber: 8),
+      "pawn2": ChessCharacterPawn(ConstantImages.svgWhitePawn, this,
+          columnNumber: 2, rowNumber: 7),
+      "pawn3": ChessCharacterPawn(ConstantImages.svgWhitePawn, this,
+          columnNumber: 2, rowNumber: 6),
+      "pawn4": ChessCharacterPawn(ConstantImages.svgWhitePawn, this,
+          columnNumber: 2, rowNumber: 5),
+      "pawn5": ChessCharacterPawn(ConstantImages.svgWhitePawn, this,
+          columnNumber: 2, rowNumber: 4),
+      "pawn6": ChessCharacterPawn(ConstantImages.svgWhitePawn, this,
+          columnNumber: 2, rowNumber: 3),
+      "pawn7": ChessCharacterPawn(ConstantImages.svgWhitePawn, this,
+          columnNumber: 2, rowNumber: 2),
+      "pawn8": ChessCharacterPawn(ConstantImages.svgWhitePawn, this,
+          columnNumber: 2, rowNumber: 1),
+      "rock1": ChessCharacterRock(ConstantImages.svgWhiteRock, this,
+          columnNumber: 1, rowNumber: 8),
+      "knight1": ChessCharacterKnight(ConstantImages.svgWhiteKnight, this,
+          columnNumber: 1, rowNumber: 7),
+      "bishop1": ChessCharacterBishop(ConstantImages.svgWhiteBishop, this,
+          columnNumber: 1, rowNumber: 6),
+      "queen": ChessCharacterQueen(ConstantImages.svgWhiteQueen, this,
+          columnNumber: 1, rowNumber: 5),
+      "king": ChessCharacterKing(ConstantImages.svgWhiteKing, this,
+          columnNumber: 1, rowNumber: 4),
+      "bishop2": ChessCharacterBishop(ConstantImages.svgWhiteBishop, this,
+          columnNumber: 1, rowNumber: 3),
+      "knight2": ChessCharacterPawn(ConstantImages.svgWhitePawn, this,
+          columnNumber: 1, rowNumber: 2),
+      "rock2": ChessCharacterRock(ConstantImages.svgWhiteRock, this,
+          columnNumber: 1, rowNumber: 1),
     };
   }
 

@@ -1,5 +1,5 @@
 import 'package:chess_flutter/feature/home/bloc/chess/chess_state.dart';
-import 'package:chess_flutter/models/board.dart';
+import 'package:chess_flutter/models/chess_board.dart';
 import 'package:chess_flutter/models/characters/abstract_character.dart';
 import 'package:chess_flutter/models/chess_box.dart';
 import 'package:chess_flutter/models/enums/player.dart';
@@ -25,6 +25,7 @@ class ChessCubit extends Cubit<ChessState> {
       print("==> $scc shotted $shottedChar");
       if (scc != null) {
         scc!.move(col, row);
+        scc!.isEverMoved = true;
 
         scc!.player.getEnemyPlayer();
         isKingInCheck = scc!.player.getEnemyPlayer().isMyKingInCheck();
@@ -67,6 +68,7 @@ class ChessCubit extends Cubit<ChessState> {
       if (box.isInCoordinate(col, row)) {
         if (scc != null) {
           scc!.move(col, row);
+          scc!.isEverMoved = true;
 
           isKingInCheck = scc!.player.getEnemyPlayer().isMyKingInCheck();
           kingBox = ChessBox(

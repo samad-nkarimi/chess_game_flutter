@@ -1,5 +1,5 @@
 import 'package:chess_flutter/constants/constant_images.dart';
-import 'package:chess_flutter/models/board.dart';
+import 'package:chess_flutter/models/chess_board.dart';
 import 'package:chess_flutter/models/characters/abstract_character.dart';
 import 'package:chess_flutter/models/chess_box.dart';
 import 'package:chess_flutter/models/enums/player.dart';
@@ -244,44 +244,17 @@ class PreMoveMethods {
       [...moBishop.onShotingBoxes, ...moRock.onShotingBoxes],
     );
 
-    // MoveOptions enemyMoveOptions = getEnemyMoveOptions(player);
-    // kingMoveOptions.onGoingBoxes.forEach((element) {
-    //   if (enemyMoveOptions.onGoingBoxes.contains(element)) {
-    //     kingMoveOptions.onGoingBoxes.remove(element);
-    //   }
-    // });
+    //check for king-rock move -> right rock -> king row < rock row
+    //right rock row = 8
+    //the col is constant
+    //check if there is a character between king and rock -> form (row +1) to  (8-1)
+    for (int i = row + 1; i < 8; i++) {
+      ChessBoard().hasCharacterAt(col, i);
+    }
+    //check for king-rock move -> left rock -> king row > rock row
 
     return kingMoveOptions;
   }
-
-  // static MoveOptions getEnemyMoveOptions(Player playerName) {
-  //   late var superPlayer;
-  //   if (playerName == Player.black) {
-  //     superPlayer = PlayerWhite();
-  //   } else {
-  //     superPlayer = PlayerBlack();
-  //   }
-
-  //   List<ChessBox> onShottingMoves = superPlayer.characters.values
-  //       .fold<List<ChessBox>>(<ChessBox>[],
-  //           (List<ChessBox> p, SuperChessCharacter e) {
-  //     return [...e.preMove().onShotingBoxes, ...p];
-  //   });
-
-  //   List<ChessBox> onGoingMoves = superPlayer.characters.values
-  //       .fold<List<ChessBox>>(<ChessBox>[],
-  //           (List<ChessBox> p, SuperChessCharacter e) {
-  //     return [...e.preMove().onGoingBoxes, ...p];
-  //   });
-
-  //   MoveOptions moveOptions = MoveOptions(
-  //     ChessBox(0, 0),
-  //     onGoingMoves,
-  //     onShottingMoves,
-  //   );
-
-  //   return moveOptions;
-  // }
 
   static MoveOptions getBishopMoveOptions(
       int count, int col, int row, SuperPlayer superPlayer) {

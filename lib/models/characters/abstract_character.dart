@@ -1,5 +1,5 @@
 import 'package:chess_flutter/core/pre_move_methods.dart';
-import 'package:chess_flutter/models/board.dart';
+import 'package:chess_flutter/models/chess_board.dart';
 import 'package:chess_flutter/models/chess_box.dart';
 import 'package:chess_flutter/models/enums/player.dart';
 import 'package:chess_flutter/models/enums/rule.dart';
@@ -13,6 +13,7 @@ abstract class SuperChessCharacter {
   final String photoId;
   final SuperPlayer player;
   final Rule rule;
+  bool isEverMoved = false;
 
   SuperChessCharacter(
     this.photoId,

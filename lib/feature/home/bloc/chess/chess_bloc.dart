@@ -5,7 +5,7 @@ import 'package:chess_flutter/models/characters/abstract_character.dart';
 import 'package:chess_flutter/models/chess_box.dart';
 import 'package:chess_flutter/models/enums/player.dart';
 import 'package:chess_flutter/models/move_options.dart';
-import 'package:chess_flutter/models/player.dart';
+import 'package:chess_flutter/models/chess_player.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ChessCubit extends Cubit<ChessState> {
@@ -18,12 +18,16 @@ class ChessCubit extends Cubit<ChessState> {
   bool isCheckMate = false;
   SuperPlayer? winner;
   MoveOptions moveOptions = MoveOptions.emptyMoveOptions();
+  bool letsDoCastlingRight = false;
+  bool letsDoCastlingLeft = false;
 
   //
   ChessCubit() : super(ChessInitialState());
 
   //the event when we click on a char
   void characterClicked(int col, int row) async {
+    letsDoCastlingRight = false;
+    letsDoCastlingLeft = false;
     if (moveOptions.onShotingBoxes.contains(ChessBox(col, row))) {
       //shot the char
       SuperChessCharacter shottedChar = ChessBoard().getcharacter(col, row);
@@ -52,6 +56,8 @@ class ChessCubit extends Cubit<ChessState> {
             .getcharacter(col, row)
             .preMove()
             .verification(scc!.player);
+
+        //castling
         if (scc is ChessCharacterKing) {
           bool cfl = PreMoveMethods.castlingFromLeft(
             ChessBoard().getcharacter(col, row).player,
@@ -62,6 +68,8 @@ class ChessCubit extends Cubit<ChessState> {
           );
           if (!cfl) {
             moveOptions.onGoingBoxes.remove(ChessBox(col, row - 2));
+          } else {
+            letsDoCastlingLeft = true;
           }
           print("cfl: $cfl");
           if (scc is ChessCharacterKing) {
@@ -74,6 +82,8 @@ class ChessCubit extends Cubit<ChessState> {
             );
             if (!rfl) {
               moveOptions.onGoingBoxes.remove(ChessBox(col, row + 2));
+            } else {
+              letsDoCastlingRight = true;
             }
             print("rfl: $rfl");
           }
@@ -89,19 +99,32 @@ class ChessCubit extends Cubit<ChessState> {
 
   //the event when we click on an empty box
   void boxClicked(int col, int row) async {
+    print("box clicked");
+
     for (var chessBox in moveOptions.onGoingBoxes) {
       //have we clicked on possible to move chess box??
       if (chessBox.isInCoordinate(col, row)) {
+        if (scc is ChessCharacterKing) {
+          if (letsDoCastlingRight && chessBox.rowNumber == scc!.rowNumber + 2) {
+            ChessBoard().getcharacter(col, 8)
+              ..move(col, row - 1)
+              ..isEverMoved = true;
+          }
+          if (letsDoCastlingLeft && chessBox.rowNumber == scc!.rowNumber - 2) {
+            ChessBoard().getcharacter(col, 8)
+              ..move(col, row + 1)
+              ..isEverMoved = true;
+          }
+        }
         moveTheChar(col, row);
+        print("object");
         await Future.delayed(Duration.zero);
         emit(CharacterMovedState(isKingInCheck, kingBox: kingBox));
         //change the turn of the game
         turnThePlayer();
       }
     }
-
     moveOptions.clear();
-    scc = null;
   }
 
   void turnThePlayer() {
@@ -120,6 +143,10 @@ class ChessCubit extends Cubit<ChessState> {
       );
       isCheckMate = scc!.player.getEnemyPlayer().isCheckMate(col, row);
       winner = scc!.player;
+
+      //
+
+      scc = null;
     }
     if (isCheckMate) {
       // send state to show winner

@@ -1,7 +1,7 @@
 import 'package:chess_flutter/models/characters/abstract_character.dart';
 import 'package:chess_flutter/models/chess_box.dart';
 import 'package:chess_flutter/models/enums/player.dart';
-import 'package:chess_flutter/models/player.dart';
+import 'package:chess_flutter/models/chess_player.dart';
 
 class ChessBoard {
   static final ChessBoard _singleton = ChessBoard._internal();

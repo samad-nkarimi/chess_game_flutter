@@ -4,7 +4,7 @@ import 'package:chess_flutter/models/chess_box.dart';
 import 'package:chess_flutter/models/enums/player.dart';
 import 'package:chess_flutter/models/enums/rule.dart';
 import 'package:chess_flutter/models/move_options.dart';
-import 'package:chess_flutter/models/player.dart';
+import 'package:chess_flutter/models/chess_player.dart';
 
 abstract class SuperChessCharacter {
   int columnNumber = 1; //not index!

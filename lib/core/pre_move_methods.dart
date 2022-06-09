@@ -4,7 +4,7 @@ import 'package:chess_flutter/models/characters/abstract_character.dart';
 import 'package:chess_flutter/models/chess_box.dart';
 import 'package:chess_flutter/models/enums/player.dart';
 import 'package:chess_flutter/models/move_options.dart';
-import 'package:chess_flutter/models/player.dart';
+import 'package:chess_flutter/models/chess_player.dart';
 
 class PreMoveMethods {
   static MoveOptions preMovePawn(SuperPlayer superPlayer, int col, int row) {
@@ -275,6 +275,13 @@ class PreMoveMethods {
 
   static bool castlingFromLeft(SuperPlayer superPlayer, int col, int row,
       MoveOptions verifiedKingMoveOptions, bool isTheKingInCheck) {
+    //check if the king has never moved
+    //must be -> false
+    bool hasTheKingMoved = ChessBoard().getcharacter(col, row).isEverMoved;
+    if (hasTheKingMoved) {
+      return false;
+    }
+
     //check if the destination of left rock is in check
     //must be -> false
     bool isLeftRockDestInCheck =
@@ -298,13 +305,6 @@ class PreMoveMethods {
       return false;
     }
 
-    //check if the king has never moved
-    //must be -> false
-    bool hasTheKingMoved = ChessBoard().getcharacter(col, row).isEverMoved;
-    if (hasTheKingMoved) {
-      return false;
-    }
-
     //check if the left rock has never moved
     //must be -> false
     bool hasTheLeftRockMoved = ChessBoard().getcharacter(col, 1).isEverMoved;
@@ -316,6 +316,13 @@ class PreMoveMethods {
 
   static bool castlingFromRight(SuperPlayer superPlayer, int col, int row,
       MoveOptions verifiedKingMoveOptions, bool isTheKingInCheck) {
+    //check if the king has never moved
+    //must be -> false
+    bool hasTheKingMoved = ChessBoard().getcharacter(col, row).isEverMoved;
+    if (hasTheKingMoved) {
+      return false;
+    }
+
     //check if the destination of right rock is in check
     //must be -> false
     bool isRightRockDestInCheck =
@@ -337,13 +344,6 @@ class PreMoveMethods {
     //must be -> false
     // bool isTheKingInCheck = superPlayer.isMyKingInCheck();
     if (isTheKingInCheck) {
-      return false;
-    }
-
-    //check if the king has never moved
-    //must be -> false
-    bool hasTheKingMoved = ChessBoard().getcharacter(col, row).isEverMoved;
-    if (hasTheKingMoved) {
       return false;
     }
 

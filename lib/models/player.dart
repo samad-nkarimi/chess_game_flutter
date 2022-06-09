@@ -305,15 +305,18 @@ class PlayerWhite extends SuperPlayer {
       "knight1": ChessCharacterKnight(ConstantImages.svgWhiteKnight, this,
           columnNumber: 8, rowNumber: 2),
       "bishop1": ChessCharacterBishop(ConstantImages.svgWhiteBishop, this,
-          columnNumber: 8, rowNumber: 3),
+          columnNumber: 8, rowNumber: 3)
+        ..isInGame = false,
       "queen": ChessCharacterQueen(ConstantImages.svgWhiteQueen, this,
           columnNumber: 4, rowNumber: 3),
       "king": ChessCharacterKing(ConstantImages.svgWhiteKing, this,
           columnNumber: 8, rowNumber: 5),
       "bishop2": ChessCharacterBishop(ConstantImages.svgWhiteBishop, this,
-          columnNumber: 8, rowNumber: 6),
+          columnNumber: 8, rowNumber: 6)
+        ..isInGame = false,
       "knight2": ChessCharacterKnight(ConstantImages.svgWhiteKnight, this,
-          columnNumber: 8, rowNumber: 7),
+          columnNumber: 8, rowNumber: 7)
+        ..isInGame = false,
       "rock2": ChessCharacterRock(ConstantImages.svgWhiteRock, this,
           columnNumber: 8, rowNumber: 8),
     };

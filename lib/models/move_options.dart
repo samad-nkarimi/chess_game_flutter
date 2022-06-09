@@ -10,6 +10,11 @@ class MoveOptions {
 
   MoveOptions(this.clickedBox, this.onGoingBoxes, this.onShotingBoxes);
 
+  MoveOptions.emptyMoveOptions()
+      : clickedBox = const ChessBox(0, 0),
+        onGoingBoxes = [],
+        onShotingBoxes = [];
+
   void clear() {
     onGoingBoxes.clear();
     onShotingBoxes.clear();
@@ -30,16 +35,12 @@ class MoveOptions {
       [],
       [],
     );
-    var player = superPlayer;
-    var enemy = superPlayer.getEnemyPlayer();
-    var board = ChessBoard();
 
     //clicked char
     SuperChessCharacter clickedChar = ChessBoard()
         .getcharacter(clickedBox.columnNumber, clickedBox.rowNumber);
-    if (clickedChar is ChessCharacterKing) {
-      print("object");
-    }
+
+    //for on goings
     for (var chessBox in onGoingBoxes) {
       //temporary move just for test if the king is in check or not
       clickedChar.move(chessBox.columnNumber, chessBox.rowNumber);
@@ -52,6 +53,7 @@ class MoveOptions {
       clickedChar.move(clickedBox.columnNumber, clickedBox.rowNumber);
     }
 
+    //for on shottings
     for (var chessBox in onShotingBoxes) {
       //temporary remove the shotted char
       SuperChessCharacter shottedChar = ChessBoard()
@@ -76,16 +78,12 @@ class MoveOptions {
       //get back the shotted char to board
       ChessBoard().addToBoardMap(
           chessBox.columnNumber, chessBox.rowNumber, shottedChar);
-
-      print("object");
     }
-    if (clickedChar is ChessCharacterKing) {
-      print("object");
-    }
-    print(clickedChar);
-    print(
-        "going: ${moveOptions.onGoingBoxes} , shotting: ${moveOptions.onShotingBoxes}");
 
     return moveOptions;
+  }
+
+  bool singleChessBoxVerification(ChessBox chessBox) {
+    return false;
   }
 }

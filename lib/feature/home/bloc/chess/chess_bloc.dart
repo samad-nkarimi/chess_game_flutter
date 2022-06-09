@@ -1,3 +1,4 @@
+import 'package:chess_flutter/core/pre_move_methods.dart';
 import 'package:chess_flutter/feature/home/bloc/chess/chess_state.dart';
 import 'package:chess_flutter/models/chess_board.dart';
 import 'package:chess_flutter/models/characters/abstract_character.dart';
@@ -10,99 +11,122 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class ChessCubit extends Cubit<ChessState> {
   SuperChessCharacter? scc;
   bool isKingInCheck = false;
-  SuperPlayer shift = PlayerWhite();
+  //which player can move the char
+  SuperPlayer playerTurn = PlayerWhite();
   List<SuperChessCharacter> outChars = [];
   ChessBox kingBox = const ChessBox(0, 0);
   bool isCheckMate = false;
   SuperPlayer? winner;
-  MoveOptions moveOptions = MoveOptions(const ChessBox(0, 0), [], []);
+  MoveOptions moveOptions = MoveOptions.emptyMoveOptions();
+
+  //
   ChessCubit() : super(ChessInitialState());
+
+  //the event when we click on a char
   void characterClicked(int col, int row) async {
     if (moveOptions.onShotingBoxes.contains(ChessBox(col, row))) {
-      //shot
+      //shot the char
       SuperChessCharacter shottedChar = ChessBoard().getcharacter(col, row);
       shottedChar.isInGame = false;
       print("==> $scc shotted $shottedChar");
-      if (scc != null) {
-        scc!.move(col, row);
-        scc!.isEverMoved = true;
-
-        scc!.player.getEnemyPlayer();
-        isKingInCheck = scc!.player.getEnemyPlayer().isMyKingInCheck();
-        kingBox = ChessBox(
-          scc!.player.getEnemyPlayer().characters["king"]!.columnNumber,
-          scc!.player.getEnemyPlayer().characters["king"]!.rowNumber,
-        );
-        isCheckMate = scc!.player.getEnemyPlayer().isCheckMate(col, row);
-        winner = scc!.player;
-      }
-      if (isCheckMate) {
-        // send state to show winner
-        if (winner != null) {
-          print("winner ==> $winner");
-          emit(PlayerWonState(winner!));
-        }
-      }
+      //move the char
+      moveTheChar(col, row);
+      await Future.delayed(Duration.zero);
+      //add shotted char to out ones
       outChars.add(shottedChar);
+      //emit to show out chars
       emit(CharacterShottedState(outChars));
+      //wait for prevent conflict states
       await Future.delayed(Duration.zero);
 
       emit(CharacterMovedState(isKingInCheck, kingBox: kingBox));
-      shiftPlayer();
+      //change the turn of the game
+      turnThePlayer();
       moveOptions.clear();
     } else {
-      if (shift == ChessBoard().getcharacter(col, row).player) {
+      //check if the player is in turn or not
+      if (playerTurn == ChessBoard().getcharacter(col, row).player) {
+        //the clicked char
         scc = ChessBoard().getcharacter(col, row);
         moveOptions = ChessBoard()
             .getcharacter(col, row)
             .preMove()
             .verification(scc!.player);
+        if (scc is ChessCharacterKing) {
+          bool cfl = PreMoveMethods.castlingFromLeft(
+            ChessBoard().getcharacter(col, row).player,
+            col,
+            row,
+            moveOptions,
+            isKingInCheck,
+          );
+          if (!cfl) {
+            moveOptions.onGoingBoxes.remove(ChessBox(col, row - 2));
+          }
+          print("cfl: $cfl");
+          if (scc is ChessCharacterKing) {
+            bool rfl = PreMoveMethods.castlingFromRight(
+              ChessBoard().getcharacter(col, row).player,
+              col,
+              row,
+              moveOptions,
+              isKingInCheck,
+            );
+            if (!rfl) {
+              moveOptions.onGoingBoxes.remove(ChessBox(col, row + 2));
+            }
+            print("rfl: $rfl");
+          }
+        }
+        //emit clicked state to show preview of possible moves
         emit(CharacterClickedState(moveOptions, isKingInCheck,
             kingBox: kingBox));
+      } else {
+        //you cant move, its not your turn
       }
     }
   }
 
+  //the event when we click on an empty box
   void boxClicked(int col, int row) async {
-    for (var box in moveOptions.onGoingBoxes) {
-      if (box.isInCoordinate(col, row)) {
-        if (scc != null) {
-          scc!.move(col, row);
-          scc!.isEverMoved = true;
-
-          isKingInCheck = scc!.player.getEnemyPlayer().isMyKingInCheck();
-          kingBox = ChessBox(
-            scc!.player.getEnemyPlayer().characters["king"]!.columnNumber,
-            scc!.player.getEnemyPlayer().characters["king"]!.rowNumber,
-          );
-          isCheckMate = scc!.player.getEnemyPlayer().isCheckMate(col, row);
-          winner = scc!.player;
-        }
-        if (isCheckMate) {
-          // send state to show winner
-          if (winner != null) {
-            print("winner ==> $winner");
-            emit(PlayerWonState(winner!));
-            await Future.delayed(Duration.zero);
-          }
-        }
+    for (var chessBox in moveOptions.onGoingBoxes) {
+      //have we clicked on possible to move chess box??
+      if (chessBox.isInCoordinate(col, row)) {
+        moveTheChar(col, row);
+        await Future.delayed(Duration.zero);
         emit(CharacterMovedState(isKingInCheck, kingBox: kingBox));
-        shiftPlayer();
+        //change the turn of the game
+        turnThePlayer();
       }
     }
 
-    for (var box in moveOptions.onShotingBoxes) {
-      if (box.isInCoordinate(col, row)) {
-        /**
-        * shot state
-        */
-      }
-    }
     moveOptions.clear();
     scc = null;
   }
 
-  void shiftPlayer() {
-    shift = shift.getEnemyPlayer();
+  void turnThePlayer() {
+    playerTurn = playerTurn.getEnemyPlayer();
+  }
+
+  void moveTheChar(int col, int row) {
+    if (scc != null) {
+      scc!.move(col, row);
+      scc!.isEverMoved = true;
+
+      isKingInCheck = scc!.player.getEnemyPlayer().isMyKingInCheck();
+      kingBox = ChessBox(
+        scc!.player.getEnemyPlayer().characters["king"]!.columnNumber,
+        scc!.player.getEnemyPlayer().characters["king"]!.rowNumber,
+      );
+      isCheckMate = scc!.player.getEnemyPlayer().isCheckMate(col, row);
+      winner = scc!.player;
+    }
+    if (isCheckMate) {
+      // send state to show winner
+      if (winner != null) {
+        print("winner ==> $winner");
+        emit(PlayerWonState(winner!));
+      }
+    }
   }
 }

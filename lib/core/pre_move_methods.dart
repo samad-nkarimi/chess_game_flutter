@@ -244,16 +244,117 @@ class PreMoveMethods {
       [...moBishop.onShotingBoxes, ...moRock.onShotingBoxes],
     );
 
-    //check for king-rock move -> right rock -> king row < rock row
+    //check for Castling  -> right rock -> king row < rock row
     //right rock row = 8
     //the col is constant
     //check if there is a character between king and rock -> form (row +1) to  (8-1)
+    //must be -> false
+    bool isAnyCharInBetweenFormRight = false;
     for (int i = row + 1; i < 8; i++) {
-      ChessBoard().hasCharacterAt(col, i);
+      isAnyCharInBetweenFormRight = ChessBoard().hasCharacterAt(col, i);
+      if (isAnyCharInBetweenFormRight) break;
     }
-    //check for king-rock move -> left rock -> king row > rock row
+    if (!isAnyCharInBetweenFormRight) {
+      kingMoveOptions.onGoingBoxes.add(ChessBox(col, row + 2));
+    }
+    //check for Castling  -> left rock -> king row > rock row
+    //left rock row = 1
+    //check if there is a character between king and rock -> form (1+1) to  (row-1)
+    //must be -> false
+    bool isAnyCharInBetweenFromLeft = false;
+    for (int i = 1 + 1; i < row; i++) {
+      isAnyCharInBetweenFromLeft = ChessBoard().hasCharacterAt(col, i);
+      if (isAnyCharInBetweenFromLeft) break;
+    }
+    if (!isAnyCharInBetweenFromLeft) {
+      kingMoveOptions.onGoingBoxes.add(ChessBox(col, row - 2));
+    }
 
     return kingMoveOptions;
+  }
+
+  static bool castlingFromLeft(SuperPlayer superPlayer, int col, int row,
+      MoveOptions verifiedKingMoveOptions, bool isTheKingInCheck) {
+    //check if the destination of left rock is in check
+    //must be -> false
+    bool isLeftRockDestInCheck =
+        !verifiedKingMoveOptions.onGoingBoxes.contains(ChessBox(col, row - 1));
+    if (isLeftRockDestInCheck) {
+      return false;
+    }
+
+    //check if the destination of right rock is in check
+    //must be -> false
+    bool isLeftDestOfTheKingInCheck =
+        !verifiedKingMoveOptions.onGoingBoxes.contains(ChessBox(col, row - 2));
+    if (isLeftDestOfTheKingInCheck) {
+      return false;
+    }
+
+    //check if king is in check -> if it is, we cant do Castling
+    //must be -> false
+    // bool isTheKingInCheck = superPlayer.isMyKingInCheck();
+    if (isTheKingInCheck) {
+      return false;
+    }
+
+    //check if the king has never moved
+    //must be -> false
+    bool hasTheKingMoved = ChessBoard().getcharacter(col, row).isEverMoved;
+    if (hasTheKingMoved) {
+      return false;
+    }
+
+    //check if the left rock has never moved
+    //must be -> false
+    bool hasTheLeftRockMoved = ChessBoard().getcharacter(col, 1).isEverMoved;
+    if (hasTheLeftRockMoved) {
+      return false;
+    }
+    return true;
+  }
+
+  static bool castlingFromRight(SuperPlayer superPlayer, int col, int row,
+      MoveOptions verifiedKingMoveOptions, bool isTheKingInCheck) {
+    //check if the destination of right rock is in check
+    //must be -> false
+    bool isRightRockDestInCheck =
+        !verifiedKingMoveOptions.onGoingBoxes.contains(ChessBox(col, row + 1));
+    if (isRightRockDestInCheck) {
+      return false;
+    }
+
+    //check if the destination of king from right is in check
+    //must be -> false
+    bool isRightDestOfTheKingInCheck =
+        !verifiedKingMoveOptions.onGoingBoxes.contains(ChessBox(col, row + 2));
+    if (isRightDestOfTheKingInCheck) {
+      return false;
+    }
+
+    //!!
+    //check if king is in check -> if it is, we can't do Castling
+    //must be -> false
+    // bool isTheKingInCheck = superPlayer.isMyKingInCheck();
+    if (isTheKingInCheck) {
+      return false;
+    }
+
+    //check if the king has never moved
+    //must be -> false
+    bool hasTheKingMoved = ChessBoard().getcharacter(col, row).isEverMoved;
+    if (hasTheKingMoved) {
+      return false;
+    }
+
+    //check if the right rock has never moved
+    //must be -> false
+    bool hasTheRightRockMoved = ChessBoard().getcharacter(col, 8).isEverMoved;
+    if (hasTheRightRockMoved) {
+      return false;
+    }
+
+    return true;
   }
 
   static MoveOptions getBishopMoveOptions(

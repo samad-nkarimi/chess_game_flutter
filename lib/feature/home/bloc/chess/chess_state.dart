@@ -36,11 +36,17 @@ class CharacterMovedState extends ChessState {
 
 //
 class CharacterShottedState extends ChessState {
-  final List<SuperChessCharacter> outChars;
-  CharacterShottedState(this.outChars);
+  final List<SuperChessCharacter> _outChars;
+  final List<SuperChessCharacter> outCharsWhite;
+  final List<SuperChessCharacter> outCharsBlack;
+  CharacterShottedState(this._outChars)
+      : outCharsWhite =
+            _outChars.where((e) => e.player.player == Player.white).toList(),
+        outCharsBlack =
+            _outChars.where((e) => e.player.player == Player.black).toList();
 
   @override
-  List<Object?> get props => [outChars];
+  List<Object?> get props => [_outChars];
 }
 
 //

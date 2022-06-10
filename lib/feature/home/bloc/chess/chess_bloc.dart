@@ -3,7 +3,6 @@ import 'package:chess_flutter/feature/home/bloc/chess/chess_state.dart';
 import 'package:chess_flutter/models/chess_board.dart';
 import 'package:chess_flutter/models/characters/abstract_character.dart';
 import 'package:chess_flutter/models/chess_box.dart';
-import 'package:chess_flutter/models/enums/player.dart';
 import 'package:chess_flutter/models/move_options.dart';
 import 'package:chess_flutter/models/chess_player.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -111,13 +110,12 @@ class ChessCubit extends Cubit<ChessState> {
               ..isEverMoved = true;
           }
           if (letsDoCastlingLeft && chessBox.rowNumber == scc!.rowNumber - 2) {
-            ChessBoard().getcharacter(col, 8)
+            ChessBoard().getcharacter(col, 1)
               ..move(col, row + 1)
               ..isEverMoved = true;
           }
         }
         moveTheChar(col, row);
-        print("object");
         await Future.delayed(Duration.zero);
         emit(CharacterMovedState(isKingInCheck, kingBox: kingBox));
         //change the turn of the game

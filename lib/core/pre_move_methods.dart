@@ -251,9 +251,12 @@ class PreMoveMethods {
     //must be -> false
     bool isAnyCharInBetweenFormRight = false;
     for (int i = row + 1; i < 8; i++) {
+      print(i);
+      print(col);
       isAnyCharInBetweenFormRight = ChessBoard().hasCharacterAt(col, i);
       if (isAnyCharInBetweenFormRight) break;
     }
+    print("isAnyCharInBetweenFormRight $isAnyCharInBetweenFormRight");
     if (!isAnyCharInBetweenFormRight) {
       kingMoveOptions.onGoingBoxes.add(ChessBox(col, row + 2));
     }

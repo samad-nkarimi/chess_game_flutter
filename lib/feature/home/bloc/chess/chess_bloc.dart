@@ -51,10 +51,36 @@ class ChessCubit extends Cubit<ChessState> {
       if (playerTurn == ChessBoard().getcharacter(col, row).player) {
         //the clicked char
         scc = ChessBoard().getcharacter(col, row);
-        moveOptions = ChessBoard()
-            .getcharacter(col, row)
-            .preMove()
-            .verification(scc!.player);
+        moveOptions = ChessBoard().getcharacter(col, row).preMove();
+        if (scc is ChessCharacterKing) {
+          //check for Castling  -> right rock -> king row < rock row
+          //right rock row = 8
+          //the col is constant
+          //check if there is a character between king and rock -> form (row +1) to  (8-1)
+          //must be -> false
+          bool isAnyCharInBetweenFormRight = false;
+          for (int i = row + 1; i < 8; i++) {
+            isAnyCharInBetweenFormRight = ChessBoard().hasCharacterAt(col, i);
+            if (isAnyCharInBetweenFormRight) break;
+          }
+          if (!isAnyCharInBetweenFormRight) {
+            moveOptions.onGoingBoxes.add(ChessBox(col, row + 2));
+          }
+          //check for Castling  -> left rock -> king row > rock row
+          //left rock row = 1
+          //check if there is a character between king and rock -> form (1+1) to  (row-1)
+          //must be -> false
+          bool isAnyCharInBetweenFromLeft = false;
+          for (int i = 1 + 1; i < row; i++) {
+            isAnyCharInBetweenFromLeft = ChessBoard().hasCharacterAt(col, i);
+            if (isAnyCharInBetweenFromLeft) break;
+          }
+          if (!isAnyCharInBetweenFromLeft) {
+            moveOptions.onGoingBoxes.add(ChessBox(col, row - 2));
+          }
+        }
+
+        moveOptions = moveOptions.verification(scc!.player);
 
         //castling
         if (scc is ChessCharacterKing) {

@@ -244,35 +244,6 @@ class PreMoveMethods {
       [...moBishop.onShotingBoxes, ...moRock.onShotingBoxes],
     );
 
-    //check for Castling  -> right rock -> king row < rock row
-    //right rock row = 8
-    //the col is constant
-    //check if there is a character between king and rock -> form (row +1) to  (8-1)
-    //must be -> false
-    bool isAnyCharInBetweenFormRight = false;
-    for (int i = row + 1; i < 8; i++) {
-      print(i);
-      print(col);
-      isAnyCharInBetweenFormRight = ChessBoard().hasCharacterAt(col, i);
-      if (isAnyCharInBetweenFormRight) break;
-    }
-    print("isAnyCharInBetweenFormRight $isAnyCharInBetweenFormRight");
-    if (!isAnyCharInBetweenFormRight) {
-      kingMoveOptions.onGoingBoxes.add(ChessBox(col, row + 2));
-    }
-    //check for Castling  -> left rock -> king row > rock row
-    //left rock row = 1
-    //check if there is a character between king and rock -> form (1+1) to  (row-1)
-    //must be -> false
-    bool isAnyCharInBetweenFromLeft = false;
-    for (int i = 1 + 1; i < row; i++) {
-      isAnyCharInBetweenFromLeft = ChessBoard().hasCharacterAt(col, i);
-      if (isAnyCharInBetweenFromLeft) break;
-    }
-    if (!isAnyCharInBetweenFromLeft) {
-      kingMoveOptions.onGoingBoxes.add(ChessBox(col, row - 2));
-    }
-
     return kingMoveOptions;
   }
 

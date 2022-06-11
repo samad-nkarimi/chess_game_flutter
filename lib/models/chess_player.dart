@@ -171,7 +171,7 @@ abstract class SuperPlayer {
   }
 
   bool isCheckMate(int col, int row) {
-    MoveOptions moveOptions = MoveOptions(ChessBox(col, row), [], []);
+    MoveOptions moveOptions = MoveOptions.emptyMoveOptions();
     MoveOptions mo;
     for (var char in characters.values) {
       if (char.isInGame) {
@@ -285,41 +285,50 @@ class PlayerWhite extends SuperPlayer {
   void testinitialize() {
     characters = {
       "pawn1": ChessCharacterPawn(ConstantImages.svgWhitePawn, this,
-          columnNumber: 7, rowNumber: 1),
+          columnNumber: 7, rowNumber: 1)
+        ..isInGame = false,
       "pawn2": ChessCharacterPawn(ConstantImages.svgWhitePawn, this,
-          columnNumber: 7, rowNumber: 2),
+          columnNumber: 7, rowNumber: 2)
+        ..isInGame = false,
       "pawn3": ChessCharacterPawn(ConstantImages.svgWhitePawn, this,
-          columnNumber: 7, rowNumber: 3),
+          columnNumber: 7, rowNumber: 3)
+        ..isInGame = false,
       "pawn4": ChessCharacterPawn(ConstantImages.svgWhitePawn, this,
-          columnNumber: 7, rowNumber: 4),
+          columnNumber: 7, rowNumber: 4)
+        ..isInGame = false,
       "pawn5": ChessCharacterPawn(ConstantImages.svgWhitePawn, this,
-          columnNumber: 7, rowNumber: 5),
+          columnNumber: 7, rowNumber: 5)
+        ..isInGame = false,
       "pawn6": ChessCharacterPawn(ConstantImages.svgWhitePawn, this,
           columnNumber: 7, rowNumber: 6)
         ..isInGame = false,
       "pawn7": ChessCharacterPawn(ConstantImages.svgWhitePawn, this,
-          columnNumber: 7, rowNumber: 7),
+          columnNumber: 7, rowNumber: 7)
+        ..isInGame = false,
       "pawn8": ChessCharacterPawn(ConstantImages.svgWhitePawn, this,
-          columnNumber: 7, rowNumber: 8),
+          columnNumber: 7, rowNumber: 8)
+        ..isInGame = false,
       "rock1": ChessCharacterRock(ConstantImages.svgWhiteRock, this,
-          columnNumber: 8, rowNumber: 1),
+          columnNumber: 8, rowNumber: 1)
+        ..isInGame = false,
       "knight1": ChessCharacterKnight(ConstantImages.svgWhiteKnight, this,
-          columnNumber: 8, rowNumber: 2),
+          columnNumber: 8, rowNumber: 2)
+        ..isInGame = false,
       "bishop1": ChessCharacterBishop(ConstantImages.svgWhiteBishop, this,
           columnNumber: 8, rowNumber: 3)
         ..isInGame = false,
       "queen": ChessCharacterQueen(ConstantImages.svgWhiteQueen, this,
-          columnNumber: 4, rowNumber: 3),
-      "king": ChessCharacterKing(ConstantImages.svgWhiteKing, this,
-          columnNumber: 8, rowNumber: 5),
-      "bishop2": ChessCharacterBishop(ConstantImages.svgWhiteBishop, this,
-          columnNumber: 8, rowNumber: 6)
+          columnNumber: 4, rowNumber: 3)
         ..isInGame = false,
+      "king": ChessCharacterKing(ConstantImages.svgWhiteKing, this,
+          columnNumber: 3, rowNumber: 6),
+      "bishop2": ChessCharacterBishop(ConstantImages.svgWhiteBishop, this,
+          columnNumber: 2, rowNumber: 7),
       "knight2": ChessCharacterKnight(ConstantImages.svgWhiteKnight, this,
           columnNumber: 8, rowNumber: 7)
         ..isInGame = false,
       "rock2": ChessCharacterRock(ConstantImages.svgWhiteRock, this,
-          columnNumber: 8, rowNumber: 8),
+          columnNumber: 1, rowNumber: 6),
     };
   }
 
@@ -390,37 +399,52 @@ class PlayerBlack extends SuperPlayer {
   void testinitialize() {
     characters = {
       "pawn1": ChessCharacterPawn(ConstantImages.svgWhitePawn, this,
-          columnNumber: 2, rowNumber: 8),
+          columnNumber: 2, rowNumber: 8)
+        ..isInGame = false,
       "pawn2": ChessCharacterPawn(ConstantImages.svgWhitePawn, this,
-          columnNumber: 2, rowNumber: 7),
+          columnNumber: 2, rowNumber: 7)
+        ..isInGame = false,
       "pawn3": ChessCharacterPawn(ConstantImages.svgWhitePawn, this,
-          columnNumber: 2, rowNumber: 6),
+          columnNumber: 2, rowNumber: 6)
+        ..isInGame = false,
       "pawn4": ChessCharacterPawn(ConstantImages.svgWhitePawn, this,
-          columnNumber: 2, rowNumber: 5),
+          columnNumber: 2, rowNumber: 5)
+        ..isInGame = false,
       "pawn5": ChessCharacterPawn(ConstantImages.svgWhitePawn, this,
-          columnNumber: 2, rowNumber: 4),
+          columnNumber: 2, rowNumber: 4)
+        ..isInGame = false,
       "pawn6": ChessCharacterPawn(ConstantImages.svgWhitePawn, this,
-          columnNumber: 2, rowNumber: 3),
+          columnNumber: 2, rowNumber: 3)
+        ..isInGame = false,
       "pawn7": ChessCharacterPawn(ConstantImages.svgWhitePawn, this,
-          columnNumber: 2, rowNumber: 2),
+          columnNumber: 2, rowNumber: 2)
+        ..isInGame = false,
       "pawn8": ChessCharacterPawn(ConstantImages.svgWhitePawn, this,
-          columnNumber: 2, rowNumber: 1),
+          columnNumber: 2, rowNumber: 1)
+        ..isInGame = false,
       "rock1": ChessCharacterRock(ConstantImages.svgWhiteRock, this,
-          columnNumber: 1, rowNumber: 8),
+          columnNumber: 1, rowNumber: 8)
+        ..isInGame = false,
       "knight1": ChessCharacterKnight(ConstantImages.svgWhiteKnight, this,
-          columnNumber: 1, rowNumber: 7),
+          columnNumber: 1, rowNumber: 7)
+        ..isInGame = false,
       "bishop1": ChessCharacterBishop(ConstantImages.svgWhiteBishop, this,
-          columnNumber: 1, rowNumber: 6),
+          columnNumber: 1, rowNumber: 6)
+        ..isInGame = false,
       "queen": ChessCharacterQueen(ConstantImages.svgWhiteQueen, this,
-          columnNumber: 3, rowNumber: 6),
+          columnNumber: 3, rowNumber: 6)
+        ..isInGame = false,
       "king": ChessCharacterKing(ConstantImages.svgWhiteKing, this,
-          columnNumber: 1, rowNumber: 4),
+          columnNumber: 1, rowNumber: 8),
       "bishop2": ChessCharacterBishop(ConstantImages.svgWhiteBishop, this,
-          columnNumber: 1, rowNumber: 3),
+          columnNumber: 1, rowNumber: 3)
+        ..isInGame = false,
       "knight2": ChessCharacterPawn(ConstantImages.svgWhitePawn, this,
-          columnNumber: 1, rowNumber: 2),
+          columnNumber: 1, rowNumber: 2)
+        ..isInGame = false,
       "rock2": ChessCharacterRock(ConstantImages.svgWhiteRock, this,
-          columnNumber: 1, rowNumber: 1),
+          columnNumber: 1, rowNumber: 1)
+        ..isInGame = false,
     };
   }
 

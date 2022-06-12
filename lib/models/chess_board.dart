@@ -1,7 +1,8 @@
-import 'package:chess_flutter/models/characters/abstract_character.dart';
+import 'package:chess_flutter/models/chess_character.dart';
 import 'package:chess_flutter/models/chess_box.dart';
 import 'package:chess_flutter/models/enums/player.dart';
 import 'package:chess_flutter/models/chess_player.dart';
+import 'package:chess_flutter/models/enums/rule.dart';
 
 class ChessBoard {
   static final ChessBoard _singleton = ChessBoard._internal();
@@ -12,9 +13,9 @@ class ChessBoard {
 
   ChessBoard._internal();
 
-  final Map<ChessBox, SuperChessCharacter> boardMap = {};
+  final Map<ChessBox, ChessCharacter> boardMap = {};
 
-  void addToBoardMap(int col, int row, SuperChessCharacter scc) {
+  void addToBoardMap(int col, int row, ChessCharacter scc) {
     if (boardMap.containsKey(ChessBox(col, row))) {
       boardMap.remove(ChessBox(col, row));
     }
@@ -27,15 +28,15 @@ class ChessBoard {
     boardMap.clear();
     for (int col = 1; col <= 8; col++) {
       for (int row = 1; row <= 8; row++) {
-        late SuperChessCharacter c;
+        late ChessCharacter c;
         //whites
         c = PlayerWhite().getCharacter(col, row);
-        if (c is ChessCharacterNone) {
+        if (c.isNone) {
           //blacks
           c = PlayerBlack().getCharacter(col, row);
         }
 
-        if (c is! ChessCharacterNone) {
+        if (!c.isNone) {
           boardMap[ChessBox(col, row)] = c;
         }
       }
@@ -43,13 +44,13 @@ class ChessBoard {
   }
 
   void exChange(int col, int row, int newCol, int newRow) {
-    SuperChessCharacter scc = getcharacter(col, row);
+    ChessCharacter scc = getcharacter(col, row);
     boardMap.removeWhere(
         (key, value) => key.columnNumber == col && key.rowNumber == row);
     addToBoardMap(newCol, newRow, scc);
   }
 
-  SuperChessCharacter getcharacter(int col, int row) {
+  ChessCharacter getcharacter(int col, int row) {
     for (var element in boardMap.keys) {
       if (element.isInCoordinate(col, row)) {
         if (boardMap[element]!.isInGame) {
@@ -57,13 +58,13 @@ class ChessBoard {
         }
       }
     }
-    return ChessCharacterNone("photoId", PlayerWhite());
+    return ChessCharacter.none();
   }
 
-  bool isEnemyAt(SuperPlayer superPlayer, int col, int row) {
-    SuperChessCharacter char = getcharacter(col, row);
-    if (char is! ChessCharacterNone) {
-      if (superPlayer != char.player) {
+  bool isEnemyAt(Player player, int col, int row) {
+    ChessCharacter char = getcharacter(col, row);
+    if (!char.isNone) {
+      if (player != char.player) {
         return true;
       }
     }
@@ -71,7 +72,7 @@ class ChessBoard {
   }
 
   bool hasCharacterAt(int col, int row) {
-    if (getcharacter(col, row) is! ChessCharacterNone) {
+    if (!getcharacter(col, row).isNone) {
       return true;
     }
     return false;

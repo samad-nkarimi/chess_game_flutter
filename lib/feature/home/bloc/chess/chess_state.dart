@@ -1,4 +1,4 @@
-import 'package:chess_flutter/models/characters/abstract_character.dart';
+import 'package:chess_flutter/models/chess_character.dart';
 import 'package:chess_flutter/models/chess_box.dart';
 import 'package:chess_flutter/models/enums/player.dart';
 import 'package:chess_flutter/models/move_options.dart';
@@ -38,14 +38,14 @@ class CharacterMovedState extends ChessState {
 
 //
 class CharacterShottedState extends ChessState {
-  final List<SuperChessCharacter> _outChars;
-  final List<SuperChessCharacter> outCharsWhite;
-  final List<SuperChessCharacter> outCharsBlack;
+  final List<ChessCharacter> _outChars;
+  final List<ChessCharacter> outCharsWhite;
+  final List<ChessCharacter> outCharsBlack;
   CharacterShottedState(this._outChars)
       : outCharsWhite =
-            _outChars.where((e) => e.player.player == Player.white).toList(),
+            _outChars.where((e) => e.player == Player.white).toList(),
         outCharsBlack =
-            _outChars.where((e) => e.player.player == Player.black).toList();
+            _outChars.where((e) => e.player == Player.black).toList();
 
   @override
   List<Object?> get props => [_outChars];
@@ -53,7 +53,7 @@ class CharacterShottedState extends ChessState {
 
 //
 class PlayerWonState extends ChessState {
-  final SuperPlayer winner;
+  final ChessPlayer winner;
   PlayerWonState(this.winner);
 
   @override

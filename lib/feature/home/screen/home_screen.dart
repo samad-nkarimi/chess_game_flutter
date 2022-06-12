@@ -4,7 +4,7 @@ import 'package:chess_flutter/common_widgets/cw_text.dart';
 import 'package:chess_flutter/feature/home/bloc/chess/chess_bloc.dart';
 import 'package:chess_flutter/feature/home/bloc/chess/chess_state.dart';
 import 'package:chess_flutter/models/chess_board.dart';
-import 'package:chess_flutter/models/characters/abstract_character.dart';
+import 'package:chess_flutter/models/chess_character.dart';
 import 'package:chess_flutter/models/enums/player.dart';
 import 'package:chess_flutter/models/chess_player.dart';
 import 'package:flutter/material.dart';
@@ -154,14 +154,14 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget getChessChar(int col, int row) {
-    late SuperChessCharacter c;
-    c = ChessBoard().getcharacter(col, row);
-    if (c is ChessCharacterNone) {
+    ChessCharacter c = ChessBoard().getcharacter(col, row);
+    print(c);
+    if (c.isNone) {
       //an empty box
       return const SizedBox();
     } else {
       return SvgPicture.asset(c.photoId,
-          color: c.player.player == Player.white ? Colors.white : Colors.black
+          color: c.player == Player.white ? Colors.white : Colors.black
           // // fit: BoxFit.fill,
           );
     }
@@ -190,25 +190,25 @@ class _HomeScreenState extends State<HomeScreen> {
     // }
   }
 
-  void setBoard(int col, int row) {
-    //form board
-    late SuperChessCharacter c;
-    //whites
-    c = PlayerWhite().getCharacter(col, row);
-    if (c is! ChessCharacterNone) {
-      // singleChar[row] = c;
-    } else {
-      //blacks
-      c = PlayerBlack().getCharacter(col, row);
-      if (c is! ChessCharacterNone) {
-        // singleChar[row] = c;
-      }
-    }
+  // void setBoard(int col, int row) {
+  //   //form board
+  //   late SuperChessCharacter c;
+  //   //whites
+  //   c = PlayerWhite().getCharacter(col, row);
+  //   if (c is! ChessCharacterNone) {
+  //     // singleChar[row] = c;
+  //   } else {
+  //     //blacks
+  //     c = PlayerBlack().getCharacter(col, row);
+  //     if (c is! ChessCharacterNone) {
+  //       // singleChar[row] = c;
+  //     }
+  //   }
 
-    if (c is! ChessCharacterNone) {
-      ChessBoard().addToBoardMap(col, row, c);
-    }
-  }
+  //   if (c is! ChessCharacterNone) {
+  //     ChessBoard().addToBoardMap(col, row, c);
+  //   }
+  // }
 
   Widget outCharsWidget(Player player) {
     return BlocBuilder<ChessCubit, ChessState>(
@@ -220,7 +220,7 @@ class _HomeScreenState extends State<HomeScreen> {
       },
       builder: (context, state) {
         if (state is CharacterShottedState) {
-          List<SuperChessCharacter> outChars = state.outCharsBlack;
+          List<ChessCharacter> outChars = state.outCharsBlack;
           Color color = Colors.black;
           if (player == Player.white) {
             outChars = state.outCharsWhite;
@@ -269,6 +269,7 @@ class _HomeScreenState extends State<HomeScreen> {
     PlayerBlack().initialize();
     // PlayerWhite().testinitialize();
     // PlayerBlack().testinitialize();
+
     super.initState();
   }
 

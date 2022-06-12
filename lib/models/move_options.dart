@@ -1,5 +1,5 @@
 import 'package:chess_flutter/models/chess_board.dart';
-import 'package:chess_flutter/models/characters/abstract_character.dart';
+import 'package:chess_flutter/models/chess_character.dart';
 import 'package:chess_flutter/models/chess_box.dart';
 import 'package:chess_flutter/models/chess_player.dart';
 
@@ -29,7 +29,7 @@ class MoveOptions {
   }
 
   //we don't want a move that put the king in check
-  MoveOptions verification(SuperPlayer superPlayer) {
+  MoveOptions verification(ChessPlayer superPlayer) {
     MoveOptions moveOptions = MoveOptions(
       clickedBox,
       [],
@@ -37,7 +37,7 @@ class MoveOptions {
     );
 
     //clicked char
-    SuperChessCharacter clickedChar = ChessBoard()
+    ChessCharacter clickedChar = ChessBoard()
         .getcharacter(clickedBox.columnNumber, clickedBox.rowNumber);
 
     //for on goings
@@ -56,7 +56,7 @@ class MoveOptions {
     //for on shottings
     for (var chessBox in onShotingBoxes) {
       //temporary remove the shotted char
-      SuperChessCharacter shottedChar = ChessBoard()
+      ChessCharacter shottedChar = ChessBoard()
           .getcharacter(chessBox.columnNumber, chessBox.rowNumber)
         ..isInGame = false;
 

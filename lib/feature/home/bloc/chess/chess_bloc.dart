@@ -1,21 +1,22 @@
 import 'package:chess_flutter/core/pre_move_methods.dart';
 import 'package:chess_flutter/feature/home/bloc/chess/chess_state.dart';
 import 'package:chess_flutter/models/chess_board.dart';
-import 'package:chess_flutter/models/characters/abstract_character.dart';
+import 'package:chess_flutter/models/chess_character.dart';
 import 'package:chess_flutter/models/chess_box.dart';
+import 'package:chess_flutter/models/enums/player.dart';
 import 'package:chess_flutter/models/move_options.dart';
 import 'package:chess_flutter/models/chess_player.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ChessCubit extends Cubit<ChessState> {
-  SuperChessCharacter? scc;
+  ChessCharacter? scc;
   bool isKingInCheck = false;
   //which player can move the char
-  SuperPlayer playerTurn = PlayerWhite();
-  List<SuperChessCharacter> outChars = [];
+  Player playerTurn = Player.white;
+  List<ChessCharacter> outChars = [];
   ChessBox kingBox = const ChessBox(0, 0);
   bool isCheckMate = false;
-  SuperPlayer? winner;
+  ChessPlayer? winner;
   MoveOptions moveOptions = MoveOptions.emptyMoveOptions();
   bool letsDoCastlingRight = false;
   bool letsDoCastlingLeft = false;
@@ -35,7 +36,7 @@ class ChessCubit extends Cubit<ChessState> {
     }
     if (moveOptions.onShotingBoxes.contains(ChessBox(col, row))) {
       //shot the char
-      SuperChessCharacter shottedChar = ChessBoard().getcharacter(col, row);
+      ChessCharacter shottedChar = ChessBoard().getcharacter(col, row);
       shottedChar.isInGame = false;
       print("==> $scc shotted $shottedChar");
       //move the char
@@ -65,7 +66,7 @@ class ChessCubit extends Cubit<ChessState> {
         //the clicked char
         scc = ChessBoard().getcharacter(col, row);
         moveOptions = ChessBoard().getcharacter(col, row).preMove();
-        if (scc is ChessCharacterKing) {
+        if (scc!.isKing) {
           //check for Castling  -> right rock -> king row < rock row
           //right rock row = 8
           //the col is constant
@@ -93,10 +94,10 @@ class ChessCubit extends Cubit<ChessState> {
           }
         }
 
-        moveOptions = moveOptions.verification(scc!.player);
+        moveOptions = moveOptions.verification(scc!.chessPlayer);
 
         //castling
-        if (scc is ChessCharacterKing) {
+        if (scc!.isKing) {
           bool cfl = PreMoveMethods.castlingFromLeft(
             ChessBoard().getcharacter(col, row).player,
             col,
@@ -110,7 +111,7 @@ class ChessCubit extends Cubit<ChessState> {
             letsDoCastlingLeft = true;
           }
           print("cfl: $cfl");
-          if (scc is ChessCharacterKing) {
+          if (scc!.isKing) {
             bool rfl = PreMoveMethods.castlingFromRight(
               ChessBoard().getcharacter(col, row).player,
               col,
@@ -146,7 +147,7 @@ class ChessCubit extends Cubit<ChessState> {
     for (var chessBox in moveOptions.onGoingBoxes) {
       //have we clicked on possible to move chess box??
       if (chessBox.isInCoordinate(col, row)) {
-        if (scc is ChessCharacterKing) {
+        if (scc!.isKing) {
           if (letsDoCastlingRight && chessBox.rowNumber == scc!.rowNumber + 2) {
             ChessBoard().getcharacter(col, 8)
               ..move(col, row - 1)
@@ -177,7 +178,7 @@ class ChessCubit extends Cubit<ChessState> {
   }
 
   void turnThePlayer() {
-    playerTurn = playerTurn.getEnemyPlayer();
+    playerTurn = playerTurn == Player.white ? Player.black : Player.white;
   }
 
   void moveTheChar(int col, int row) {
@@ -185,13 +186,13 @@ class ChessCubit extends Cubit<ChessState> {
       scc!.move(col, row);
       scc!.isEverMoved = true;
 
-      isKingInCheck = scc!.player.getEnemyPlayer().isMyKingInCheck();
+      isKingInCheck = scc!.chessPlayer.getEnemyPlayer().isMyKingInCheck();
       kingBox = ChessBox(
-        scc!.player.getEnemyPlayer().characters["king"]!.columnNumber,
-        scc!.player.getEnemyPlayer().characters["king"]!.rowNumber,
+        scc!.chessPlayer.getEnemyPlayer().characters["king"]!.columnNumber,
+        scc!.chessPlayer.getEnemyPlayer().characters["king"]!.rowNumber,
       );
-      isCheckMate = scc!.player.getEnemyPlayer().isCheckMate(col, row);
-      winner = scc!.player;
+      isCheckMate = scc!.chessPlayer.getEnemyPlayer().isCheckMate(col, row);
+      winner = scc!.chessPlayer;
     }
     if (isCheckMate) {
       // send state to show winner

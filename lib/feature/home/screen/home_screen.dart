@@ -28,8 +28,9 @@ class _HomeScreenState extends State<HomeScreen> {
       if (rowIndex % 2 == 0) {
         return const Color.fromARGB(255, 0, 167, 103);
       }
-      //odd columns
-    } else {
+    }
+    //odd columns
+    else {
       if (rowIndex % 2 != 0) {
         return const Color.fromARGB(255, 0, 167, 103);
       }
@@ -154,40 +155,39 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget getChessChar(int col, int row) {
     late SuperChessCharacter c;
-    // c = ChessBoard().getcharacter(col, row);
-    // if (c is ChessCharacterNone) {
-    //   //an empty box
-    //   return const SizedBox();
-    // } else {
+    c = ChessBoard().getcharacter(col, row);
+    if (c is ChessCharacterNone) {
+      //an empty box
+      return const SizedBox();
+    } else {
+      return SvgPicture.asset(c.photoId,
+          color: c.player.player == Player.white ? Colors.white : Colors.black
+          // // fit: BoxFit.fill,
+          );
+    }
+    // //whites
+    // c = PlayerWhite().getCharacter(col, row);
+    // if (c is! ChessCharacterNone) {
     //   return SvgPicture.asset(
     //     c.photoId,
     //     color: Colors.white,
-    //     // // fit: BoxFit.fill,
+    //     // fit: BoxFit.fill,
     //   );
     // }
-    //whites
-    c = PlayerWhite().getCharacter(col, row);
-    if (c is! ChessCharacterNone) {
-      return SvgPicture.asset(
-        c.photoId,
-        color: Colors.white,
-        // fit: BoxFit.fill,
-      );
-    }
 
-    //blacks
-    c = PlayerBlack().getCharacter(col, row);
+    // //blacks
+    // c = PlayerBlack().getCharacter(col, row);
 
-    if (c is! ChessCharacterNone) {
-      return SvgPicture.asset(
-        c.photoId,
-        color: Colors.black,
-        // fit: BoxFit.fill,
-      );
-    } else {
-      //an empty box
-      return const SizedBox();
-    }
+    // if (c is! ChessCharacterNone) {
+    //   return SvgPicture.asset(
+    //     c.photoId,
+    //     color: Colors.black,
+    //     // fit: BoxFit.fill,
+    //   );
+    // } else {
+    //   //an empty box
+    //   return const SizedBox();
+    // }
   }
 
   void setBoard(int col, int row) {
@@ -208,7 +208,6 @@ class _HomeScreenState extends State<HomeScreen> {
     if (c is! ChessCharacterNone) {
       ChessBoard().addToBoardMap(col, row, c);
     }
-    // print(ChessBoard().boardMap);
   }
 
   Widget outCharsWidget(Player player) {

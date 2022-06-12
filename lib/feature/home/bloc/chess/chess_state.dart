@@ -27,7 +27,9 @@ class CharacterClickedState extends ChessState {
 class CharacterMovedState extends ChessState {
   final bool isKingInCheck;
   final ChessBox kingBox;
-  CharacterMovedState(this.isKingInCheck,
+  final ChessBox moveFrom;
+  final ChessBox moveTo;
+  CharacterMovedState(this.isKingInCheck, this.moveFrom, this.moveTo,
       {this.kingBox = const ChessBox(0, 0)});
 
   @override

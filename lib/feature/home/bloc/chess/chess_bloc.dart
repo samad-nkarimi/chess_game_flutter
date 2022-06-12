@@ -19,6 +19,8 @@ class ChessCubit extends Cubit<ChessState> {
   MoveOptions moveOptions = MoveOptions.emptyMoveOptions();
   bool letsDoCastlingRight = false;
   bool letsDoCastlingLeft = false;
+  ChessBox moveFrom = const ChessBox(0, 0);
+  ChessBox moveTo = const ChessBox(0, 0);
 
   //
   ChessCubit() : super(ChessInitialState());
@@ -27,6 +29,10 @@ class ChessCubit extends Cubit<ChessState> {
   void characterClicked(int col, int row) async {
     letsDoCastlingRight = false;
     letsDoCastlingLeft = false;
+    if (scc != null) {
+      moveFrom = ChessBox(scc!.columnNumber, scc!.rowNumber);
+      moveTo = ChessBox(col, row);
+    }
     if (moveOptions.onShotingBoxes.contains(ChessBox(col, row))) {
       //shot the char
       SuperChessCharacter shottedChar = ChessBoard().getcharacter(col, row);
@@ -42,7 +48,14 @@ class ChessCubit extends Cubit<ChessState> {
       //wait for prevent conflict states
       await Future.delayed(Duration.zero);
 
-      emit(CharacterMovedState(isKingInCheck, kingBox: kingBox));
+      emit(
+        CharacterMovedState(
+          isKingInCheck,
+          moveFrom,
+          moveTo,
+          kingBox: kingBox,
+        ),
+      );
       //change the turn of the game
       turnThePlayer();
       moveOptions.clear();
@@ -125,6 +138,10 @@ class ChessCubit extends Cubit<ChessState> {
   //the event when we click on an empty box
   void boxClicked(int col, int row) async {
     print("box clicked");
+    if (scc != null) {
+      moveFrom = ChessBox(scc!.columnNumber, scc!.rowNumber);
+      moveTo = ChessBox(col, row);
+    }
 
     for (var chessBox in moveOptions.onGoingBoxes) {
       //have we clicked on possible to move chess box??
@@ -143,9 +160,17 @@ class ChessCubit extends Cubit<ChessState> {
         }
         moveTheChar(col, row);
         await Future.delayed(Duration.zero);
-        emit(CharacterMovedState(isKingInCheck, kingBox: kingBox));
+        emit(CharacterMovedState(
+          isKingInCheck,
+          moveFrom,
+          moveTo,
+          kingBox: kingBox,
+        ));
         //change the turn of the game
         turnThePlayer();
+        //
+
+        scc = null;
       }
     }
     moveOptions.clear();
@@ -167,10 +192,6 @@ class ChessCubit extends Cubit<ChessState> {
       );
       isCheckMate = scc!.player.getEnemyPlayer().isCheckMate(col, row);
       winner = scc!.player;
-
-      //
-
-      scc = null;
     }
     if (isCheckMate) {
       // send state to show winner

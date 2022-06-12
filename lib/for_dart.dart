@@ -16,21 +16,23 @@
 // }
 
 //************************************* */
-void main(List<String> args) {
-  List<String> getName() {
-    return ["samad", "n"];
-  }
+// void main(List<String> args) {
+//   List<String> getName() {
+//     return ["samad", "n"];
+//   }
 
-  var p = Person(getName);
-  print(p.list);
-}
+//   var p = Person(getName);
+//   print(p.list);
+// }
 
-class Human {}
+// class Human {}
 
-class Person extends Human {
-  List<String> list;
-  Function function;
-  Person(this.function)
-      : list = function(),
-        super();
-}
+// class Person extends Human {
+//   List<String> list;
+//   Function function;
+//   Person(this.function)
+//       : list = function(),
+//         super();
+// }
+
+void main(List<String> args) {}

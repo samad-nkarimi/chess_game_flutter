@@ -5,7 +5,6 @@ import 'package:chess_flutter/feature/home/bloc/chess/chess_bloc.dart';
 import 'package:chess_flutter/feature/home/bloc/chess/chess_state.dart';
 import 'package:chess_flutter/models/chess_board.dart';
 import 'package:chess_flutter/models/characters/abstract_character.dart';
-import 'package:chess_flutter/models/chess_box.dart';
 import 'package:chess_flutter/models/enums/player.dart';
 import 'package:chess_flutter/models/chess_player.dart';
 import 'package:flutter/material.dart';
@@ -22,14 +21,15 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   double squareLength = 350; // min(width , height)
 
-  Color getDefaultBoxColor(int columnIndex, int rowIndex) {
+  //white and black colors
+  Color getBackgroundBoxColor(int columnIndex, int rowIndex) {
+    // even columns
     if (columnIndex % 2 == 0) {
-      // even columns
       if (rowIndex % 2 == 0) {
         return const Color.fromARGB(255, 0, 167, 103);
       }
-    } else {
       //odd columns
+    } else {
       if (rowIndex % 2 != 0) {
         return const Color.fromARGB(255, 0, 167, 103);
       }
@@ -37,37 +37,40 @@ class _HomeScreenState extends State<HomeScreen> {
     return const Color.fromARGB(255, 252, 71, 207);
   }
 
-  Color getBoxColor(ChessState state, int col, int row) {
-    if (state is ChessInitialState) {
-      return getDefaultBoxColor(col, row);
-    }
-    if (state is CharacterClickedState) {
-      if (state.moveOptions.onGoingBoxes.isNotEmpty) {
-        for (var box in state.moveOptions.onGoingBoxes) {
-          if (box.isInCoordinate(col, row)) {
-            return Colors.purple;
-          }
-        }
-      }
-      if (state.moveOptions.onShotingBoxes.isNotEmpty) {
-        for (var box in state.moveOptions.onShotingBoxes) {
-          if (box.isInCoordinate(col, row)) {
-            return Colors.red;
-          }
-        }
-      }
-      if (state.moveOptions.clickedBox.isInCoordinate(col, row)) {
-        return Colors.pink;
-      }
-    }
-    return getDefaultBoxColor(col, row);
-  }
+  // Color getBoxColor(ChessState state, int col, int row) {
+  //   if (state is ChessInitialState) {
+  //     return getBackgroundBoxColor(col, row);
+  //   }
+  //   if (state is CharacterClickedState) {
+  //     if (state.moveOptions.onGoingBoxes.isNotEmpty) {
+  //       for (var box in state.moveOptions.onGoingBoxes) {
+  //         if (box.isInCoordinate(col, row)) {
+  //           return Colors.purple;
+  //         }
+  //       }
+  //     }
+  //     if (state.moveOptions.onShotingBoxes.isNotEmpty) {
+  //       for (var box in state.moveOptions.onShotingBoxes) {
+  //         if (box.isInCoordinate(col, row)) {
+  //           return Colors.red;
+  //         }
+  //       }
+  //     }
+  //     if (state.moveOptions.clickedBox.isInCoordinate(col, row)) {
+  //       return Colors.pink;
+  //     }
+  //   }
+  //   return getBackgroundBoxColor(col, row);
+  // }
 
+  //the color based on character moves
   Gradient? getBoxGradient(ChessState state, int col, int row) {
+    //no color yet
     if (state is ChessInitialState) {
       return null;
     }
     if (state is CharacterClickedState) {
+      //ongoing boxes
       if (state.moveOptions.onGoingBoxes.isNotEmpty) {
         for (var box in state.moveOptions.onGoingBoxes) {
           if (box.isInCoordinate(col, row)) {
@@ -79,6 +82,7 @@ class _HomeScreenState extends State<HomeScreen> {
         }
       }
 
+      //onShotting boxes
       if (state.moveOptions.onShotingBoxes.isNotEmpty) {
         for (var box in state.moveOptions.onShotingBoxes) {
           if (box.isInCoordinate(col, row)) {
@@ -90,12 +94,15 @@ class _HomeScreenState extends State<HomeScreen> {
         }
       }
 
+      //clicked character
       if (state.moveOptions.clickedBox.isInCoordinate(col, row)) {
         return const RadialGradient(
           colors: [Colors.blue, Colors.deepPurple],
           center: Alignment.center,
         );
       }
+
+      //king if is in check
       if (state.isKingInCheck && state.kingBox.isInCoordinate(col, row)) {
         return const RadialGradient(
           colors: [
@@ -107,6 +114,7 @@ class _HomeScreenState extends State<HomeScreen> {
       }
     }
     if (state is CharacterMovedState) {
+      //king if is in check
       if (state.isKingInCheck && state.kingBox.isInCoordinate(col, row)) {
         return const RadialGradient(
           colors: [
@@ -116,7 +124,31 @@ class _HomeScreenState extends State<HomeScreen> {
           center: Alignment.center,
         );
       }
+      //the box, character moved from
+      if (state.moveFrom.isInCoordinate(col, row)) {
+        return const RadialGradient(
+          colors: [
+            Color.fromARGB(255, 50, 170, 240),
+            Color.fromARGB(255, 50, 170, 240),
+            // Color.fromARGB(120, 231, 255, 92)
+          ],
+          center: Alignment.center,
+        );
+      }
+      //the box, character moved to
+      if (state.moveTo.isInCoordinate(col, row)) {
+        return const RadialGradient(
+          colors: [
+            Color.fromARGB(255, 50, 170, 240),
+            Color.fromARGB(255, 50, 170, 240),
+            // Color.fromARGB(115, 231, 255, 92)
+          ],
+          center: Alignment.center,
+        );
+      }
     }
+
+    //a regular box
     return null;
   }
 
@@ -319,8 +351,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                         }
                                       },
                                       child: CWContainer(
-                                          color: getDefaultBoxColor(
+                                          color: getBackgroundBoxColor(
                                               columnNumber, rowNumber),
+                                          brAll: 10,
+                                          // brWidth: 1,
+                                          // brColor: Colors.white,
+                                          // mar: [1, 1, 1, 1],
                                           w: squareLength / 9,
                                           h: squareLength / 9,
                                           gradient: getBoxGradient(

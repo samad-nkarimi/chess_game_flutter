@@ -1,7 +1,7 @@
 import 'dart:math' as math;
 import 'package:chess_flutter/common_widgets/cw_container.dart';
 import 'package:chess_flutter/common_widgets/cw_text.dart';
-import 'package:chess_flutter/feature/home/bloc/chess/chess_bloc.dart';
+import 'package:chess_flutter/feature/home/bloc/chess/chess_cubit.dart';
 import 'package:chess_flutter/feature/home/bloc/chess/chess_state.dart';
 import 'package:chess_flutter/models/chess_board.dart';
 import 'package:chess_flutter/models/chess_character.dart';
@@ -282,103 +282,125 @@ class _HomeScreenState extends State<HomeScreen> {
     squareLength = size.shortestSide;
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Center(
-          child: CWText(
-            "..C.H.E.S.S..",
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-            fontSize: 20,
-          ),
-        ),
-      ),
-      body: Center(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            // outCharsWidget(Player.white),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                outCharsWidget(Player.white),
-                outCharsWidget(Player.black),
-                BlocBuilder<ChessCubit, ChessState>(
-                  buildWhen: (previous, current) {
-                    if (current is! CharacterShottedState) {
-                      return true;
-                    }
-                    return false;
-                  },
-                  builder: (context, state) {
-                    // setBoard(columnNumber, rowNumber);
+      // appBar: AppBar(
+      //   title: const Center(
+      //     child: CWText(
+      //       "..C.H.E.S.S..",
+      //       color: Colors.white,
+      //       fontWeight: FontWeight.bold,
+      //       fontSize: 20,
+      //     ),
+      //   ),
+      // ),
+      body: Stack(
+        children: [
+          for (int i = 0; i < 30; i++)
+            for (int j = 0; j < 15; j++)
+              Container(
+                height: 50,
+                width: 50,
+                margin: EdgeInsets.only(left: 50.0 * i, top: 50.0 * j),
+                child: SvgPicture.asset(
+                  "assets/images/svg/bg_pattern.svg",
+                  height: 50,
+                  width: 50,
+                ),
+              ),
+          Container(
+            color: Colors.white10,
+            child: Center(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  // outCharsWidget(Player.white),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      outCharsWidget(Player.white),
+                      outCharsWidget(Player.black),
+                      BlocBuilder<ChessCubit, ChessState>(
+                        buildWhen: (previous, current) {
+                          if (current is! CharacterShottedState) {
+                            return true;
+                          }
+                          return false;
+                        },
+                        builder: (context, state) {
+                          // setBoard(columnNumber, rowNumber);
 
-                    ChessBoard().createMap();
+                          ChessBoard().createMap();
 
-                    if (state is PlayerWonState) {
-                      print("winner ==> ${state.winner}");
-                    }
-                    return CWContainer(
-                      h: squareLength,
-                      w: squareLength,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          for (int columnNumber = 1;
-                              columnNumber <= 8;
-                              columnNumber++)
-                            Row(
+                          if (state is PlayerWonState) {
+                            print("winner ==> ${state.winner}");
+                          }
+                          return CWContainer(
+                            h: squareLength,
+                            w: squareLength,
+                            child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                for (int rowNumber = 1;
-                                    rowNumber <= 8;
-                                    rowNumber++)
-                                  Flexible(
-                                    flex: 1,
-                                    child: InkWell(
-                                      onTap: () {
-                                        if (ChessBoard().hasCharacterAt(
-                                            columnNumber, rowNumber)) {
-                                          // ChessBoard().getcharacter(columnNumber, rowNumber);
-                                          context
-                                              .read<ChessCubit>()
-                                              .characterClicked(
-                                                  columnNumber, rowNumber);
-                                        } else {
-                                          context.read<ChessCubit>().boxClicked(
-                                              columnNumber, rowNumber);
-                                        }
-                                      },
-                                      child: CWContainer(
-                                          color: getBackgroundBoxColor(
-                                              columnNumber, rowNumber),
-                                          brAll: 10,
-                                          // brWidth: 1,
-                                          // brColor: Colors.white,
-                                          // mar: [1, 1, 1, 1],
-                                          w: squareLength / 9,
-                                          h: squareLength / 9,
-                                          gradient: getBoxGradient(
-                                              state, columnNumber, rowNumber),
-                                          pad: const [5, 10, 5, 10],
-                                          // shape: BoxShape.circle,
-                                          child: getChessChar(
-                                              columnNumber, rowNumber)),
-                                    ),
+                                for (int columnNumber = 1;
+                                    columnNumber <= 8;
+                                    columnNumber++)
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      for (int rowNumber = 1;
+                                          rowNumber <= 8;
+                                          rowNumber++)
+                                        Flexible(
+                                          flex: 1,
+                                          child: InkWell(
+                                            onTap: () {
+                                              if (ChessBoard().hasCharacterAt(
+                                                  columnNumber, rowNumber)) {
+                                                // ChessBoard().getcharacter(columnNumber, rowNumber);
+                                                context
+                                                    .read<ChessCubit>()
+                                                    .characterClicked(
+                                                        columnNumber,
+                                                        rowNumber);
+                                              } else {
+                                                context
+                                                    .read<ChessCubit>()
+                                                    .boxClicked(columnNumber,
+                                                        rowNumber);
+                                              }
+                                            },
+                                            child: CWContainer(
+                                                color: getBackgroundBoxColor(
+                                                    columnNumber, rowNumber),
+                                                brAll: 10,
+                                                // brWidth: 1,
+                                                // brColor: Colors.white,
+                                                // mar: [1, 1, 1, 1],
+                                                w: squareLength / 9,
+                                                h: squareLength / 9,
+                                                gradient: getBoxGradient(state,
+                                                    columnNumber, rowNumber),
+                                                pad: const [5, 10, 5, 10],
+                                                // shape: BoxShape.circle,
+                                                child: getChessChar(
+                                                    columnNumber, rowNumber)),
+                                          ),
+                                        ),
+                                    ],
                                   ),
                               ],
                             ),
-                        ],
+                          );
+                        },
                       ),
-                    );
-                  },
-                ),
-              ],
+                    ],
+                  ),
+                  // outCharsWidget(Player.black),
+                ],
+              ),
             ),
-            // outCharsWidget(Player.black),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

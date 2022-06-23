@@ -102,18 +102,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_web_plugins:
-    dependency: transitive
-    description: flutter
-    source: sdk
-    version: "0.0.0"
-  js:
-    dependency: transitive
-    description:
-      name: js
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.6.4"
   lints:
     dependency: transitive
     description:
@@ -177,13 +165,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "5.0.0"
-  plugin_platform_interface:
-    dependency: transitive
-    description:
-      name: plugin_platform_interface
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.1.2"
   provider:
     dependency: transitive
     description:
@@ -191,48 +172,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "6.0.3"
-  record:
+  scroll_snap_list:
     dependency: "direct main"
     description:
-      name: record
+      name: scroll_snap_list
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.1.1"
-  record_linux:
-    dependency: transitive
-    description:
-      name: record_linux
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.1.0"
-  record_macos:
-    dependency: transitive
-    description:
-      name: record_macos
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.1.0"
-  record_platform_interface:
-    dependency: transitive
-    description:
-      name: record_platform_interface
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.3.0"
-  record_web:
-    dependency: transitive
-    description:
-      name: record_web
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.3.1"
-  record_windows:
-    dependency: transitive
-    description:
-      name: record_windows
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.4.3"
+    version: "0.9.1"
   sky_engine:
     dependency: transitive
     description: flutter

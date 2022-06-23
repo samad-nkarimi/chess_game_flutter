@@ -1,9 +1,11 @@
 import 'package:chess_flutter/common_widgets/cw_container.dart';
+import 'package:chess_flutter/common_widgets/cw_elevated_button.dart';
 import 'package:chess_flutter/common_widgets/cw_text.dart';
-import 'package:chess_flutter/feature/home/bloc/chess/chess_bloc.dart';
+import 'package:chess_flutter/feature/home/bloc/chess/chess_cubit.dart';
 import 'package:chess_flutter/feature/home/screen/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:scroll_snap_list/scroll_snap_list.dart';
 
 void main() {
   BlocOverrides.runZoned(

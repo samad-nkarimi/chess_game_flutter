@@ -1,4 +1,5 @@
 import 'dart:math' as math;
+import 'dart:ui';
 import 'package:chess_flutter/common_widgets/cw_container.dart';
 import 'package:chess_flutter/common_widgets/cw_text.dart';
 import 'package:chess_flutter/feature/home/bloc/chess/chess_cubit.dart';
@@ -161,7 +162,7 @@ class _HomeScreenState extends State<HomeScreen> {
       return const SizedBox();
     } else {
       return SvgPicture.asset(c.photoId,
-          color: c.player == Player.white ? Colors.white : Colors.black
+          color: c.player == Player.white ? Colors.white : Colors.amber
           // // fit: BoxFit.fill,
           );
     }
@@ -279,7 +280,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
-    squareLength = size.shortestSide;
+    squareLength = size.shortestSide - 20;
 
     return Scaffold(
       // appBar: AppBar(
@@ -294,18 +295,18 @@ class _HomeScreenState extends State<HomeScreen> {
       // ),
       body: Stack(
         children: [
-          for (int i = 0; i < 30; i++)
-            for (int j = 0; j < 15; j++)
-              Container(
-                height: 50,
-                width: 50,
-                margin: EdgeInsets.only(left: 50.0 * i, top: 50.0 * j),
-                child: SvgPicture.asset(
-                  "assets/images/svg/bg_pattern.svg",
-                  height: 50,
-                  width: 50,
-                ),
-              ),
+          // for (int i = 0; i < 30; i++)
+          //   for (int j = 0; j < 15; j++)
+          //     Container(
+          //       height: 50,
+          //       width: 50,
+          //       margin: EdgeInsets.only(left: 50.0 * i, top: 50.0 * j),
+          //       child: SvgPicture.asset(
+          //         "assets/images/svg/bg_pattern.svg",
+          //         height: 50,
+          //         width: 50,
+          //       ),
+          //     ),
           Container(
             color: Colors.white10,
             child: Center(
@@ -316,8 +317,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      outCharsWidget(Player.white),
-                      outCharsWidget(Player.black),
+                      // outCharsWidget(Player.white),
+                      // outCharsWidget(Player.black),
                       BlocBuilder<ChessCubit, ChessState>(
                         buildWhen: (previous, current) {
                           if (current is! CharacterShottedState) {
@@ -334,8 +335,10 @@ class _HomeScreenState extends State<HomeScreen> {
                             print("winner ==> ${state.winner}");
                           }
                           return CWContainer(
+                            color: Color.fromARGB(255, 177, 145, 5),
                             h: squareLength,
                             w: squareLength,
+                            mar: const [10, 10, 10, 10],
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               mainAxisSize: MainAxisSize.min,
@@ -356,7 +359,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                             onTap: () {
                                               if (ChessBoard().hasCharacterAt(
                                                   columnNumber, rowNumber)) {
-                                                // ChessBoard().getcharacter(columnNumber, rowNumber);
                                                 context
                                                     .read<ChessCubit>()
                                                     .characterClicked(
@@ -369,21 +371,40 @@ class _HomeScreenState extends State<HomeScreen> {
                                                         rowNumber);
                                               }
                                             },
-                                            child: CWContainer(
-                                                color: getBackgroundBoxColor(
-                                                    columnNumber, rowNumber),
-                                                brAll: 10,
-                                                // brWidth: 1,
-                                                // brColor: Colors.white,
-                                                // mar: [1, 1, 1, 1],
-                                                w: squareLength / 9,
-                                                h: squareLength / 9,
-                                                gradient: getBoxGradient(state,
-                                                    columnNumber, rowNumber),
-                                                pad: const [5, 10, 5, 10],
-                                                // shape: BoxShape.circle,
-                                                child: getChessChar(
-                                                    columnNumber, rowNumber)),
+                                            child: ClipRRect(
+                                              clipBehavior: Clip.antiAlias,
+                                              child: ImageFiltered(
+                                                imageFilter: ImageFilter.blur(
+                                                  sigmaX: 2,
+                                                  sigmaY: 2,
+                                                  tileMode: TileMode.mirror,
+                                                ),
+                                                child: ClipRRect(
+                                                  clipBehavior: Clip.antiAlias,
+                                                  child: CWContainer(
+                                                      color: getBackgroundBoxColor(
+                                                          columnNumber,
+                                                          rowNumber),
+                                                      blendMode:
+                                                          BlendMode.difference,
+                                                      brAll: 10,
+                                                      // brWidth: 1,
+                                                      // brColor: Colors.white,
+                                                      // mar: [1, 1, 1, 1],
+                                                      w: squareLength / 8.3,
+                                                      h: squareLength / 8.3,
+                                                      gradient: getBoxGradient(
+                                                          state,
+                                                          columnNumber,
+                                                          rowNumber),
+                                                      pad: const [5, 5, 5, 5],
+                                                      // shape: BoxShape.circle,
+                                                      child: getChessChar(
+                                                          columnNumber,
+                                                          rowNumber)),
+                                                ),
+                                              ),
+                                            ),
                                           ),
                                         ),
                                     ],

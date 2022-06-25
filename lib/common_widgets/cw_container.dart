@@ -8,6 +8,7 @@ class CWContainer extends StatelessWidget {
   final Gradient? gradient;
   final Color brColor;
   final BoxShape? shape;
+  final BlendMode? blendMode;
 
   /// topLeft , topRight , bottomRight , bottomLeft
   final List<double> br;
@@ -30,6 +31,7 @@ class CWContainer extends StatelessWidget {
     this.color = Colors.transparent,
     this.gradient,
     this.brColor = Colors.transparent,
+    this.blendMode,
     this.br = const [0, 0, 0, 0],
     this.brAll = -1,
     this.brWidth = 1,
@@ -55,6 +57,7 @@ class CWContainer extends StatelessWidget {
       padding: EdgeInsets.only(
           top: pad[0], right: pad[1], bottom: pad[2], left: pad[3]),
       decoration: BoxDecoration(
+        backgroundBlendMode: blendMode,
         color: color,
         gradient: gradient,
         shape: shape ?? BoxShape.rectangle,

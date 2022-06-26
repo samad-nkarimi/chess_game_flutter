@@ -3,7 +3,7 @@ import 'package:chess_flutter/models/chess_box.dart';
 import 'package:chess_flutter/models/chess_player.dart';
 import 'package:chess_flutter/models/move_options.dart';
 
-class ChessRepository {
+class ChessLogic {
   ChessCharacter? scc;
   bool isKingInCheck = false;
   //which player can move the char
@@ -18,7 +18,7 @@ class ChessRepository {
   ChessBox moveFrom = const ChessBox(0, 0);
   ChessBox moveTo = const ChessBox(0, 0);
 
-  ChessRepository.initialize() {
+  ChessLogic.initialize() {
     PlayerWhite().initialize();
     PlayerBlack().initialize();
   }

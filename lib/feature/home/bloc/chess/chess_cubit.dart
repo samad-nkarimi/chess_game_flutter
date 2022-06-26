@@ -49,14 +49,9 @@ class ChessCubit extends Cubit<ChessState> {
       //wait for prevent conflict states
       await Future.delayed(Duration.zero);
 
-      emit(
-        CharacterMovedState(
-          isKingInCheck,
-          moveFrom,
-          moveTo,
-          kingBox: kingBox,
-        ),
-      );
+      emit(CharacterMovedState(isKingInCheck, moveFrom, moveTo,
+          kingBox: kingBox));
+
       //change the turn of the game
       turnThePlayer();
       moveOptions.clear();
@@ -111,21 +106,21 @@ class ChessCubit extends Cubit<ChessState> {
             letsDoCastlingLeft = true;
           }
           print("cfl: $cfl");
-          if (scc!.isKing) {
-            bool rfl = PreMoveMethods.castlingFromRight(
-              ChessBoard().getcharacter(col, row).player,
-              col,
-              row,
-              moveOptions,
-              isKingInCheck,
-            );
-            if (!rfl) {
-              moveOptions.onGoingBoxes.remove(ChessBox(col, row + 2));
-            } else {
-              letsDoCastlingRight = true;
-            }
-            print("rfl: $rfl");
+          // if (scc!.isKing) {
+          bool rfl = PreMoveMethods.castlingFromRight(
+            ChessBoard().getcharacter(col, row).player,
+            col,
+            row,
+            moveOptions,
+            isKingInCheck,
+          );
+          if (!rfl) {
+            moveOptions.onGoingBoxes.remove(ChessBox(col, row + 2));
+          } else {
+            letsDoCastlingRight = true;
           }
+          print("rfl: $rfl");
+          // }
         }
         //emit clicked state to show preview of possible moves
         emit(CharacterClickedState(moveOptions, isKingInCheck,

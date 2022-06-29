@@ -1,0 +1,28 @@
+import 'dart:convert';
+
+import 'package:chess_flutter/domain/user_repo.dart';
+import 'package:chess_flutter/models/user.dart';
+import 'package:http/http.dart' as http;
+
+class UserService {
+  var url = Uri.parse('http://localhost:3000/api/players/find-all');
+  var token =
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwbGF5ZXJfaWQiOjEsImVtYWlsIjoic2FtYWQubmthcmltaUBnbWFpbC5jb20iLCJpYXQiOjE2NTY1MzAzNDcsImV4cCI6MTY1NjU0ODM0N30.KMEgPo31XiCKxKIjnwvjR5ov618XXXiyVgKpGUAfgPA";
+  Future<List<User>> fetchUsers() async {
+    List<User> users = [];
+    var response =
+        await http.get(url, headers: {'Authorization': 'Bearer $token'}
+            // body: {
+            //   'name': 'doodle',
+            //   'email': 'blue',
+            //   'password': 'blue',
+            // },
+            );
+    // print(jsonDecode(response.body)[0]);
+    // Map<String, dynamic> json =
+    //     jsonDecode(response.body) as Map<String, dynamic>;
+
+    users = User.usersFromJson(jsonDecode(response.body));
+    return users;
+  }
+}

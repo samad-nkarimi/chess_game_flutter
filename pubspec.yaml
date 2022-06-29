@@ -38,6 +38,8 @@ dependencies:
   flutter_bloc: ^8.0.1
   equatable: ^2.0.3
   scroll_snap_list: ^0.9.1
+  http: ^0.13.4
+  hive: ^2.2.2
 
   
 

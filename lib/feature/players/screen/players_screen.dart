@@ -4,12 +4,22 @@ import 'package:chess_flutter/common_widgets/cw_container.dart';
 import 'package:chess_flutter/common_widgets/cw_elevated_button.dart';
 import 'package:chess_flutter/common_widgets/cw_text.dart';
 import 'package:chess_flutter/feature/players/widget/custom_input_field.dart';
+import 'package:chess_flutter/models/user.dart';
+import 'package:chess_flutter/repository/user_repo_impl.dart';
+import 'package:chess_flutter/service/user_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class PlayersScreen extends StatelessWidget {
+class PlayersScreen extends StatefulWidget {
   static const routeName = "/players_screen";
-  const PlayersScreen({Key? key}) : super(key: key);
+  PlayersScreen({Key? key}) : super(key: key);
+
+  @override
+  State<PlayersScreen> createState() => _PlayersScreenState();
+}
+
+class _PlayersScreenState extends State<PlayersScreen> {
+  List<User> users = [];
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +41,10 @@ class PlayersScreen extends StatelessWidget {
                   flex: 3,
                   child: Center(
                     child: CWElevatedButton(
-                      onPressed: () {},
+                      onPressed: () async {
+                        users = await UserRepoImpl(UserService()).getUsers();
+                        setState(() {});
+                      },
                       child: CWText("fetch all"),
                     ),
                   ),
@@ -46,7 +59,7 @@ class PlayersScreen extends StatelessWidget {
         color: Colors.blueGrey,
         child: SingleChildScrollView(
             child: GridView.builder(
-          itemCount: 50,
+          itemCount: users.length,
           shrinkWrap: true,
           scrollDirection: Axis.vertical,
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -61,7 +74,12 @@ class PlayersScreen extends StatelessWidget {
               w: double.infinity,
               brAll: 5,
               color: Colors.white24,
-              child: Text(index.toString()),
+              child: Column(
+                children: [
+                  Text(users[index].name),
+                  Text(users[index].score),
+                ],
+              ),
             );
           },
         )),

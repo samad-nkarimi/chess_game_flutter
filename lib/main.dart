@@ -40,7 +40,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       routes: {
         "/0": (context) => const HomeScreen(),
-        "/": (context) => const PlayersScreen(),
+        "/": (context) => PlayersScreen(),
       },
     );
   }

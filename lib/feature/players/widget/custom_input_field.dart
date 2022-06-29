@@ -74,10 +74,10 @@ class _CustomInputFieldState extends State<CustomInputField> {
               color: Colors.black54,
               width: 1.5,
             ),
-            borderRadius: BorderRadius.circular(30),
+            borderRadius: BorderRadius.circular(5),
           ),
           enabledBorder: OutlineInputBorder(
-            borderRadius: const BorderRadius.all(Radius.circular(32)),
+            borderRadius: const BorderRadius.all(Radius.circular(5)),
             borderSide: BorderSide(
               color: Colors.black26,
               width: .5,

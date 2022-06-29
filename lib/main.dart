@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:scroll_snap_list/scroll_snap_list.dart';
 
+import 'feature/players/screen/players_screen.dart';
+
 void main() {
   BlocOverrides.runZoned(
     () {
@@ -34,7 +36,12 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.lightGreen,
       ),
-      home: const HomeScreen(),
+      // home: const HomeScreen(),
+      debugShowCheckedModeBanner: false,
+      routes: {
+        "/0": (context) => const HomeScreen(),
+        "/": (context) => const PlayersScreen(),
+      },
     );
   }
 }

@@ -27,16 +27,16 @@ class _HomeScreenState extends State<HomeScreen> {
     // even columns
     if (columnIndex % 2 == 0) {
       if (rowIndex % 2 == 0) {
-        return const Color.fromARGB(255, 0, 167, 103);
+        return Color.fromARGB(255, 118, 236, 191);
       }
     }
     //odd columns
     else {
       if (rowIndex % 2 != 0) {
-        return const Color.fromARGB(255, 0, 167, 103);
+        return const Color.fromARGB(255, 118, 236, 191);
       }
     }
-    return const Color.fromARGB(255, 252, 71, 207);
+    return Color.fromARGB(255, 110, 6, 6);
   }
 
   // Color getBoxColor(ChessState state, int col, int row) {
@@ -375,8 +375,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                               clipBehavior: Clip.antiAlias,
                                               child: ImageFiltered(
                                                 imageFilter: ImageFilter.blur(
-                                                  sigmaX: 2,
-                                                  sigmaY: 2,
+                                                  sigmaX: 0.2,
+                                                  sigmaY: 0.2,
                                                   tileMode: TileMode.mirror,
                                                 ),
                                                 child: ClipRRect(

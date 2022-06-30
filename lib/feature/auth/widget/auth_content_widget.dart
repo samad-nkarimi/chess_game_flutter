@@ -24,7 +24,7 @@ class StringWrapper {
 
 class AuthContentWidget extends StatefulWidget {
   final AuthType authType;
-  AuthContentWidget({Key? key, this.authType = AuthType.signup})
+  const AuthContentWidget({Key? key, this.authType = AuthType.signup})
       : super(key: key);
 
   @override
@@ -33,9 +33,15 @@ class AuthContentWidget extends StatefulWidget {
 
 class _AuthContentWidgetState extends State<AuthContentWidget> {
   final formKey = GlobalKey<FormState>();
+
+  late StringWrapper nameWrapper;
   late StringWrapper emailWrapper;
   late StringWrapper passwordWrapper;
   late StringWrapper confrimPasswordWrapper;
+
+  bool nameValidation(String name) {
+    return name.isNotEmpty && name.length < 20;
+  }
 
   bool emailValidation(String email) {
     return RegExp(
@@ -66,7 +72,8 @@ class _AuthContentWidgetState extends State<AuthContentWidget> {
     if (emailValidation(emailWrapper.value) &&
         passwordValidation(passwordWrapper.value)) {
       if (authType == AuthType.signup) {
-        return confirmPasswordValidation(confrimPasswordWrapper.value);
+        return nameValidation(nameWrapper.value) &&
+            confirmPasswordValidation(confrimPasswordWrapper.value);
       } else {
         return true;
       }
@@ -78,6 +85,8 @@ class _AuthContentWidgetState extends State<AuthContentWidget> {
   @override
   void initState() {
     super.initState();
+    nameWrapper = StringWrapper(
+        '', 'username', Icons.verified_user, nameValidation, "نام کاربری");
     emailWrapper = StringWrapper(
         '', 'google.site@gmail.com', Icons.email, emailValidation, "ایمیل");
     passwordWrapper = StringWrapper(
@@ -111,19 +120,28 @@ class _AuthContentWidgetState extends State<AuthContentWidget> {
             key: formKey,
             child: Column(
               children: [
+                //
+                if (widget.authType == AuthType.signup)
+                  AuthInputField(inputValue: nameWrapper),
+                if (widget.authType == AuthType.signup)
+                  const SizedBox(height: 10),
+                //
                 AuthInputField(inputValue: emailWrapper),
                 const SizedBox(height: 10),
+                //
                 AuthInputField(inputValue: passwordWrapper),
+                //
                 if (widget.authType == AuthType.signup)
                   const SizedBox(height: 10),
                 if (widget.authType == AuthType.signup)
                   AuthInputField(inputValue: confrimPasswordWrapper),
+                //
                 const SizedBox(height: 40),
                 AuthConfirmButtonWidget(
                   authType: widget.authType,
                   isFormValid: isFormValidate(widget.authType),
                   registerCredential: RegisterCredential(
-                    "",
+                    nameWrapper.value,
                     emailWrapper.value,
                     passwordWrapper.value,
                     widget.authType,
@@ -164,7 +182,6 @@ class _AuthContentWidgetState extends State<AuthContentWidget> {
                   authType == AuthType.login
                       ? AuthType.signup
                       : AuthType.login);
-              print(authType);
             },
             child: Text(authType == AuthType.login ? 'sign up' : 'login'),
           )

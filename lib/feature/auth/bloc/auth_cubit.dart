@@ -4,6 +4,8 @@ import 'package:chess_flutter/models/enums/auth_type.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../models/auth_response.dart';
+import '../../../models/enums/auth_response_status.dart';
 import '../../../models/register_credential.dart';
 
 class AuthCubit extends Cubit<AuthState> {
@@ -20,18 +22,19 @@ class AuthCubit extends Cubit<AuthState> {
     // String username = email.substring(0, email.indexOf('@')); //#change
     if (registerCredential.authType == AuthType.signup) {
       try {
-        var response = authRegisterUseCase.execute(registerCredential);
+        AuthResponse response =
+            await authRegisterUseCase.execute(registerCredential);
 
-        // if (response.authResponseStatus == AuthResponseStatus.succeed) {
-        //   await ServerCrud().createUserDatabase();
-        //   emit(AuthSucceedState());
-        // } else {
-        //   print("failed with statusCode: $response");
-        //   emit(AuthErrorState(
-        //     response.message,
-        //     DateTime.now().millisecondsSinceEpoch.toString(),
-        //   ));
-        // }
+        if (response.authResponseStatus == AuthResponseStatus.succeed) {
+          // await ServerCrud().createUserDatabase();
+          emit(AuthSucceedState());
+        } else {
+          print("failed with statusCode: $response");
+          emit(AuthErrorState(
+            response.message,
+            DateTime.now().millisecondsSinceEpoch.toString(),
+          ));
+        }
       } catch (error) {
         emit(AuthErrorState(
           error.toString(),
@@ -41,24 +44,24 @@ class AuthCubit extends Cubit<AuthState> {
     } else {
       //login
       try {
-        // AuthResponse response =
-        //     await ServerCrud().loginUserToServer(event.authCredentials);
+        AuthResponse response =
+            await authRegisterUseCase.execute(registerCredential);
 
-        // if (response.authResponseStatus == AuthResponseStatus.succeed) {
-        //   // after this we should go to home page as a logged in user
-        //   // Navigator.pushReplacementNamed(context, '/');
-        //   String data =
-        //       await ServerCrud().getDataFromServer(registerCredential.name);
+        if (response.authResponseStatus == AuthResponseStatus.succeed) {
+          // after this we should go to home page as a logged in user
+          // Navigator.pushReplacementNamed(context, '/');
+          // String data =
+          //     await ServerCrud().getDataFromServer(registerCredential.name);
 
-        //   print("from server: $data");
-        //   emit(AuthSucceedState());
-        // } else {
-        //   print("failed with statusCode: $response");
-        //   emit(AuthErrorState(
-        //     response.message,
-        //     DateTime.now().millisecondsSinceEpoch.toString(),
-        //   ));
-        // }
+          // print("from server: $data");
+          emit(AuthSucceedState());
+        } else {
+          print("failed with statusCode: $response");
+          emit(AuthErrorState(
+            response.message,
+            DateTime.now().millisecondsSinceEpoch.toString(),
+          ));
+        }
       } catch (error) {
         emit(AuthErrorState(
           error.toString(),

@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:chess_flutter/domain/user_repo.dart';
 import 'package:chess_flutter/models/user.dart';
 import 'package:http/http.dart' as http;
 

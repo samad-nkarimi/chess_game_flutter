@@ -1,5 +1,6 @@
-import 'package:chess_flutter/domain/auth_repo.dart';
 import 'package:chess_flutter/service/auth_service.dart';
+
+import '../domain/repo/auth_repo.dart';
 
 class AuthRepoImpl implements AuthRepo {
   final AuthService authService;
@@ -17,6 +18,7 @@ class AuthRepoImpl implements AuthRepo {
 
   @override
   String register(String email, String name, String password) {
+    authService.register();
     throw UnimplementedError();
   }
 }

@@ -12,14 +12,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+class ChessScreen extends StatefulWidget {
+  const ChessScreen({Key? key}) : super(key: key);
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<ChessScreen> createState() => _ChessScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _ChessScreenState extends State<ChessScreen> {
   double squareLength = 350; // min(width , height)
 
   //white and black colors

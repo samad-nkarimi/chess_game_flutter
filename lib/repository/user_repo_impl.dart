@@ -12,13 +12,12 @@ class UserRepoImpl implements UserRepo {
   UserRepoImpl(this.userService);
 
   @override
-  List<User> findUserById() {
-    post(Uri.parse(url));
-    throw Exception();
+  Future<List<User>> getUsers() async {
+    return userService.fetchUsers();
   }
 
   @override
-  Future<List<User>> getUsers() async {
-    return userService.fetchUsers();
+  Future<List<User>> findUserById(String username) {
+    return userService.findUsersById(username);
   }
 }

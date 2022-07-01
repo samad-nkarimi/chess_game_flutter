@@ -42,7 +42,7 @@ class _AuthScreenState extends State<AuthScreen> {
                         isWating = false;
                         Navigator.pop(context);
                       }
-                      print("error");
+                      print("error: ${state.message}");
                     }
                     if (state is WatingForAuthState) {
                       // showAlertDialog("wating");

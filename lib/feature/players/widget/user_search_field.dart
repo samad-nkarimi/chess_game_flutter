@@ -1,22 +1,38 @@
-import 'package:flutter/material.dart';
+import 'dart:async';
 
-class CustomInputField extends StatefulWidget {
+import 'package:chess_flutter/feature/players/bloc/user_cubit.dart';
+import 'package:chess_flutter/feature/players/serch_timer.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+class UserSearchField extends StatefulWidget {
   // final StringWrapper inputValue;
-  const CustomInputField({Key? key}) : super(key: key);
+  const UserSearchField({Key? key}) : super(key: key);
 
   @override
-  State<CustomInputField> createState() => _CustomInputFieldState();
+  State<UserSearchField> createState() => _UserSearchFieldState();
 }
 
-class _CustomInputFieldState extends State<CustomInputField> {
+class _UserSearchFieldState extends State<UserSearchField> {
   bool isValid = false;
   bool focus = false;
   FocusNode f = FocusNode();
+  late Timer timer;
+
+  @override
+  void initState() {
+    super.initState();
+    timer = Timer(const Duration(seconds: 1), () {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
       child: TextFormField(
         onChanged: (value) {
+          SearchTimer(() =>
+              BlocProvider.of<UserCubit>(context).searchFeedChanged(value));
+
           // widget.inputValue.setValue(value);
 
           // if (widget.inputValue.validaton(value)) {

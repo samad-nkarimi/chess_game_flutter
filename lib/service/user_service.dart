@@ -24,4 +24,15 @@ class UserService {
     users = User.usersFromJson(jsonDecode(response.body));
     return users;
   }
+
+  //
+  Future<List<User>> findUsersById(String username) async {
+    var url = Uri.parse('http://localhost:3000/api/players/find-all/$username');
+    List<User> users = [];
+    var response =
+        await http.get(url, headers: {'Authorization': 'Bearer $token'});
+
+    users = User.usersFromJson(jsonDecode(response.body));
+    return users;
+  }
 }

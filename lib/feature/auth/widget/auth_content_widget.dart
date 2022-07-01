@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../common_widgets/cw_text.dart';
-import '../../players/widget/custom_input_field.dart';
+import '../../players/widget/user_search_field.dart';
 
 class StringWrapper {
   String value;
@@ -76,6 +76,10 @@ class _AuthContentWidgetState extends State<AuthContentWidget> {
   }
 
   bool isFormValidate(AuthType authType) {
+    print(nameWrapper.value);
+    print(emailWrapper.value);
+    print(passwordWrapper.value);
+    print(confrimPasswordWrapper.value);
     if (emailValidation(emailWrapper.value) &&
         passwordValidation(passwordWrapper.value)) {
       if (authType == AuthType.signup) {
@@ -153,19 +157,31 @@ class _AuthContentWidgetState extends State<AuthContentWidget> {
               children: [
                 //
                 if (widget.authType == AuthType.signup)
-                  AuthInputField(inputValue: nameWrapper),
+                  AuthInputField(
+                    inputValue: nameWrapper,
+                    key: Key(nameWrapper.labelText),
+                  ),
                 if (widget.authType == AuthType.signup)
                   const SizedBox(height: 10),
                 //
-                AuthInputField(inputValue: emailWrapper),
+                AuthInputField(
+                  inputValue: emailWrapper,
+                  key: Key(emailWrapper.labelText),
+                ),
                 const SizedBox(height: 10),
                 //
-                AuthInputField(inputValue: passwordWrapper),
+                AuthInputField(
+                  inputValue: passwordWrapper,
+                  key: Key(passwordWrapper.labelText),
+                ),
                 //
                 if (widget.authType == AuthType.signup)
                   const SizedBox(height: 10),
                 if (widget.authType == AuthType.signup)
-                  AuthInputField(inputValue: confrimPasswordWrapper),
+                  AuthInputField(
+                    inputValue: confrimPasswordWrapper,
+                    key: Key(confrimPasswordWrapper.labelText),
+                  ),
                 //
                 const SizedBox(height: 40),
                 AuthConfirmButtonWidget(

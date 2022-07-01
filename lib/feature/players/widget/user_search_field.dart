@@ -30,8 +30,12 @@ class _UserSearchFieldState extends State<UserSearchField> {
     return Container(
       child: TextFormField(
         onChanged: (value) {
-          SearchTimer(() =>
-              BlocProvider.of<UserCubit>(context).searchFeedChanged(value));
+          if (value.isEmpty) {
+            SearchTimer(() {});
+          } else {
+            SearchTimer(() =>
+                BlocProvider.of<UserCubit>(context).searchFeedChanged(value));
+          }
 
           // widget.inputValue.setValue(value);
 

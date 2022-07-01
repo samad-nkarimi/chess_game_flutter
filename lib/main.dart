@@ -4,20 +4,22 @@ import 'package:chess_flutter/common_widgets/cw_text.dart';
 import 'package:chess_flutter/domain/repo/auth_repo.dart';
 import 'package:chess_flutter/domain/use_case/auth_register_use_case.dart';
 import 'package:chess_flutter/domain/use_case/find_username_use_case.dart';
+import 'package:chess_flutter/domain/use_case/play_request_use_case.dart';
 import 'package:chess_flutter/feature/auth/bloc/auth_cubit.dart';
 import 'package:chess_flutter/feature/bottom_nav/screen/vav_screen.dart';
 import 'package:chess_flutter/feature/chess/bloc/chess/chess_cubit.dart';
 import 'package:chess_flutter/feature/chess/screen/chess_screen.dart';
+import 'package:chess_flutter/feature/home/bloc/home_cubit.dart';
 import 'package:chess_flutter/feature/home/screen/home_screen.dart';
 
 import 'package:chess_flutter/repository/auth_repo_impl.dart';
+import 'package:chess_flutter/repository/remote_play_repo_impl.dart';
 import 'package:chess_flutter/repository/user_repo_impl.dart';
 import 'package:chess_flutter/service/auth_service.dart';
+import 'package:chess_flutter/service/play_service.dart';
 import 'package:chess_flutter/service/user_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:scroll_snap_list/scroll_snap_list.dart';
-
 import 'feature/auth/screen/auth_screen.dart';
 import 'feature/players/bloc/user_cubit.dart';
 import 'feature/players/screen/players_screen.dart';
@@ -31,12 +33,13 @@ void main() {
             BlocProvider(create: (context) => ChessCubit()),
             BlocProvider(
               create: (context) => UserCubit(
-                findUsernameUseCase: FindUsernameUseCase(
-                  UserRepoImpl(
-                    UserService(),
+                  findUsernameUseCase: FindUsernameUseCase(
+                    UserRepoImpl(
+                      UserService(),
+                    ),
                   ),
-                ),
-              ),
+                  playRequestUseCase:
+                      PlayRequestUseCase(RemotePlayRepoImpl(PlayService()))),
             ),
             BlocProvider(
               create: (context) => AuthCubit(
@@ -47,6 +50,7 @@ void main() {
                 ),
               ),
             ),
+            BlocProvider(create: (context) => HomeCubit()),
           ],
           child: const MyApp(),
         ),

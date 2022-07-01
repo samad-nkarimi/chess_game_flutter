@@ -23,7 +23,9 @@ class UserService {
     var response =
         await http.get(url, headers: {'Authorization': 'Bearer $token'});
 
+    print(response.body);
     users = User.usersFromJson(jsonDecode(response.body));
+    print(users);
     return users;
   }
 }

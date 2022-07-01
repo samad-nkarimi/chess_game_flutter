@@ -5,6 +5,7 @@ import 'package:chess_flutter/common_widgets/cw_elevated_button.dart';
 import 'package:chess_flutter/common_widgets/cw_loading_widget.dart';
 import 'package:chess_flutter/common_widgets/cw_text.dart';
 import 'package:chess_flutter/feature/auth/screen/auth_screen.dart';
+import 'package:chess_flutter/feature/home/bloc/home_cubit.dart';
 import 'package:chess_flutter/feature/players/bloc/user_cubit.dart';
 import 'package:chess_flutter/feature/players/bloc/user_state.dart';
 import 'package:chess_flutter/feature/players/widget/user_search_field.dart';
@@ -69,81 +70,98 @@ class _PlayersScreenState extends State<PlayersScreen> {
           ),
         ),
       ),
-      body: BlocConsumer<UserCubit, UserState>(
-        listener: (context, state) {
-          if (state is SearchingUserState) {
-            showDialog(
-              context: context,
-              barrierDismissible: false,
-              builder: (c) {
-                return const CWLoadingWidget();
-              },
-            );
-          } else if (state is ErrorUserState) {
-            Navigator.pop(context);
-          }
-        },
+      body: BlocBuilder<UserCubit, UserState>(
+        // listener: (context, state) {
+        //   if (state is SearchingUserState) {
+        //     showDialog(
+        //       context: context,
+        //       barrierDismissible: true,
+        //       builder: (c) {
+        //         return const CWLoadingWidget();
+        //       },
+        //     );
+        //   } else if (state is ErrorUserState) {
+        //     Navigator.pop(context);
+        //   }
+        // },
         builder: (context, state) {
+          bool searching = false;
+          if (state is SearchingUserState) {
+            searching = true;
+          }
+          print(state);
           return CWContainer(
             h: double.infinity,
             w: double.infinity,
             color: Colors.blueGrey,
             child: SingleChildScrollView(
-              child: GridView.builder(
-                itemCount: users.length,
-                shrinkWrap: true,
-                scrollDirection: Axis.vertical,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount:
-                      max(1, MediaQuery.of(context).size.width ~/ 300),
-                  childAspectRatio: 5,
-                ),
-                itemBuilder: (context, index) {
-                  return CWContainer(
-                    h: 50,
-                    mar: const [1, 10, 1, 10],
-                    pad: const [5, 20, 5, 20],
-                    w: double.infinity,
-                    brAll: 5,
-                    color: Colors.white24,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Column(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            CWText(
-                              "name: ${users[index].name}",
-                              color: Colors.white,
-                              fontSize: 18,
-                            ),
-                            CWText(
-                              "score: ${users[index].score}",
-                              color: Colors.white60,
-                              fontSize: 14,
-                            ),
-                          ],
-                        ),
-                        const Expanded(child: SizedBox()),
-                        CWElevatedButton(
-                          onPressed: () {},
-                          child: CWText(
-                            "request",
-                            color: Colors.white,
+              child: searching
+                  ? Center(
+                      child: const CWText(
+                      "searching...",
+                      color: Colors.white,
+                    ))
+                  : GridView.builder(
+                      itemCount: state.users.length,
+                      shrinkWrap: true,
+                      scrollDirection: Axis.vertical,
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount:
+                            max(1, MediaQuery.of(context).size.width ~/ 300),
+                        childAspectRatio: 5,
+                      ),
+                      itemBuilder: (context, index) {
+                        return CWContainer(
+                          h: 50,
+                          mar: const [1, 10, 1, 10],
+                          pad: const [5, 20, 5, 20],
+                          w: double.infinity,
+                          brAll: 5,
+                          color: Colors.white24,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Column(
+                                mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  CWText(
+                                    "name: ${state.users[index].name}",
+                                    color: Colors.white,
+                                    fontSize: 18,
+                                  ),
+                                  CWText(
+                                    "score: ${state.users[index].score}",
+                                    color: Colors.white60,
+                                    fontSize: 14,
+                                  ),
+                                ],
+                              ),
+                              const Expanded(child: SizedBox()),
+                              CWElevatedButton(
+                                onPressed: () {
+                                  BlocProvider.of<UserCubit>(context)
+                                      .sendPlayRequestTo(users[index].name);
+                                  BlocProvider.of<HomeCubit>(context)
+                                      .addNewRemotePlay(users[index].name);
+                                },
+                                vPadding: 20,
+                                hPadding: 20,
+                                bRadius: 5,
+                                primary: Colors.green,
+                                onPrimary: Colors.white,
+                                child: const CWText(
+                                  "request",
+                                  color: Colors.white,
+                                ),
+                              )
+                            ],
                           ),
-                          vPadding: 20,
-                          hPadding: 20,
-                          bRadius: 5,
-                          primary: Colors.green,
-                          onPrimary: Colors.white,
-                        )
-                      ],
+                        );
+                      },
                     ),
-                  );
-                },
-              ),
             ),
           );
         },

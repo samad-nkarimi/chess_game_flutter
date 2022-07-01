@@ -65,8 +65,8 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       routes: {
         "/0": (context) => const HomeScreen(),
-        "/1": (context) => PlayersScreen(),
-        "/": (context) => const AuthScreen(),
+        "/": (context) => PlayersScreen(),
+        AuthScreen.routeName: (context) => const AuthScreen(),
       },
     );
   }

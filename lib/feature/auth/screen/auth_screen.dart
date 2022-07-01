@@ -77,7 +77,7 @@ class _AuthScreenState extends State<AuthScreen> {
                     } else if (state is AuthTypeChangedState) {
                       return AuthContentWidget(authType: state.authType);
                     } else {
-                      return AuthContentWidget(authType: AuthType.login);
+                      return const AuthContentWidget(authType: AuthType.login);
                     }
                   },
                 ),

@@ -3,12 +3,12 @@ import 'dart:math';
 import 'package:chess_flutter/common_widgets/cw_container.dart';
 import 'package:chess_flutter/common_widgets/cw_elevated_button.dart';
 import 'package:chess_flutter/common_widgets/cw_text.dart';
+import 'package:chess_flutter/feature/auth/screen/auth_screen.dart';
 import 'package:chess_flutter/feature/players/widget/custom_input_field.dart';
 import 'package:chess_flutter/models/user.dart';
 import 'package:chess_flutter/repository/user_repo_impl.dart';
 import 'package:chess_flutter/service/user_service.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 class PlayersScreen extends StatefulWidget {
   static const routeName = "/players_screen";
@@ -26,33 +26,45 @@ class _PlayersScreenState extends State<PlayersScreen> {
     // print(MediaQuery.of(context).size.width);
     return Scaffold(
       appBar: PreferredSize(
-          child: CWContainer(
-            h: 60,
-            w: double.infinity,
-            pad: [5, 20, 5, 20],
-            color: Colors.green,
-            child: Row(
-              children: [
-                Flexible(
-                  flex: 10,
-                  child: CustomInputField(),
-                ),
-                Flexible(
-                  flex: 3,
-                  child: Center(
-                    child: CWElevatedButton(
-                      onPressed: () async {
-                        users = await UserRepoImpl(UserService()).getUsers();
-                        setState(() {});
-                      },
-                      child: CWText("fetch all"),
-                    ),
+        preferredSize: const Size(double.infinity, 60),
+        child: CWContainer(
+          h: 60,
+          w: double.infinity,
+          pad: const [5, 20, 5, 20],
+          color: Colors.green,
+          child: Row(
+            children: [
+              const Flexible(
+                flex: 10,
+                child: CustomInputField(),
+              ),
+              Flexible(
+                flex: 3,
+                child: Center(
+                  child: CWElevatedButton(
+                    onPressed: () async {
+                      users = await UserRepoImpl(UserService()).getUsers();
+                      setState(() {});
+                    },
+                    child: const CWText("fetch all"),
                   ),
                 ),
-              ],
-            ),
+              ),
+              Flexible(
+                flex: 3,
+                child: Center(
+                  child: CWElevatedButton(
+                    onPressed: () async {
+                      Navigator.pushNamed(context, AuthScreen.routeName);
+                    },
+                    child: const CWText("register"),
+                  ),
+                ),
+              ),
+            ],
           ),
-          preferredSize: Size(double.infinity, 60)),
+        ),
+      ),
       body: CWContainer(
         h: double.infinity,
         w: double.infinity,
@@ -69,8 +81,8 @@ class _PlayersScreenState extends State<PlayersScreen> {
           itemBuilder: (context, index) {
             return CWContainer(
               h: 50,
-              mar: [1, 10, 1, 10],
-              pad: [5, 20, 5, 20],
+              mar: const [1, 10, 1, 10],
+              pad: const [5, 20, 5, 20],
               w: double.infinity,
               brAll: 5,
               color: Colors.white24,

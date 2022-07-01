@@ -15,8 +15,15 @@ class StringWrapper {
   IconData icon;
   Function validaton;
   String guideText;
-  StringWrapper(
-      this.value, this.hint, this.icon, this.validaton, this.guideText);
+  String labelText;
+  StringWrapper({
+    required this.value,
+    required this.hint,
+    required this.icon,
+    required this.validaton,
+    required this.labelText,
+    required this.guideText,
+  });
   setValue(String value) {
     this.value = value;
   }
@@ -82,21 +89,45 @@ class _AuthContentWidgetState extends State<AuthContentWidget> {
     }
   }
 
+  void initializeStringWrappers() {
+    nameWrapper = StringWrapper(
+      value: '',
+      hint: 'username',
+      icon: Icons.verified_user,
+      validaton: nameValidation,
+      labelText: "username",
+      guideText: "نام کاربری",
+    );
+    emailWrapper = StringWrapper(
+      value: '',
+      hint: 'google.site@gmail.com',
+      icon: Icons.email,
+      validaton: emailValidation,
+      labelText: "email",
+      guideText: "ایمیل",
+    );
+    passwordWrapper = StringWrapper(
+      value: '',
+      hint: 'SnGoogle4321',
+      icon: Icons.lock,
+      validaton: passwordValidation,
+      labelText: "password",
+      guideText: "رمز شامل حروف یزرگ و کوچک و اعداد باشد و طول آن حداقل 8 باشد",
+    );
+    confrimPasswordWrapper = StringWrapper(
+      value: '',
+      hint: 'SnGoogle4321',
+      icon: Icons.lock,
+      validaton: confirmPasswordValidation,
+      labelText: "confirm password",
+      guideText: "مطابق رمز بالا باشد",
+    );
+  }
+
   @override
   void initState() {
     super.initState();
-    nameWrapper = StringWrapper(
-        '', 'username', Icons.verified_user, nameValidation, "نام کاربری");
-    emailWrapper = StringWrapper(
-        '', 'google.site@gmail.com', Icons.email, emailValidation, "ایمیل");
-    passwordWrapper = StringWrapper(
-        '',
-        'SnGoogle4321',
-        Icons.lock,
-        passwordValidation,
-        "رمز شامل حروف یزرگ و کوچک و اعداد باشد و طول آن حداقل 8 باشد");
-    confrimPasswordWrapper = StringWrapper('', 'SnGoogle4321', Icons.lock,
-        confirmPasswordValidation, "مطابق رمز بالا باشد");
+    initializeStringWrappers();
   }
 
   @override

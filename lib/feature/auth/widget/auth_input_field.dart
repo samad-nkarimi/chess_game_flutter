@@ -56,13 +56,18 @@ class _AuthInputFieldState extends State<AuthInputField> {
             decoration: InputDecoration(
               hintText: widget.inputValue.hint,
               hintStyle: TextStyle(color: Colors.grey.withOpacity(.4)),
-              fillColor: focus ? Colors.grey.shade200 : Colors.white,
+              fillColor:
+                  focus ? Color.fromARGB(250, 250, 250, 251) : Colors.white,
               // errorText: "error",
               filled: true,
               // focusColor: onEmail ? Colors.red : Colors.white,
 
-              prefixIcon: Icon(widget.inputValue.icon, color: Colors.amber),
-              prefixIconColor: Colors.amber,
+              prefixIcon: Icon(
+                widget.inputValue.icon,
+                color: Color.fromARGB(255, 76, 164, 214),
+                size: 20.0,
+              ),
+              prefixIconColor: Color.fromARGB(255, 32, 128, 184),
               suffixIcon: isValid
                   ? const Icon(
                       Icons.timeline,
@@ -71,39 +76,40 @@ class _AuthInputFieldState extends State<AuthInputField> {
                   : null,
               // labelText: "email",
 
-              // label: Container(
-              //   // height: 10,
-              //   child: const Text("email"),
-
-              //   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-              //   decoration: BoxDecoration(
-              //     borderRadius: BorderRadius.circular(30),
-              //     color: Colors.white,
-              //   ),
-              // ),
-              labelStyle: const TextStyle(color: Colors.green),
+              label: Container(
+                // height: 10,
+                margin: EdgeInsets.all(0),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(30),
+                  color: Color.fromARGB(250, 250, 250, 251),
+                ),
+                child: Text(widget.inputValue.labelText),
+              ),
+              labelStyle:
+                  const TextStyle(color: Color.fromARGB(166, 76, 175, 79)),
               focusedBorder: OutlineInputBorder(
                 borderSide: const BorderSide(
-                  color: Colors.green,
-                  width: 2.5,
+                  color: Colors.black38,
+                  width: 1.0,
                 ),
-                borderRadius: BorderRadius.circular(30),
+                borderRadius: BorderRadius.circular(5),
               ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: const BorderRadius.all(Radius.circular(32)),
+              enabledBorder: const OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(5)),
                 borderSide: BorderSide(
-                  color: Colors.orange.shade100,
-                  width: 1.5,
+                  color: Colors.black12,
+                  width: .5,
                 ),
               ),
             ),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 30),
+            padding: const EdgeInsets.symmetric(horizontal: 15),
             child: CWText(
               widget.inputValue.guideText,
               fontSize: 10,
-              color: Colors.red,
+              color: Colors.black54,
               textAlign: TextAlign.right,
             ),
           ),

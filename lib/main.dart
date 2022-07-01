@@ -5,8 +5,11 @@ import 'package:chess_flutter/domain/repo/auth_repo.dart';
 import 'package:chess_flutter/domain/use_case/auth_register_use_case.dart';
 import 'package:chess_flutter/domain/use_case/find_username_use_case.dart';
 import 'package:chess_flutter/feature/auth/bloc/auth_cubit.dart';
-import 'package:chess_flutter/feature/home/bloc/chess/chess_cubit.dart';
+import 'package:chess_flutter/feature/bottom_nav/screen/vav_screen.dart';
+import 'package:chess_flutter/feature/chess/bloc/chess/chess_cubit.dart';
+import 'package:chess_flutter/feature/chess/screen/chess_screen.dart';
 import 'package:chess_flutter/feature/home/screen/home_screen.dart';
+
 import 'package:chess_flutter/repository/auth_repo_impl.dart';
 import 'package:chess_flutter/repository/user_repo_impl.dart';
 import 'package:chess_flutter/service/auth_service.dart';
@@ -67,9 +70,11 @@ class MyApp extends StatelessWidget {
       // home: const HomeScreen(),
       debugShowCheckedModeBanner: false,
       routes: {
-        "/0": (context) => const ChessScreen(),
-        "/": (context) => PlayersScreen(),
+        "/": (context) => const BottomNavScreen(),
+        HomeScreen.routeNAme: (context) => const HomeScreen(),
+        "/1": (context) => const PlayersScreen(),
         AuthScreen.routeName: (context) => const AuthScreen(),
+        ChessScreen.routeName: (context) => const ChessScreen(),
       },
     );
   }

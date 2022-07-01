@@ -1,5 +1,6 @@
 import 'package:chess_flutter/core/pre_move_methods.dart';
-import 'package:chess_flutter/feature/home/bloc/chess/chess_state.dart';
+import 'package:chess_flutter/feature/chess/bloc/chess/chess_state.dart';
+
 import 'package:chess_flutter/models/chess_board.dart';
 import 'package:chess_flutter/models/chess_character.dart';
 import 'package:chess_flutter/models/chess_box.dart';

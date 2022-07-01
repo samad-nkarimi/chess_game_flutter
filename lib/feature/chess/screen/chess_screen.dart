@@ -1,9 +1,9 @@
 import 'dart:math' as math;
 import 'dart:ui';
 import 'package:chess_flutter/common_widgets/cw_container.dart';
-import 'package:chess_flutter/common_widgets/cw_text.dart';
-import 'package:chess_flutter/feature/home/bloc/chess/chess_cubit.dart';
-import 'package:chess_flutter/feature/home/bloc/chess/chess_state.dart';
+import 'package:chess_flutter/feature/chess/bloc/chess/chess_cubit.dart';
+import 'package:chess_flutter/feature/chess/bloc/chess/chess_state.dart';
+
 import 'package:chess_flutter/models/chess_board.dart';
 import 'package:chess_flutter/models/chess_character.dart';
 import 'package:chess_flutter/models/enums/player.dart';
@@ -13,6 +13,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class ChessScreen extends StatefulWidget {
+  static const routeName = "/chess_screen";
   const ChessScreen({Key? key}) : super(key: key);
 
   @override

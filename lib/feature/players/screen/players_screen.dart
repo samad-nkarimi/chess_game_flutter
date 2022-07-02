@@ -12,6 +12,7 @@ import 'package:chess_flutter/feature/players/widget/user_search_field.dart';
 import 'package:chess_flutter/models/user.dart';
 import 'package:chess_flutter/repository/user_repo_impl.dart';
 import 'package:chess_flutter/service/user_service.dart';
+import 'package:chess_flutter/service_locator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -143,9 +144,12 @@ class _PlayersScreenState extends State<PlayersScreen> {
                               CWElevatedButton(
                                 onPressed: () {
                                   BlocProvider.of<UserCubit>(context)
-                                      .sendPlayRequestTo(users[index].name);
+                                      .sendPlayRequestTo(
+                                          ServiceLocator().username,
+                                          state.users[index].name);
                                   BlocProvider.of<HomeCubit>(context)
-                                      .addNewRemotePlay(users[index].name);
+                                      .addNewRemotePlay(
+                                          state.users[index].name);
                                 },
                                 vPadding: 20,
                                 hPadding: 20,

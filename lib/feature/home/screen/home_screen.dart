@@ -1,11 +1,15 @@
+import 'dart:convert';
+import 'dart:io';
 import 'dart:math';
 
 import 'package:chess_flutter/common_widgets/cw_container.dart';
 import 'package:chess_flutter/common_widgets/cw_text.dart';
 import 'package:chess_flutter/feature/home/bloc/home_cubit.dart';
 import 'package:chess_flutter/feature/home/bloc/home_state.dart';
+import 'package:chess_flutter/service_locator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:http/http.dart' as http;
 
 class HomeScreen extends StatefulWidget {
   static const routeNAme = "/home_screen";
@@ -16,6 +20,16 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

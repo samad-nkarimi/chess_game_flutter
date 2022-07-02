@@ -17,7 +17,9 @@ import 'package:chess_flutter/repository/remote_play_repo_impl.dart';
 import 'package:chess_flutter/repository/user_repo_impl.dart';
 import 'package:chess_flutter/service/auth_service.dart';
 import 'package:chess_flutter/service/play_service.dart';
+import 'package:chess_flutter/service/sse_service.dart';
 import 'package:chess_flutter/service/user_service.dart';
+import 'package:chess_flutter/service_locator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'feature/auth/screen/auth_screen.dart';
@@ -25,6 +27,9 @@ import 'feature/players/bloc/user_cubit.dart';
 import 'feature/players/screen/players_screen.dart';
 
 void main() {
+  ServiceLocator serviceLocator = ServiceLocator();
+  serviceLocator.setUsername("samad45");
+  SSEService().subscribe();
   BlocOverrides.runZoned(
     () {
       runApp(

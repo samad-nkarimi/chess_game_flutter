@@ -148,7 +148,7 @@ class _PlayersScreenState extends State<PlayersScreen> {
                                           ServiceLocator().username,
                                           state.users[index].name);
                                   BlocProvider.of<HomeCubit>(context)
-                                      .addNewRemotePlay(
+                                      .addNewRemotePlayRequest(
                                           state.users[index].name);
                                 },
                                 vPadding: 20,

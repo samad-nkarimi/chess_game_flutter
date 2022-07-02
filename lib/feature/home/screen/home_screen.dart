@@ -7,6 +7,7 @@ import 'package:chess_flutter/common_widgets/cw_text.dart';
 import 'package:chess_flutter/domain/entity/remote_play_entity.dart';
 import 'package:chess_flutter/feature/home/bloc/home_cubit.dart';
 import 'package:chess_flutter/feature/home/bloc/home_state.dart';
+import 'package:chess_flutter/feature/home/screen/request_plays_screen.dart';
 import 'package:chess_flutter/service_locator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -51,13 +52,38 @@ class _HomeScreenState extends State<HomeScreen> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              const CWContainer(
+              CWContainer(
                 h: 150,
                 w: double.infinity,
-                mar: [10, 30, 10, 30],
+                mar: const [10, 30, 10, 30],
                 brAll: 5,
                 color: Colors.black38,
-                child: CWText("user"),
+                child: Stack(
+                  children: [
+                    const CWText("user"),
+                    Align(
+                      alignment: Alignment.topRight,
+                      child: InkWell(
+                        onTap: () {
+                          Navigator.pushNamed(
+                              context, RequestPlaysScreen.routeName);
+                        },
+                        child: CWContainer(
+                          h: 40,
+                          w: 40,
+                          brAll: 30,
+                          mar: [10, 10, 10, 10],
+                          brColor: Colors.white,
+                          child: Icon(
+                            Icons.add,
+                            size: 35,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
               BlocBuilder<HomeCubit, HomeState>(
                 buildWhen: ((previous, current) {

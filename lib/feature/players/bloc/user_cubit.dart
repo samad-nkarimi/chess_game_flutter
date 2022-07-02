@@ -31,6 +31,6 @@ class UserCubit extends Cubit<UserState> {
 
   //
   void sendPlayRequestTo(String requestUsername, String targetUsername) {
-    playRequestUseCase.execute(requestUsername, targetUsername);
+    playRequestUseCase.sendPlayRequestTo(requestUsername, targetUsername);
   }
 }

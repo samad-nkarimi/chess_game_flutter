@@ -9,4 +9,14 @@ class RemotePlayRepoImpl extends RemotePLayRepo {
   void sendPlayRequestTo(String requestUsername, String targetUsername) {
     playService.sendPlayRequest(requestUsername, targetUsername);
   }
+
+  @override
+  void acceptPlayRequestFrom(String requestUsername, String targetUsername) {
+    playService.acceptPlayRequest(requestUsername, targetUsername);
+  }
+
+  @override
+  void rejectPlayRequestFrom(String requestUsername, String targetUsername) {
+    playService.rejectPlayRequest(requestUsername, targetUsername);
+  }
 }

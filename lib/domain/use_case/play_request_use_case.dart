@@ -5,7 +5,15 @@ class PlayRequestUseCase {
 
   PlayRequestUseCase(this.remotePLayRepo);
 
-  void execute(String requestUsername, String targetUsername) {
+  void sendPlayRequestTo(String requestUsername, String targetUsername) {
     remotePLayRepo.sendPlayRequestTo(requestUsername, targetUsername);
+  }
+
+  void acceptPlayRequestFrom(String requestUsername, String targetUsername) {
+    remotePLayRepo.acceptPlayRequestFrom(requestUsername, targetUsername);
+  }
+
+  void rejectPlayRequestFrom(String requestUsername, String targetUsername) {
+    remotePLayRepo.acceptPlayRequestFrom(requestUsername, targetUsername);
   }
 }

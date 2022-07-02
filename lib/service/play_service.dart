@@ -18,4 +18,32 @@ class PlayService {
     // print(users);
     // return users;
   }
+
+  //
+  void acceptPlayRequest(String requestUsername, String targetUsername) async {
+    var url = Uri.parse('http://localhost:3000/api/remote-play/accept-request');
+
+    var response = await http.post(url,
+        headers: {"Content-Type": "application/json"},
+        body: json.encode({
+          "request_username": requestUsername,
+          "target_username": targetUsername,
+        }));
+
+    print(response.body);
+  }
+
+  //
+  void rejectPlayRequest(String requestUsername, String targetUsername) async {
+    var url = Uri.parse('http://localhost:3000/api/remote-play/reject-request');
+
+    var response = await http.post(url,
+        headers: {"Content-Type": "application/json"},
+        body: json.encode({
+          "request_username": requestUsername,
+          "target_username": targetUsername,
+        }));
+
+    print(response.body);
+  }
 }

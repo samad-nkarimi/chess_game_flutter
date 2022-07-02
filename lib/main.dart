@@ -23,6 +23,7 @@ import 'package:chess_flutter/service_locator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'feature/auth/screen/auth_screen.dart';
+import 'feature/home/screen/request_plays_screen.dart';
 import 'feature/players/bloc/user_cubit.dart';
 import 'feature/players/screen/players_screen.dart';
 
@@ -84,6 +85,7 @@ class MyApp extends StatelessWidget {
         "/1": (context) => const PlayersScreen(),
         AuthScreen.routeName: (context) => const AuthScreen(),
         ChessScreen.routeName: (context) => const ChessScreen(),
+        RequestPlaysScreen.routeName: (context) => const RequestPlaysScreen(),
       },
     );
   }

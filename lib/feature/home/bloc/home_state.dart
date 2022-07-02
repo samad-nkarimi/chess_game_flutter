@@ -1,13 +1,14 @@
+import 'package:chess_flutter/domain/entity/remote_play_entity.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class HomeState extends Equatable {}
 
 class InitialHomeState extends HomeState {
-  final int playCount;
+  final List<RemotePlayEntity> remotePlays;
 
-  InitialHomeState(this.playCount);
+  InitialHomeState(this.remotePlays);
   @override
-  List<Object?> get props => [playCount];
+  List<Object?> get props => [remotePlays];
 }
 
 //
@@ -21,9 +22,9 @@ class NewRemotePlayHomeState extends HomeState {
 
 //
 class PlaysListHomeState extends HomeState {
-  final int playCount;
+  final List<RemotePlayEntity> remotePlays;
 
-  PlaysListHomeState(this.playCount);
+  PlaysListHomeState(this.remotePlays);
   @override
-  List<Object?> get props => [playCount];
+  List<Object?> get props => [remotePlays];
 }

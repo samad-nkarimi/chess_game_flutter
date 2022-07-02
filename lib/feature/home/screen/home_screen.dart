@@ -4,6 +4,7 @@ import 'dart:math';
 
 import 'package:chess_flutter/common_widgets/cw_container.dart';
 import 'package:chess_flutter/common_widgets/cw_text.dart';
+import 'package:chess_flutter/domain/entity/remote_play_entity.dart';
 import 'package:chess_flutter/feature/home/bloc/home_cubit.dart';
 import 'package:chess_flutter/feature/home/bloc/home_state.dart';
 import 'package:chess_flutter/service_locator.dart';
@@ -58,30 +59,86 @@ class _HomeScreenState extends State<HomeScreen> {
                 color: Colors.black38,
                 child: CWText("user"),
               ),
-              BlocBuilder<HomeCubit, HomeState>(builder: (context, state) {
-                return GridView.builder(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 10, horizontal: 30),
-                  shrinkWrap: true,
-                  scrollDirection: Axis.vertical,
-                  itemCount: 10,
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount:
-                        max(1, MediaQuery.of(context).size.width ~/ 150),
-                    childAspectRatio: 1,
-                  ),
-                  itemBuilder: (context, index) {
-                    return const CWContainer(
-                      // h: 150,
-                      w: double.infinity,
-                      mar: [5, 5, 5, 5],
-                      brAll: 5,
-                      color: Colors.black38,
-                      child: CWText("user"),
-                    );
-                  },
-                );
-              }),
+              BlocBuilder<HomeCubit, HomeState>(
+                buildWhen: ((previous, current) {
+                  if (current is PlaysListHomeState) {
+                    return true;
+                  }
+                  if (current is InitialHomeState) {
+                    return true;
+                  }
+                  return false;
+                }),
+                builder: (context, state) {
+                  int playCount = 0;
+                  List<RemotePlayEntity> remotePlays = [];
+                  if (state is PlaysListHomeState) {
+                    playCount = state.remotePlays.length;
+                    remotePlays = state.remotePlays;
+                  }
+                  if (state is InitialHomeState) {
+                    playCount = state.remotePlays.length;
+                    remotePlays = state.remotePlays;
+                  }
+                  return GridView.builder(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 10, horizontal: 30),
+                    shrinkWrap: true,
+                    scrollDirection: Axis.vertical,
+                    itemCount: playCount,
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount:
+                          max(1, MediaQuery.of(context).size.width ~/ 150),
+                      childAspectRatio: 1,
+                    ),
+                    itemBuilder: (context, index) {
+                      return CWContainer(
+                        w: double.infinity,
+                        mar: const [5, 5, 5, 5],
+                        brAll: 5,
+                        color: Colors.black38,
+                        child: ClipRRect(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.max,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              CWContainer(
+                                h: 50,
+                                color: Colors.black12,
+                                al: Alignment.center,
+                                child: Column(
+                                  children: [
+                                    CWText(
+                                      remotePlays[index].targetUsername,
+                                      color: Colors.white,
+                                      fontSize: 20,
+                                    ),
+                                    CWText(
+                                      remotePlays[index].targetScore,
+                                      color: Colors.white,
+                                      fontSize: 10,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              CWContainer(
+                                h: 30,
+                                color: Colors.green,
+                                al: Alignment.center,
+                                child: CWText(
+                                  remotePlays[index].status.name,
+                                  color: Colors.white,
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                },
+              ),
             ],
           ),
         ),

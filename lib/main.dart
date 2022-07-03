@@ -36,7 +36,7 @@ void main() {
       runApp(
         MultiBlocProvider(
           providers: [
-            BlocProvider(create: (context) => ChessCubit()),
+            // BlocProvider(create: (context) => ChessCubit()),
             BlocProvider(
               create: (context) => UserCubit(
                   findUsernameUseCase: FindUsernameUseCase(

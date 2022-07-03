@@ -131,76 +131,80 @@ class _ChessScreenState extends State<ChessScreen> {
           ),
         ),
       ),
-      body: Stack(
-        children: [
-          // for (int i = 0; i < 30; i++)
-          //   for (int j = 0; j < 15; j++)
-          //     Container(
-          //       height: 50,
-          //       width: 50,
-          //       margin: EdgeInsets.only(left: 50.0 * i, top: 50.0 * j),
-          //       child: SvgPicture.asset(
-          //         "assets/images/svg/bg_pattern.svg",
-          //         height: 50,
-          //         width: 50,
-          //       ),
-          //     ),
-          Container(
-            color: Colors.white10,
-            child: Center(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  // outCharsWidget(Player.white),
+      body: BlocProvider(
+        create: (context) => ChessCubit()..init(),
+        child: Stack(
+          children: [
+            // for (int i = 0; i < 30; i++)
+            //   for (int j = 0; j < 15; j++)
+            //     Container(
+            //       height: 50,
+            //       width: 50,
+            //       margin: EdgeInsets.only(left: 50.0 * i, top: 50.0 * j),
+            //       child: SvgPicture.asset(
+            //         "assets/images/svg/bg_pattern.svg",
+            //         height: 50,
+            //         width: 50,
+            //       ),
+            //     ),
+            Container(
+              color: Colors.white10,
+              child: Center(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    // outCharsWidget(Player.white),
 
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const CompetitetitleWidget(
-                          myUsername: "my name",
-                          competitorUsername: "competitor"),
-                      // outCharsWidget(Player.white),
-                      // outCharsWidget(Player.black),
-                      BlocBuilder<ChessCubit, ChessState>(
-                        buildWhen: (previous, current) {
-                          if (current is CharacterShottedState) {
-                            return false;
-                          }
-                          if (current is PlayerTurnedState) {
-                            return false;
-                          }
-                          return true;
-                        },
-                        builder: (context, state) {
-                          // setBoard(columnNumber, rowNumber);
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const CompetitetitleWidget(
+                            myUsername: "my name",
+                            competitorUsername: "competitor"),
+                        // outCharsWidget(Player.white),
+                        // outCharsWidget(Player.black),
+                        BlocBuilder<ChessCubit, ChessState>(
+                          buildWhen: (previous, current) {
+                            if (current is CharacterShottedState) {
+                              return false;
+                            }
+                            if (current is PlayerTurnedState) {
+                              return false;
+                            }
+                            return true;
+                          },
+                          builder: (context, state) {
+                            // setBoard(columnNumber, rowNumber);
 
-                          if (state is CharacterMovedState &&
-                              widget.isOnlineGame) {
-                            playerTurn = state.player == Player.white
-                                ? Player.black
-                                : Player.white;
-                          }
+                            if (state is CharacterMovedState &&
+                                widget.isOnlineGame) {
+                              playerTurn = state.player == Player.white
+                                  ? Player.black
+                                  : Player.white;
+                            }
+                            print("state: $state");
 
-                          ChessBoard().createMap();
+                            ChessBoard().createMap();
 
-                          if (state is PlayerWonState) {
-                            print("winner ==> ${state.winner}");
-                          }
-                          return MainChessBoard(
-                            chessState: state,
-                            squareLength: squareLength,
-                            playerTurn: playerTurn,
-                          );
-                        },
-                      ),
-                    ],
-                  ),
-                  // outCharsWidget(Player.black),
-                ],
+                            if (state is PlayerWonState) {
+                              print("winner ==> ${state.winner}");
+                            }
+                            return MainChessBoard(
+                              chessState: state,
+                              squareLength: squareLength,
+                              playerTurn: playerTurn,
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                    // outCharsWidget(Player.black),
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

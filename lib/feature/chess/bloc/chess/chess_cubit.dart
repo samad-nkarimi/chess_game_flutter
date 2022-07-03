@@ -27,6 +27,11 @@ class ChessCubit extends Cubit<ChessState> {
   //
   ChessCubit() : super(ChessInitialState());
 
+  //
+  void init() {
+    emit(ChessInitialState());
+  }
+
   //the event when we click on a char
   void characterClicked(int col, int row) async {
     letsDoCastlingRight = false;

@@ -1,6 +1,9 @@
+import 'dart:math';
+
 import 'package:chess_flutter/common_widgets/cw_container.dart';
 import 'package:chess_flutter/common_widgets/cw_elevated_button.dart';
 import 'package:chess_flutter/common_widgets/cw_text.dart';
+import 'package:chess_flutter/feature/chess/screen/chess_screen.dart';
 import 'package:chess_flutter/feature/home/screen/home_screen.dart';
 import 'package:chess_flutter/feature/players/screen/players_screen.dart';
 import 'package:flutter/material.dart';
@@ -20,53 +23,88 @@ class _BottomNavScreenState extends State<BottomNavScreen> {
     return Scaffold(
       body: selectedIndex == 0 ? const HomeScreen() : const PlayersScreen(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: Row(
-        mainAxisSize: MainAxisSize.max,
+      floatingActionButton: Stack(
+        alignment: Alignment.bottomCenter,
         children: [
-          Flexible(
-            flex: 1,
-            child: InkWell(
-              onTap: () {
-                setState(() {
-                  selectedIndex = 0;
-                });
-              },
-              child: const CWContainer(
-                h: 50,
-                br: [30, 30, 0, 0],
-                color: Colors.green,
+          Row(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Flexible(
+                flex: 1,
+                child: InkWell(
+                  onTap: () {
+                    setState(() {
+                      selectedIndex = 0;
+                    });
+                  },
+                  child: const CWContainer(
+                    h: 50,
+                    br: [30, 30, 0, 0],
+                    color: Colors.green,
+                    al: Alignment.center,
+                    child: CWText(
+                      "home",
+                      color: Colors.white,
+                      fontSize: 22,
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+              ),
+              Flexible(
+                flex: 1,
+                child: InkWell(
+                  onTap: () {
+                    setState(() {
+                      selectedIndex = 1;
+                    });
+                  },
+                  child: const CWContainer(
+                    h: 50,
+                    br: [30, 30, 0, 0],
+                    color: Colors.green,
+                    al: Alignment.center,
+                    child: CWText(
+                      "users",
+                      color: Colors.white,
+                      fontSize: 22,
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          InkWell(
+            onTap: () {
+              Navigator.pushNamed(context, ChessScreen.routeName);
+            },
+            child: Transform.rotate(
+              angle: pi / 4,
+              alignment: Alignment.center,
+              child: CWContainer(
+                h: 70,
+                w: 70,
+                mar: const [0, 0, 10, 0],
+                brAll: 10,
                 al: Alignment.center,
-                child: CWText(
-                  "home",
-                  color: Colors.white,
-                  fontSize: 22,
-                  textAlign: TextAlign.center,
+                color: Colors.green.shade800,
+                brColor: Colors.white,
+                brWidth: 2,
+                child: Transform.rotate(
+                  angle: -pi / 4,
+                  alignment: Alignment.center,
+                  child: const CWText(
+                    "offline\ngame",
+                    color: Colors.white,
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                    textAlign: TextAlign.center,
+                  ),
                 ),
               ),
             ),
-          ),
-          Flexible(
-            flex: 1,
-            child: InkWell(
-              onTap: () {
-                setState(() {
-                  selectedIndex = 1;
-                });
-              },
-              child: const CWContainer(
-                h: 50,
-                br: [30, 30, 0, 0],
-                color: Colors.orange,
-                al: Alignment.center,
-                child: CWText(
-                  "users",
-                  color: Colors.white,
-                  fontSize: 22,
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            ),
-          ),
+          )
         ],
       ),
     );

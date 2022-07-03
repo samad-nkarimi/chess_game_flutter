@@ -50,8 +50,13 @@ class ChessCubit extends Cubit<ChessState> {
       //wait for prevent conflict states
       await Future.delayed(Duration.zero);
 
-      emit(CharacterMovedState(isKingInCheck, moveFrom, moveTo,
-          kingBox: kingBox));
+      emit(CharacterMovedState(
+        isKingInCheck,
+        moveFrom,
+        moveTo,
+        scc!.player,
+        kingBox: kingBox,
+      ));
 
       //change the turn of the game
       turnThePlayer();
@@ -161,6 +166,7 @@ class ChessCubit extends Cubit<ChessState> {
           isKingInCheck,
           moveFrom,
           moveTo,
+          scc!.player,
           kingBox: kingBox,
         ));
         //change the turn of the game

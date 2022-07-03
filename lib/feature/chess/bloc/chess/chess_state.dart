@@ -29,11 +29,13 @@ class CharacterMovedState extends ChessState {
   final ChessBox kingBox;
   final ChessBox moveFrom;
   final ChessBox moveTo;
-  CharacterMovedState(this.isKingInCheck, this.moveFrom, this.moveTo,
+  final Player player;
+  CharacterMovedState(
+      this.isKingInCheck, this.moveFrom, this.moveTo, this.player,
       {this.kingBox = const ChessBox(0, 0)});
 
   @override
-  List<Object?> get props => [isKingInCheck, kingBox];
+  List<Object?> get props => [isKingInCheck, kingBox, player, moveFrom, moveTo];
 }
 
 //

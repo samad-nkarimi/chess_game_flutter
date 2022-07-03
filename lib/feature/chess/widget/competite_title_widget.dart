@@ -53,14 +53,15 @@ class CompetitetitleWidget extends StatelessWidget {
               return false;
             },
             builder: (context, state) {
-              Player player = Player.white;
+              Player playerTurn = Player.white;
               if (state is PlayerTurnedState) {
-                player = state.playerTurn;
+                playerTurn = state.playerTurn;
               }
               return CWContainer(
                 w: 30,
                 h: 30,
-                color: player == Player.white ? Colors.white : Colors.black54,
+                color:
+                    playerTurn == Player.white ? Colors.white : Colors.black54,
                 brAll: 50,
                 brColor: Colors.green,
                 brWidth: 3,

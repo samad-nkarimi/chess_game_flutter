@@ -77,7 +77,8 @@ class _BottomNavScreenState extends State<BottomNavScreen> {
           ),
           InkWell(
             onTap: () {
-              Navigator.pushNamed(context, ChessScreen.routeName);
+              Navigator.pushNamed(context, ChessScreen.routeName,
+                  arguments: false);
             },
             child: Transform.rotate(
               angle: pi / 4,

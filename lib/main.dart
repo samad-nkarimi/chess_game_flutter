@@ -2,9 +2,11 @@ import 'package:chess_flutter/common_widgets/cw_container.dart';
 import 'package:chess_flutter/common_widgets/cw_elevated_button.dart';
 import 'package:chess_flutter/common_widgets/cw_text.dart';
 import 'package:chess_flutter/domain/repo/auth_repo.dart';
+import 'package:chess_flutter/domain/repo/remote_play_move_repo.dart';
 import 'package:chess_flutter/domain/use_case/auth_register_use_case.dart';
 import 'package:chess_flutter/domain/use_case/find_username_use_case.dart';
 import 'package:chess_flutter/domain/use_case/play_request_use_case.dart';
+import 'package:chess_flutter/domain/use_case/remote_play_move_use_case.dart';
 import 'package:chess_flutter/feature/auth/bloc/auth_cubit.dart';
 import 'package:chess_flutter/feature/bottom_nav/screen/vav_screen.dart';
 import 'package:chess_flutter/feature/chess/bloc/chess/chess_cubit.dart';
@@ -13,10 +15,12 @@ import 'package:chess_flutter/feature/home/bloc/home_cubit.dart';
 import 'package:chess_flutter/feature/home/screen/home_screen.dart';
 
 import 'package:chess_flutter/repository/auth_repo_impl.dart';
+import 'package:chess_flutter/repository/remote_play_move_repo_impl.dart';
 import 'package:chess_flutter/repository/remote_play_repo_impl.dart';
 import 'package:chess_flutter/repository/user_repo_impl.dart';
 import 'package:chess_flutter/service/auth_service.dart';
-import 'package:chess_flutter/service/play_service.dart';
+import 'package:chess_flutter/service/remote_move_service.dart';
+import 'package:chess_flutter/service/request_play_service.dart';
 import 'package:chess_flutter/service/sse_service.dart';
 import 'package:chess_flutter/service/user_service.dart';
 import 'package:chess_flutter/service_locator.dart';
@@ -44,8 +48,8 @@ void main() {
                       UserService(),
                     ),
                   ),
-                  playRequestUseCase:
-                      PlayRequestUseCase(RemotePlayRepoImpl(PlayService()))),
+                  playRequestUseCase: PlayRequestUseCase(
+                      RemoteRequestPlayRepoImpl(RequestPlayService()))),
             ),
             BlocProvider(
               create: (context) => AuthCubit(
@@ -84,7 +88,9 @@ class MyApp extends StatelessWidget {
         HomeScreen.routeNAme: (context) => const HomeScreen(),
         "/1": (context) => const PlayersScreen(),
         AuthScreen.routeName: (context) => const AuthScreen(),
-        ChessScreen.routeName: (context) => const ChessScreen(),
+        ChessScreen.routeName: (context) => ChessScreen(
+            usecase: RemotePlayMoveUseCase(
+                RemotePlayMoveRepoImpl(RemoteMoveService()))),
         RequestPlaysScreen.routeName: (context) => const RequestPlaysScreen(),
       },
     );

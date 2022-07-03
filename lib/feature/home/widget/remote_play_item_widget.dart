@@ -14,14 +14,7 @@ class RemotePlayItemWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (cotext) {
-            return const ChessScreen(
-              isOnlineGame: true,
-            );
-          }),
-        );
+        Navigator.pushNamed(context, ChessScreen.routeName, arguments: true);
       },
       child: CWContainer(
         w: double.infinity,

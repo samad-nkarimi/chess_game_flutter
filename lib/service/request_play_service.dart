@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
-class PlayService {
+class RequestPlayService {
   void sendPlayRequest(String requestUsername, String targetUsername) async {
     var url = Uri.parse('http://localhost:3000/api/remote-play/request');
 

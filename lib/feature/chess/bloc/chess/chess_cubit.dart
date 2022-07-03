@@ -1,4 +1,5 @@
 import 'package:chess_flutter/core/pre_move_methods.dart';
+import 'package:chess_flutter/domain/use_case/remote_play_move_use_case.dart';
 import 'package:chess_flutter/feature/chess/bloc/chess/chess_state.dart';
 
 import 'package:chess_flutter/models/chess_board.dart';
@@ -7,6 +8,8 @@ import 'package:chess_flutter/models/chess_box.dart';
 import 'package:chess_flutter/models/enums/player.dart';
 import 'package:chess_flutter/models/move_options.dart';
 import 'package:chess_flutter/models/chess_player.dart';
+import 'package:chess_flutter/models/remote_move_details.dart';
+import 'package:chess_flutter/service_locator.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ChessCubit extends Cubit<ChessState> {
@@ -21,15 +24,28 @@ class ChessCubit extends Cubit<ChessState> {
   MoveOptions moveOptions = MoveOptions.emptyMoveOptions();
   bool letsDoCastlingRight = false;
   bool letsDoCastlingLeft = false;
-  ChessBox moveFrom = const ChessBox(0, 0);
-  ChessBox moveTo = const ChessBox(0, 0);
+  ChessBox moveFromBox = const ChessBox(0, 0);
+  ChessBox moveToBox = const ChessBox(0, 0);
+
+  //clean arc
+  final RemotePlayMoveUseCase remotePlayMoveUseCase;
 
   //
-  ChessCubit() : super(ChessInitialState());
+  ChessCubit(this.remotePlayMoveUseCase) : super(ChessInitialState());
 
   //
   void init() {
+    //TODO
+    //load data from data if necessary
     emit(ChessInitialState());
+  }
+
+  //
+  void handleRemoteMove() {
+    //if char clicked
+    characterClicked(0, 0);
+    //if box clicked
+    boxClicked(0, 0);
   }
 
   //the event when we click on a char
@@ -37,8 +53,8 @@ class ChessCubit extends Cubit<ChessState> {
     letsDoCastlingRight = false;
     letsDoCastlingLeft = false;
     if (scc != null) {
-      moveFrom = ChessBox(scc!.columnNumber, scc!.rowNumber);
-      moveTo = ChessBox(col, row);
+      moveFromBox = ChessBox(scc!.columnNumber, scc!.rowNumber);
+      moveToBox = ChessBox(col, row);
     }
     if (moveOptions.onShotingBoxes.contains(ChessBox(col, row))) {
       //shot the char
@@ -57,10 +73,19 @@ class ChessCubit extends Cubit<ChessState> {
 
       emit(CharacterMovedState(
         isKingInCheck,
-        moveFrom,
-        moveTo,
+        moveFromBox,
+        moveToBox,
         scc!.player,
         kingBox: kingBox,
+      ));
+
+      //TODO
+      //send to server
+      remotePlayMoveUseCase.sendMoveToServer(RemoteMoveDetails(
+        ServiceLocator().username,
+        "",
+        moveFromBox,
+        moveToBox,
       ));
 
       //change the turn of the game
@@ -146,8 +171,8 @@ class ChessCubit extends Cubit<ChessState> {
   void boxClicked(int col, int row) async {
     print("box clicked");
     if (scc != null) {
-      moveFrom = ChessBox(scc!.columnNumber, scc!.rowNumber);
-      moveTo = ChessBox(col, row);
+      moveFromBox = ChessBox(scc!.columnNumber, scc!.rowNumber);
+      moveToBox = ChessBox(col, row);
     }
 
     for (var chessBox in moveOptions.onGoingBoxes) {
@@ -169,11 +194,21 @@ class ChessCubit extends Cubit<ChessState> {
         await Future.delayed(Duration.zero);
         emit(CharacterMovedState(
           isKingInCheck,
-          moveFrom,
-          moveTo,
+          moveFromBox,
+          moveToBox,
           scc!.player,
           kingBox: kingBox,
         ));
+
+        //TODO
+        //send to server
+        remotePlayMoveUseCase.sendMoveToServer(RemoteMoveDetails(
+          ServiceLocator().username,
+          "",
+          moveFromBox,
+          moveToBox,
+        ));
+
         //change the turn of the game
         turnThePlayer();
         //

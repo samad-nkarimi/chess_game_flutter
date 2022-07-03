@@ -96,7 +96,7 @@ class MainChessBoard extends StatelessWidget {
 
   Widget getChessChar(int col, int row) {
     ChessCharacter c = ChessBoard().getcharacter(col, row);
-    print(c);
+    // print(c);
     if (c.isNone) {
       //an empty box
       return const SizedBox();

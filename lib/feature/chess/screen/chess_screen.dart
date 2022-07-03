@@ -2,6 +2,7 @@ import 'dart:math' as math;
 import 'dart:ui';
 import 'package:chess_flutter/common_widgets/cw_container.dart';
 import 'package:chess_flutter/common_widgets/cw_text.dart';
+import 'package:chess_flutter/domain/use_case/remote_play_move_use_case.dart';
 import 'package:chess_flutter/feature/chess/bloc/chess/chess_cubit.dart';
 import 'package:chess_flutter/feature/chess/bloc/chess/chess_state.dart';
 import 'package:chess_flutter/feature/chess/widget/main_chess_board.dart';
@@ -19,7 +20,9 @@ import '../widget/competite_title_widget.dart';
 class ChessScreen extends StatefulWidget {
   static const routeName = "/chess_screen";
   final bool isOnlineGame;
-  const ChessScreen({Key? key, this.isOnlineGame = false}) : super(key: key);
+  final RemotePlayMoveUseCase? usecase;
+  const ChessScreen({Key? key, this.isOnlineGame = false, this.usecase})
+      : super(key: key);
 
   @override
   State<ChessScreen> createState() => _ChessScreenState();
@@ -28,6 +31,7 @@ class ChessScreen extends StatefulWidget {
 class _ChessScreenState extends State<ChessScreen> {
   double squareLength = 350; // min(width , height)
   Player playerTurn = Player.white;
+  bool online = false;
 
   // void setBoard(int col, int row) {
   //   //form board
@@ -112,6 +116,13 @@ class _ChessScreenState extends State<ChessScreen> {
     super.initState();
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    online = ModalRoute.of(context)!.settings.arguments as bool;
+    print("online: $online");
+  }
+
   bool clicked = false;
 
   @override
@@ -132,7 +143,7 @@ class _ChessScreenState extends State<ChessScreen> {
         ),
       ),
       body: BlocProvider(
-        create: (context) => ChessCubit()..init(),
+        create: (context) => ChessCubit(widget.usecase!)..init(),
         child: Stack(
           children: [
             // for (int i = 0; i < 30; i++)
@@ -176,8 +187,7 @@ class _ChessScreenState extends State<ChessScreen> {
                           builder: (context, state) {
                             // setBoard(columnNumber, rowNumber);
 
-                            if (state is CharacterMovedState &&
-                                widget.isOnlineGame) {
+                            if (state is CharacterMovedState && online) {
                               playerTurn = state.player == Player.white
                                   ? Player.black
                                   : Player.white;

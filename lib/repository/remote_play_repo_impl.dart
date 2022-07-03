@@ -1,10 +1,10 @@
 import 'package:chess_flutter/domain/repo/remote_play_repo.dart';
-import 'package:chess_flutter/service/play_service.dart';
+import 'package:chess_flutter/service/request_play_service.dart';
 
-class RemotePlayRepoImpl extends RemotePLayRepo {
-  final PlayService playService;
+class RemoteRequestPlayRepoImpl extends RemoteRequestPLayRepo {
+  final RequestPlayService playService;
 
-  RemotePlayRepoImpl(this.playService);
+  RemoteRequestPlayRepoImpl(this.playService);
   @override
   void sendPlayRequestTo(String requestUsername, String targetUsername) {
     playService.sendPlayRequest(requestUsername, targetUsername);

@@ -28,7 +28,6 @@ class SSEService {
       Future<http.StreamedResponse> response = _client.send(request);
       response.asStream().listen((event) {
         print(event.statusCode);
-
         event.stream.listen((value) {
           print(utf8.decode(value));
         });

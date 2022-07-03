@@ -170,11 +170,15 @@ class ChessCubit extends Cubit<ChessState> {
         scc = null;
       }
     }
-    moveOptions.clear();
+    if (scc == null) {
+      moveOptions.clear();
+    }
   }
 
-  void turnThePlayer() {
+  void turnThePlayer() async {
+    await Future.delayed(Duration.zero);
     playerTurn = playerTurn == Player.white ? Player.black : Player.white;
+    emit(PlayerTurnedState(playerTurn));
   }
 
   void moveTheChar(int col, int row) {

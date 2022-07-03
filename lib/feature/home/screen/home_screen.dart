@@ -8,6 +8,7 @@ import 'package:chess_flutter/domain/entity/remote_play_entity.dart';
 import 'package:chess_flutter/feature/home/bloc/home_cubit.dart';
 import 'package:chess_flutter/feature/home/bloc/home_state.dart';
 import 'package:chess_flutter/feature/home/screen/request_plays_screen.dart';
+import 'package:chess_flutter/feature/home/widget/remote_play_item_widget.dart';
 import 'package:chess_flutter/service_locator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -118,49 +119,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       childAspectRatio: 1,
                     ),
                     itemBuilder: (context, index) {
-                      return CWContainer(
-                        w: double.infinity,
-                        mar: const [5, 5, 5, 5],
-                        brAll: 5,
-                        color: Colors.black38,
-                        child: ClipRRect(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.max,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              CWContainer(
-                                h: 50,
-                                color: Colors.black12,
-                                al: Alignment.center,
-                                child: Column(
-                                  children: [
-                                    CWText(
-                                      remotePlays[index].targetUsername,
-                                      color: Colors.white,
-                                      fontSize: 20,
-                                    ),
-                                    CWText(
-                                      remotePlays[index].targetScore,
-                                      color: Colors.white,
-                                      fontSize: 10,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              CWContainer(
-                                h: 30,
-                                color: Colors.green,
-                                al: Alignment.center,
-                                child: CWText(
-                                  remotePlays[index].status.name,
-                                  color: Colors.white,
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                      );
+                      return RemotePlayItemWidget(
+                          remotePlay: remotePlays[index]);
                     },
                   );
                 },

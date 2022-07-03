@@ -12,6 +12,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import '../widget/competite_title_widget.dart';
+
 class ChessScreen extends StatefulWidget {
   static const routeName = "/chess_screen";
   const ChessScreen({Key? key}) : super(key: key);
@@ -315,17 +317,24 @@ class _ChessScreenState extends State<ChessScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   // outCharsWidget(Player.white),
+
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
+                      CompetitetitleWidget(
+                          myUsername: "my name",
+                          competitorUsername: "competitor"),
                       // outCharsWidget(Player.white),
                       // outCharsWidget(Player.black),
                       BlocBuilder<ChessCubit, ChessState>(
                         buildWhen: (previous, current) {
-                          if (current is! CharacterShottedState) {
-                            return true;
+                          if (current is CharacterShottedState) {
+                            return false;
                           }
-                          return false;
+                          if (current is PlayerTurnedState) {
+                            return false;
+                          }
+                          return true;
                         },
                         builder: (context, state) {
                           // setBoard(columnNumber, rowNumber);

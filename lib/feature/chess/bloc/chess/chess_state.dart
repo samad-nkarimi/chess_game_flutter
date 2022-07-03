@@ -59,3 +59,12 @@ class PlayerWonState extends ChessState {
   @override
   List<Object?> get props => [winner];
 }
+
+//
+class PlayerTurnedState extends ChessState {
+  final Player playerTurn;
+  PlayerTurnedState(this.playerTurn);
+
+  @override
+  List<Object?> get props => [playerTurn];
+}

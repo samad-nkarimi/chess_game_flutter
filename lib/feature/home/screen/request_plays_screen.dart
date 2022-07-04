@@ -28,6 +28,7 @@ class _RequestPlaysScreenState extends State<RequestPlaysScreen> {
     return Scaffold(
       appBar: AppBar(title: const CWText("requests")),
       body: BlocBuilder<HomeCubit, HomeState>(
+        
         buildWhen: (previous, current) {
           if (current is PlayRequestsHomeState) {
             return true;
@@ -40,10 +41,7 @@ class _RequestPlaysScreenState extends State<RequestPlaysScreen> {
           List<String> requests = [];
           if (state is PlayRequestsHomeState) {
             requests = state.remotePlayRequest;
-          } else {
-            print("object");
-            context.read<HomeCubit>().sendPlayRequestsHomeState();
-          }
+          } 
           return CWContainer(
             pad: const [10, 0, 10, 0],
             child: ListView.builder(

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:chess_flutter/core/pre_move_methods.dart';
 import 'package:chess_flutter/models/chess_board.dart';
 import 'package:chess_flutter/models/enums/player.dart';
@@ -12,8 +14,8 @@ class ChessCharacter {
   final String photoId;
   final Player player;
   final Rule rule;
-  ChessPlayer chessPlayer = PlayerWhite();
   bool isEverMoved = false;
+  ChessPlayer chessPlayer = PlayerWhite();
 
   ChessCharacter(
     this.photoId,
@@ -31,6 +33,48 @@ class ChessCharacter {
       : photoId = "",
         player = Player.white,
         rule = Rule.none;
+
+  String toJson() {
+    return jsonEncode({
+      "col": columnNumber,
+      "row": rowNumber,
+      "is_in_game": isInGame,
+      "photo_id": photoId,
+      "player": player.name,
+      "rule": rule.name,
+      "is_ever_moved": isEverMoved,
+    });
+  }
+
+  ChessCharacter.fromJson(Map<dynamic, dynamic> json)
+      : columnNumber = json["col"],
+        isEverMoved = json["is_ever_moved"],
+        rowNumber = json["row"],
+        isInGame = json["is_in_game"],
+        photoId = json["photo_id"],
+        player = json["player"] == "white" ? Player.white : Player.black,
+        rule = getRuleFromString(json["rule"].toString()),
+        chessPlayer = json["player"] == "white" ? PlayerWhite() : PlayerBlack();
+
+  static Rule getRuleFromString(String ruleName) {
+    switch (ruleName) {
+      case "pawn":
+        return Rule.pawn;
+      case "rock":
+        return Rule.rock;
+      case "bishop":
+        return Rule.bishop;
+      case "knight":
+        return Rule.knight;
+      case "king":
+        return Rule.king;
+      case "queen":
+        return Rule.queen;
+
+      default:
+        return Rule.none;
+    }
+  }
 
   bool get isNone {
     if (rule == Rule.none) return true;

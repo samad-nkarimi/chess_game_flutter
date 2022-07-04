@@ -1,19 +1,34 @@
+import 'dart:convert';
+
 import 'package:chess_flutter/models/chess_character.dart';
 import 'package:chess_flutter/models/chess_box.dart';
 import 'package:chess_flutter/models/enums/player.dart';
 import 'package:chess_flutter/models/chess_player.dart';
-import 'package:chess_flutter/models/enums/rule.dart';
 
 class ChessBoard {
   static final ChessBoard _singleton = ChessBoard._internal();
-
   factory ChessBoard() {
     return _singleton;
   }
-
   ChessBoard._internal();
 
   final Map<ChessBox, ChessCharacter> boardMap = {};
+
+  String toJson() {
+    Map<String, dynamic> map = {};
+    for (var element in boardMap.entries) {
+      map[element.key.toKey()] = element.value.toJson();
+    }
+    return jsonEncode(map);
+  }
+
+  ChessBoard.fromJson(dynamic json) {
+    Map<String, dynamic> map = json as Map<String, dynamic>;
+    for (var element in map.entries) {
+      boardMap[ChessBox.fromKey(element.key)] =
+          ChessCharacter.fromJson((jsonDecode(element.value)));
+    }
+  }
 
   void addToBoardMap(int col, int row, ChessCharacter scc) {
     if (boardMap.containsKey(ChessBox(col, row))) {

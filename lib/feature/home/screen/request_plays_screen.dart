@@ -2,6 +2,8 @@ import 'package:chess_flutter/common_widgets/cw_container.dart';
 import 'package:chess_flutter/common_widgets/cw_elevated_button.dart';
 import 'package:chess_flutter/common_widgets/cw_text.dart';
 import 'package:chess_flutter/feature/home/bloc/home_cubit.dart';
+import 'package:chess_flutter/feature/home/bloc/home_state.dart';
+import 'package:chess_flutter/feature/home/screen/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -25,14 +27,33 @@ class _RequestPlaysScreenState extends State<RequestPlaysScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const CWText("requests")),
-      body: CWContainer(
-        pad: const [10, 0, 10, 0],
-        child: ListView.builder(
-          itemCount: requestPlays.length,
-          itemBuilder: (context, index) {
-            return requestPlayItem(requestPlays[index]);
-          },
-        ),
+      body: BlocBuilder<HomeCubit, HomeState>(
+        buildWhen: (previous, current) {
+          if (current is PlayRequestsHomeState) {
+            return true;
+          }
+
+          return false;
+        },
+        builder: (context, state) {
+          print(state);
+          List<String> requests = [];
+          if (state is PlayRequestsHomeState) {
+            requests = state.remotePlayRequest;
+          } else {
+            print("object");
+            context.read<HomeCubit>().sendPlayRequestsHomeState();
+          }
+          return CWContainer(
+            pad: const [10, 0, 10, 0],
+            child: ListView.builder(
+              itemCount: requests.length,
+              itemBuilder: (context, index) {
+                return requestPlayItem(requests[index]);
+              },
+            ),
+          );
+        },
       ),
     );
   }

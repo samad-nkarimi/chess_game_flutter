@@ -1,3 +1,4 @@
+import 'package:chess_flutter/blocs/simple_bloc_observer.dart';
 import 'package:chess_flutter/common_widgets/cw_container.dart';
 import 'package:chess_flutter/common_widgets/cw_elevated_button.dart';
 import 'package:chess_flutter/common_widgets/cw_text.dart';
@@ -60,13 +61,13 @@ void main() {
                 ),
               ),
             ),
-            BlocProvider(create: (context) => HomeCubit()),
+            BlocProvider(create: (context) => HomeCubit()..init()),
           ],
           child: const MyApp(),
         ),
       );
     },
-    // blocObserver: SimpleBlocObserver(),
+    blocObserver: SimpleBlocObserver(),
   );
 }
 

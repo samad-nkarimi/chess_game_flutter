@@ -12,7 +12,7 @@ class SSEService {
   }
   SSEService._internal();
 
-  StreamController<String> streamController = StreamController();
+  StreamController<String> streamController = StreamController.broadcast();
 
   subscribe() async {
     String username = ServiceLocator().username;
@@ -43,5 +43,6 @@ class SSEService {
 
   unsubscribe() {
     _client.close();
+    streamController.close();
   }
 }

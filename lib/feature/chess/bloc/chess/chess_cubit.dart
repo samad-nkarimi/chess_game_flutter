@@ -41,7 +41,9 @@ class ChessCubit extends Cubit<ChessState> {
     //TODO
     //load data from data if necessary
     emit(ChessInitialState());
-    if (!SSEService().streamController.hasListener && isOnline) {
+
+    // if (!SSEService().streamController.hasListener && isOnline) {
+    if (isOnline) {
       SSEService().streamController.stream.listen((data) {
         try {
           var map = jsonDecode(data) as Map<String, dynamic>;

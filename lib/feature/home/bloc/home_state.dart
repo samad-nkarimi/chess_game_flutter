@@ -5,10 +5,11 @@ abstract class HomeState extends Equatable {}
 
 class InitialHomeState extends HomeState {
   final List<RemotePlayEntity> remotePlays;
+  final List<String> playRequests;
 
-  InitialHomeState(this.remotePlays);
+  InitialHomeState(this.remotePlays, this.playRequests);
   @override
-  List<Object?> get props => [remotePlays];
+  List<Object?> get props => [remotePlays, playRequests];
 }
 
 //
@@ -28,4 +29,14 @@ class PlaysListHomeState extends HomeState {
   PlaysListHomeState(this.remotePlays, this.id);
   @override
   List<Object?> get props => [remotePlays, id];
+}
+
+//
+class PlayRequestsHomeState extends HomeState {
+  final List<String> remotePlayRequest;
+  final String id;
+
+  PlayRequestsHomeState(this.remotePlayRequest, this.id);
+  @override
+  List<Object?> get props => [remotePlayRequest, id];
 }

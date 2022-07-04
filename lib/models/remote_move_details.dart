@@ -17,11 +17,13 @@ class RemoteMoveDetails extends Equatable {
   @override
   List<Object?> get props => [fromBox, toBox];
 
-  RemoteMoveDetails.fromJson()
+  RemoteMoveDetails.fromJson(Map<String, dynamic> json)
       : requestUsername = "",
         targetUsername = "",
-        fromBox = ChessBox(0, 0),
-        toBox = ChessBox(0, 0);
+        fromBox = ChessBox((9 - json["move_from_col"]).toInt(),
+            (9 - json["move_from_row"]).toInt()),
+        toBox = ChessBox((9 - json["move_to_col"]).toInt(),
+            (9 - json["move_to_row"]).toInt());
 
   // toJson(RemoteMoveDetails remoteMoveDetails) {
   //   {
@@ -29,4 +31,12 @@ class RemoteMoveDetails extends Equatable {
   //   }
 
   // }
+
+  int reverseCol(int col) {
+    return 9 - col;
+  }
+
+  int reverseRow(int row) {
+    return 9 - row;
+  }
 }

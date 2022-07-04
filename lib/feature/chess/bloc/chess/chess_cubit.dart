@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:chess_flutter/core/pre_move_methods.dart';
 import 'package:chess_flutter/domain/use_case/remote_play_move_use_case.dart';
 import 'package:chess_flutter/feature/chess/bloc/chess/chess_state.dart';
@@ -9,6 +11,7 @@ import 'package:chess_flutter/models/enums/player.dart';
 import 'package:chess_flutter/models/move_options.dart';
 import 'package:chess_flutter/models/chess_player.dart';
 import 'package:chess_flutter/models/remote_move_details.dart';
+import 'package:chess_flutter/service/sse_service.dart';
 import 'package:chess_flutter/service_locator.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -34,22 +37,46 @@ class ChessCubit extends Cubit<ChessState> {
   ChessCubit(this.remotePlayMoveUseCase) : super(ChessInitialState());
 
   //
-  void init() {
+  void init(bool isOnline) {
     //TODO
     //load data from data if necessary
     emit(ChessInitialState());
+    if (!SSEService().streamController.hasListener && isOnline) {
+      SSEService().streamController.stream.listen((data) {
+        try {
+          var map = jsonDecode(data) as Map<String, dynamic>;
+          if (map.containsKey("type")) {
+            if (map["type"] == "move") {
+              RemoteMoveDetails rmd = RemoteMoveDetails.fromJson(
+                  jsonDecode(data) as Map<String, dynamic>);
+              handleRemoteMove(
+                rmd.fromBox.columnNumber,
+                rmd.fromBox.rowNumber,
+                rmd.toBox.columnNumber,
+                rmd.toBox.rowNumber,
+              );
+            }
+          }
+        } catch (e) {
+          print(e);
+        }
+      });
+    }
   }
 
   //
-  void handleRemoteMove() {
-    //if char clicked
-    characterClicked(0, 0);
-    //if box clicked
-    boxClicked(0, 0);
+  void handleRemoteMove(int fromCol, int fromRow, int toCol, int toRow) {
+    characterClicked(fromCol, fromRow, true, true);
+    if (ChessBoard().hasCharacterAt(toCol, toRow)) {
+      characterClicked(toCol, toRow, true, true);
+    } else {
+      boxClicked(toCol, toRow, true, true);
+    }
   }
 
   //the event when we click on a char
-  void characterClicked(int col, int row) async {
+  void characterClicked(
+      int col, int row, bool isRomuteMove, bool isOnline) async {
     letsDoCastlingRight = false;
     letsDoCastlingLeft = false;
     if (scc != null) {
@@ -81,12 +108,14 @@ class ChessCubit extends Cubit<ChessState> {
 
       //TODO
       //send to server
-      remotePlayMoveUseCase.sendMoveToServer(RemoteMoveDetails(
-        ServiceLocator().username,
-        "",
-        moveFromBox,
-        moveToBox,
-      ));
+      if (!isRomuteMove && isOnline) {
+        remotePlayMoveUseCase.sendMoveToServer(RemoteMoveDetails(
+          ServiceLocator().username,
+          "",
+          moveFromBox,
+          moveToBox,
+        ));
+      }
 
       //change the turn of the game
       turnThePlayer();
@@ -168,7 +197,7 @@ class ChessCubit extends Cubit<ChessState> {
   }
 
   //the event when we click on an empty box
-  void boxClicked(int col, int row) async {
+  void boxClicked(int col, int row, bool isRemuteMove, bool isOnline) async {
     print("box clicked");
     if (scc != null) {
       moveFromBox = ChessBox(scc!.columnNumber, scc!.rowNumber);
@@ -202,12 +231,14 @@ class ChessCubit extends Cubit<ChessState> {
 
         //TODO
         //send to server
-        remotePlayMoveUseCase.sendMoveToServer(RemoteMoveDetails(
-          ServiceLocator().username,
-          "",
-          moveFromBox,
-          moveToBox,
-        ));
+        if (!isRemuteMove && isOnline) {
+          remotePlayMoveUseCase.sendMoveToServer(RemoteMoveDetails(
+            ServiceLocator().username,
+            "",
+            moveFromBox,
+            moveToBox,
+          ));
+        }
 
         //change the turn of the game
         turnThePlayer();

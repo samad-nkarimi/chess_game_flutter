@@ -15,11 +15,13 @@ class MainChessBoard extends StatelessWidget {
   final ChessState chessState;
   final double squareLength;
   final Player playerTurn;
+  final bool isOnline;
   const MainChessBoard({
     Key? key,
     required this.chessState,
     required this.squareLength,
     required this.playerTurn,
+    required this.isOnline,
   }) : super(key: key);
 
   @override
@@ -48,13 +50,11 @@ class MainChessBoard extends StatelessWidget {
                         }
                         if (ChessBoard()
                             .hasCharacterAt(columnNumber, rowNumber)) {
-                          context
-                              .read<ChessCubit>()
-                              .characterClicked(columnNumber, rowNumber);
+                          context.read<ChessCubit>().characterClicked(
+                              columnNumber, rowNumber, false, isOnline);
                         } else {
-                          context
-                              .read<ChessCubit>()
-                              .boxClicked(columnNumber, rowNumber);
+                          context.read<ChessCubit>().boxClicked(
+                              columnNumber, rowNumber, false, isOnline);
                         }
                       },
                       child: ClipRRect(

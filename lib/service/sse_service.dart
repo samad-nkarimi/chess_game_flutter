@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:chess_flutter/service_locator.dart';
@@ -10,6 +11,8 @@ class SSEService {
     return _singleton;
   }
   SSEService._internal();
+
+  StreamController<String> streamController = StreamController();
 
   subscribe() async {
     String username = ServiceLocator().username;
@@ -30,6 +33,7 @@ class SSEService {
         print(event.statusCode);
         event.stream.listen((value) {
           print(utf8.decode(value));
+          streamController.sink.add(utf8.decode(value));
         });
       });
     } catch (e) {

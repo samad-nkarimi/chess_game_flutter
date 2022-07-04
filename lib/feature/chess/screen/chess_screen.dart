@@ -31,7 +31,7 @@ class ChessScreen extends StatefulWidget {
 class _ChessScreenState extends State<ChessScreen> {
   double squareLength = 350; // min(width , height)
   Player playerTurn = Player.white;
-  bool online = false;
+  bool isOnline = false;
 
   // void setBoard(int col, int row) {
   //   //form board
@@ -119,8 +119,8 @@ class _ChessScreenState extends State<ChessScreen> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    online = ModalRoute.of(context)!.settings.arguments as bool;
-    print("online: $online");
+    isOnline = ModalRoute.of(context)!.settings.arguments as bool;
+    print("online: $isOnline");
   }
 
   bool clicked = false;
@@ -143,7 +143,7 @@ class _ChessScreenState extends State<ChessScreen> {
         ),
       ),
       body: BlocProvider(
-        create: (context) => ChessCubit(widget.usecase!)..init(),
+        create: (context) => ChessCubit(widget.usecase!)..init(isOnline),
         child: Stack(
           children: [
             // for (int i = 0; i < 30; i++)
@@ -187,7 +187,7 @@ class _ChessScreenState extends State<ChessScreen> {
                           builder: (context, state) {
                             // setBoard(columnNumber, rowNumber);
 
-                            if (state is CharacterMovedState && online) {
+                            if (state is CharacterMovedState && isOnline) {
                               playerTurn = state.player == Player.white
                                   ? Player.black
                                   : Player.white;
@@ -203,6 +203,7 @@ class _ChessScreenState extends State<ChessScreen> {
                               chessState: state,
                               squareLength: squareLength,
                               playerTurn: playerTurn,
+                              isOnline: isOnline,
                             );
                           },
                         ),

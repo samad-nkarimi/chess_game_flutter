@@ -26,6 +26,7 @@ import 'package:chess_flutter/service/sse_service.dart';
 import 'package:chess_flutter/service/user_service.dart';
 import 'package:chess_flutter/service_locator.dart';
 import 'package:chess_flutter/storage/play_storage.dart';
+import 'package:chess_flutter/storage/user_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -37,8 +38,8 @@ import 'feature/players/screen/players_screen.dart';
 void main() async {
   ServiceLocator serviceLocator = ServiceLocator();
   await Hive.initFlutter();
-  PlayStorage().createBox();
-  serviceLocator.setUsername("samad45");
+  // PlayStorage().createBox();
+  serviceLocator.setUsername(await UserStorage().getUsername());
   SSEService().subscribe();
   BlocOverrides.runZoned(
     () {
@@ -65,7 +66,15 @@ void main() async {
                 ),
               ),
             ),
-            BlocProvider(create: (context) => HomeCubit()..init()),
+            BlocProvider(
+              create: (context) => HomeCubit(
+                PlayRequestUseCase(
+                  RemoteRequestPlayRepoImpl(
+                    RequestPlayService(),
+                  ),
+                ),
+              )..init(),
+            ),
           ],
           child: const MyApp(),
         ),

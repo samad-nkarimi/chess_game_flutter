@@ -11,9 +11,9 @@ class ChessCharacter {
   int columnNumber = 1; //not index!
   int rowNumber = 1; //not index!
   bool isInGame = true;
-  final String photoId;
+  String photoId;
   final Player player;
-  final Rule rule;
+  Rule rule;
   bool isEverMoved = false;
   ChessPlayer chessPlayer = PlayerWhite();
 

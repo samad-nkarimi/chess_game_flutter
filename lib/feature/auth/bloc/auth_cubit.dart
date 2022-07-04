@@ -1,6 +1,9 @@
 import 'package:chess_flutter/domain/use_case/auth_register_use_case.dart';
 import 'package:chess_flutter/feature/auth/bloc/auth_state.dart';
 import 'package:chess_flutter/models/enums/auth_type.dart';
+import 'package:chess_flutter/service/sse_service.dart';
+import 'package:chess_flutter/service_locator.dart';
+import 'package:chess_flutter/storage/user_storage.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -27,6 +30,9 @@ class AuthCubit extends Cubit<AuthState> {
 
         if (response.authResponseStatus == AuthResponseStatus.succeed) {
           // await ServerCrud().createUserDatabase();
+          ServiceLocator().setUsername(registerCredential.name);
+          UserStorage().saveUsername(registerCredential.name);
+          SSEService().subscribe();
           emit(AuthSucceedState());
         } else {
           print("failed with statusCode: $response");

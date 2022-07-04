@@ -94,6 +94,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   if (current is InitialHomeState) {
                     return true;
                   }
+
                   return false;
                 }),
                 builder: (context, state) {

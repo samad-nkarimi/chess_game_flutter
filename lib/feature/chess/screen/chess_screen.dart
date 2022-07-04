@@ -1,5 +1,4 @@
 import 'dart:math' as math;
-import 'dart:ui';
 import 'package:chess_flutter/common_widgets/cw_container.dart';
 import 'package:chess_flutter/common_widgets/cw_text.dart';
 import 'package:chess_flutter/domain/use_case/remote_play_move_use_case.dart';

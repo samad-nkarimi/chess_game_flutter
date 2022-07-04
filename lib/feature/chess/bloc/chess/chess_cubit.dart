@@ -44,6 +44,21 @@ class ChessCubit extends Cubit<ChessState> {
     //TODO
     //load data from data if necessary
     ChessBoard chessBoard = await PlayStorage().getBoard("name");
+    PlayerWhite().characters = [];
+    PlayerBlack().characters = [];
+
+    chessBoard.boardMap.forEach(
+      (key, value) {
+        if (value.player == Player.white) {
+          PlayerWhite().characters.add(value);
+        } else {
+          PlayerBlack().characters.add(value);
+        }
+      },
+    );
+
+    //emit state
+    emit(ResumePlayState(DateTime.now().microsecondsSinceEpoch.toString()));
 
     // if (!SSEService().streamController.hasListener && isOnline) {
     if (isOnline) {
@@ -271,8 +286,16 @@ class ChessCubit extends Cubit<ChessState> {
 
       isKingInCheck = scc!.chessPlayer.getEnemyPlayer().isMyKingInCheck();
       kingBox = ChessBox(
-        scc!.chessPlayer.getEnemyPlayer().characters["king"]!.columnNumber,
-        scc!.chessPlayer.getEnemyPlayer().characters["king"]!.rowNumber,
+        scc!.chessPlayer
+            .getEnemyPlayer()
+            .characters
+            .singleWhere((char) => char.isKing)
+            .columnNumber,
+        scc!.chessPlayer
+            .getEnemyPlayer()
+            .characters
+            .singleWhere((char) => char.isKing)
+            .rowNumber,
       );
       isCheckMate = scc!.chessPlayer.getEnemyPlayer().isCheckMate(col, row);
       winner = scc!.chessPlayer;

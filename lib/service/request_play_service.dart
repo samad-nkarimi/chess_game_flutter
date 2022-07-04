@@ -1,10 +1,11 @@
 import 'dart:convert';
 
+import 'package:chess_flutter/config/network_url.dart';
 import 'package:http/http.dart' as http;
 
 class RequestPlayService {
   void sendPlayRequest(String requestUsername, String targetUsername) async {
-    var url = Uri.parse('http://localhost:3000/api/remote-play/request');
+    var url = Uri.parse('http://$hostIp:3000/api/remote-play/request');
 
     var response = await http.post(url,
         headers: {"Content-Type": "application/json"},
@@ -21,7 +22,7 @@ class RequestPlayService {
 
   //
   void acceptPlayRequest(String requestUsername, String targetUsername) async {
-    var url = Uri.parse('http://localhost:3000/api/remote-play/accept-request');
+    var url = Uri.parse('http://$hostIp:3000/api/remote-play/accept-request');
 
     var response = await http.post(url,
         headers: {"Content-Type": "application/json"},
@@ -35,7 +36,7 @@ class RequestPlayService {
 
   //
   void rejectPlayRequest(String requestUsername, String targetUsername) async {
-    var url = Uri.parse('http://localhost:3000/api/remote-play/reject-request');
+    var url = Uri.parse('http://$hostIp:3000/api/remote-play/reject-request');
 
     var response = await http.post(url,
         headers: {"Content-Type": "application/json"},

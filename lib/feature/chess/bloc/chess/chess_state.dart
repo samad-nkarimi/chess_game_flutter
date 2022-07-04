@@ -70,3 +70,12 @@ class PlayerTurnedState extends ChessState {
   @override
   List<Object?> get props => [playerTurn];
 }
+
+//
+class ResumePlayState extends ChessState {
+  final String id;
+  ResumePlayState(this.id);
+
+  @override
+  List<Object?> get props => [id];
+}

@@ -14,6 +14,6 @@ class PlayRequestUseCase {
   }
 
   void rejectPlayRequestFrom(String requestUsername, String targetUsername) {
-    remotePLayRepo.acceptPlayRequestFrom(requestUsername, targetUsername);
+    remotePLayRepo.rejectPlayRequestFrom(requestUsername, targetUsername);
   }
 }

@@ -30,6 +30,7 @@ class PlayStorage {
   void addChessBoard(String competitorUsername, String board) async {
     print(board);
     Box box = await getBox();
+    // box.clear();
     await box.put(getItemIndex(competitorUsername), board);
     await box.close();
   }

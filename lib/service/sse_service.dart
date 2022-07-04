@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:chess_flutter/config/network_url.dart';
 import 'package:chess_flutter/service_locator.dart';
 import 'package:http/http.dart' as http;
 
@@ -20,7 +21,7 @@ class SSEService {
     try {
       _client = http.Client();
       var request =
-          http.Request('GET', Uri.parse("http://localhost:3000/api/connect"));
+          http.Request('GET', Uri.parse("http://$hostIp:3000/api/connect"));
       request.headers["Cache-Controll"] = 'no-Cache';
       // request.headers["Content-Type"] = 'text/plain';
       request.headers["Accept"] = 'text/event-stream';

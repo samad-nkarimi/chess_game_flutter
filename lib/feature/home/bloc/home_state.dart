@@ -38,5 +38,8 @@ class PlayRequestsHomeState extends HomeState {
 
   PlayRequestsHomeState(this.remotePlayRequest, this.id);
   @override
-  List<Object?> get props => [remotePlayRequest, id];
+  List<Object?> get props => [
+        remotePlayRequest,
+        id,
+      ];
 }

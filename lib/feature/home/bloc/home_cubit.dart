@@ -67,14 +67,8 @@ class HomeCubit extends Cubit<HomeState> {
 
   //what we send to target
   void addNewRemotePlayRequest(String targetUsername) {
-    remotePlays.add(
-      RemotePlayEntity(
-        targetUsername,
-        '0',
-        RemotePlayStatus.wating,
-        DateTime.now(),
-      ),
-    );
+    remotePlays.add(RemotePlayEntity(
+        targetUsername, '0', RemotePlayStatus.wating, DateTime.now()));
     // emit(NewRemotePlayHomeState(targetUsername));
     emit(PlaysListHomeState(
         remotePlays, DateTime.now().millisecondsSinceEpoch.toString()));
@@ -82,14 +76,8 @@ class HomeCubit extends Cubit<HomeState> {
 
   //what we get from others
   void acceptRemotePlay(String commingUsername) {
-    remotePlays.add(
-      RemotePlayEntity(
-        commingUsername,
-        '0',
-        RemotePlayStatus.active,
-        DateTime.now(),
-      ),
-    );
+    remotePlays.add(RemotePlayEntity(
+        commingUsername, '0', RemotePlayStatus.active, DateTime.now()));
     emit(PlaysListHomeState(
         remotePlays, DateTime.now().millisecondsSinceEpoch.toString()));
     playRequestUseCase.acceptPlayRequestFrom(

@@ -1,3 +1,4 @@
+import 'package:chess_flutter/domain/entity/credential_entity.dart';
 import 'package:chess_flutter/feature/auth/bloc/auth_cubit.dart';
 import 'package:chess_flutter/models/enums/auth_type.dart';
 import 'package:chess_flutter/models/register_credential.dart';
@@ -10,7 +11,7 @@ import '../../../common_widgets/cw_elevated_button.dart';
 class AuthConfirmButtonWidget extends StatefulWidget {
   final AuthType authType;
   final bool isFormValid;
-  final RegisterCredential registerCredential;
+  final CredentialEntity registerCredential;
   const AuthConfirmButtonWidget({
     Key? key,
     this.authType = AuthType.signup,
@@ -27,7 +28,7 @@ class _AuthConfirmButtonWidgetState extends State<AuthConfirmButtonWidget> {
   @override
   Widget build(BuildContext context) {
     return CWElevatedButton(
-      primary: Colors.green,
+      primary: widget.isFormValid ? Colors.green : Colors.grey,
       onPrimary: Colors.white,
       // shape: RoundedRectangleBorder(
       //   borderRadius: BorderRadius.circular(50),
@@ -40,22 +41,15 @@ class _AuthConfirmButtonWidgetState extends State<AuthConfirmButtonWidget> {
         child: Text(widget.authType.name),
       ),
       onPressed: () async {
-        print("start...");
-
         if (widget.isFormValid) {
           print("form is validate");
-          BlocProvider.of<AuthCubit>(context)
-              .register(widget.registerCredential);
-
-          // .add(ConfirmButtonPressedEvent(
-          //   AuthCredentials(
-          //     username: emailWrapper.value,
-          //     email: emailWrapper.value,
-          //     password: passwordWrapper.value,
-          //     authType: widget.authType,
-          //   ),
-          // ));
-          print("sent to bloc");
+          if (widget.authType == AuthType.signup) {
+            BlocProvider.of<AuthCubit>(context)
+                .signUp(widget.registerCredential);
+          } else {
+            BlocProvider.of<AuthCubit>(context)
+                .login(widget.registerCredential);
+          }
         } else {
           //tell bloc the errors
           print("form is not validate");

@@ -1,3 +1,4 @@
+import 'package:chess_flutter/domain/entity/credential_entity.dart';
 import 'package:chess_flutter/domain/use_case/auth_register_use_case.dart';
 import 'package:chess_flutter/feature/auth/bloc/auth_state.dart';
 import 'package:chess_flutter/models/enums/auth_type.dart';
@@ -9,75 +10,67 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../models/auth_response.dart';
 import '../../../models/enums/auth_response_status.dart';
-import '../../../models/register_credential.dart';
 
 class AuthCubit extends Cubit<AuthState> {
   final AuthRegisterUseCase authRegisterUseCase;
   AuthCubit({required this.authRegisterUseCase})
       : super(InitialAuthState(AuthType.signup));
 
-  void register(RegisterCredential registerCredential) async {
-    // authRegisterUseCase.execute(registerCredential);
-    // if (connectionStatus.hasConnection) {
-    print("connecting...");
-    emit(WatingForAuthState(registerCredential.authType));
-    await Future.delayed(const Duration(seconds: 3));
-    // String username = email.substring(0, email.indexOf('@')); //#change
-    if (registerCredential.authType == AuthType.signup) {
-      try {
-        AuthResponse response =
-            await authRegisterUseCase.execute(registerCredential);
+  void formContentChanged() {
+    emit(FormValidationAuthState(
+        DateTime.now().millisecondsSinceEpoch.toString()));
+  }
 
-        if (response.authResponseStatus == AuthResponseStatus.succeed) {
-          // await ServerCrud().createUserDatabase();
-          ServiceLocator().setUsername(registerCredential.name);
-          UserStorage().saveUsername(registerCredential.name);
-          SSEService().subscribe();
-          emit(AuthSucceedState());
-        } else {
-          print("failed with statusCode: $response");
-          emit(AuthErrorState(
-            response.message,
-            DateTime.now().millisecondsSinceEpoch.toString(),
-          ));
-        }
-      } catch (error) {
+  void signUp(CredentialEntity entity) async {
+    try {
+      AuthResponse response = await authRegisterUseCase.signUp(entity);
+
+      if (response.authResponseStatus == AuthResponseStatus.succeed) {
+        // await ServerCrud().createUserDatabase();
+        ServiceLocator().setUsername(entity.username);
+        UserStorage().saveUsername(entity.username);
+        SSEService().subscribe();
+        emit(AuthSucceedState());
+      } else {
+        print("failed with statusCode: $response");
         emit(AuthErrorState(
-          error.toString(),
+          response.message,
           DateTime.now().millisecondsSinceEpoch.toString(),
         ));
       }
-    } else {
-      //login
-      try {
-        AuthResponse response =
-            await authRegisterUseCase.execute(registerCredential);
+    } catch (error) {
+      emit(AuthErrorState(
+        error.toString(),
+        DateTime.now().millisecondsSinceEpoch.toString(),
+      ));
+    }
+  }
 
-        if (response.authResponseStatus == AuthResponseStatus.succeed) {
-          // after this we should go to home page as a logged in user
-          // Navigator.pushReplacementNamed(context, '/');
-          // String data =
-          //     await ServerCrud().getDataFromServer(registerCredential.name);
+  void login(CredentialEntity entity) async {
+    try {
+      AuthResponse response = await authRegisterUseCase.login(entity);
 
-          // print("from server: $data");
-          emit(AuthSucceedState());
-        } else {
-          print("failed with statusCode: $response");
-          emit(AuthErrorState(
-            response.message,
-            DateTime.now().millisecondsSinceEpoch.toString(),
-          ));
-        }
-      } catch (error) {
+      if (response.authResponseStatus == AuthResponseStatus.succeed) {
+        emit(AuthSucceedState());
+      } else {
+        print("failed with statusCode: $response");
         emit(AuthErrorState(
-          error.toString(),
+          response.message,
           DateTime.now().millisecondsSinceEpoch.toString(),
         ));
       }
+    } catch (error) {
+      emit(AuthErrorState(
+        error.toString(),
+        DateTime.now().millisecondsSinceEpoch.toString(),
+      ));
     }
   }
 
   void authTypePressedEvent(AuthType authType) {
     emit(AuthTypeChangedState(authType));
+    Future.delayed(Duration.zero);
+    emit(FormValidationAuthState(
+        DateTime.now().millisecondsSinceEpoch.toString()));
   }
 }

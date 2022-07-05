@@ -83,7 +83,10 @@ class _AuthScreenState extends State<AuthScreen> {
                 ),
               ),
               const CWContainer(
-                  h: 60, w: double.infinity, child: Text("authentication")),
+                h: 60,
+                w: double.infinity,
+                child: Center(child: Text("authentication")),
+              ),
             ],
           ),
         ),

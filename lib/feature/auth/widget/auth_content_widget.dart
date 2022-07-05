@@ -1,4 +1,6 @@
+import 'package:chess_flutter/domain/entity/credential_entity.dart';
 import 'package:chess_flutter/feature/auth/bloc/auth_cubit.dart';
+import 'package:chess_flutter/feature/auth/bloc/auth_state.dart';
 import 'package:chess_flutter/feature/auth/widget/auth_confirm_button_widget.dart';
 import 'package:chess_flutter/feature/auth/widget/auth_input_field.dart';
 import 'package:chess_flutter/models/enums/auth_type.dart';
@@ -184,16 +186,26 @@ class _AuthContentWidgetState extends State<AuthContentWidget> {
                   ),
                 //
                 const SizedBox(height: 40),
-                AuthConfirmButtonWidget(
-                  authType: widget.authType,
-                  isFormValid: isFormValidate(widget.authType),
-                  registerCredential: RegisterCredential(
-                    nameWrapper.value,
-                    emailWrapper.value,
-                    passwordWrapper.value,
-                    widget.authType,
-                  ),
-                ),
+                BlocBuilder<AuthCubit, AuthState>(
+                    buildWhen: (previous, current) {
+                  if (current is FormValidationAuthState) {
+                    return true;
+                  }
+                  return false;
+                }, builder: (context, state) {
+                  bool isFormValid = isFormValidate(widget.authType);
+
+                  return AuthConfirmButtonWidget(
+                    authType: widget.authType,
+                    isFormValid: isFormValid,
+                    registerCredential: CredentialEntity(
+                      nameWrapper.value,
+                      emailWrapper.value,
+                      passwordWrapper.value,
+                      confrimPasswordWrapper.value,
+                    ),
+                  );
+                }),
                 if (widget.authType == AuthType.login)
                   TextButton(
                     onPressed: () {},

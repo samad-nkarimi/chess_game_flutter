@@ -1,14 +1,39 @@
+import 'package:chess_flutter/domain/entity/credential_entity.dart';
+import 'package:chess_flutter/domain/helper/credential_validation_helper.dart';
 import 'package:chess_flutter/domain/repo/auth_repo.dart';
 
 import '../../models/auth_response.dart';
-import '../../models/register_credential.dart';
 
 class AuthRegisterUseCase {
   final AuthRepo authRepo;
 
   AuthRegisterUseCase(this.authRepo);
 
-  Future<AuthResponse> execute(RegisterCredential registerCredential) async {
-    return authRepo.register(registerCredential);
+  Future<AuthResponse> signUp(CredentialEntity entity) async {
+    return authRepo.signUp(entity);
+  }
+
+  Future<AuthResponse> login(CredentialEntity entity) async {
+    return authRepo.signUp(entity);
+  }
+
+  Future<AuthResponse> logout(CredentialEntity entity) async {
+    return authRepo.logout(entity);
+  }
+
+  bool credentialValidationForSignUp(CredentialEntity entity) {
+    if (CredentialValidationHelper().isFormValidateForSignUp(entity)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  bool credentialValidationForLogin(CredentialEntity entity) {
+    if (CredentialValidationHelper().isFormValidateForLogin(entity)) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }

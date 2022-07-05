@@ -42,3 +42,12 @@ class AuthSucceedState extends AuthState {
   @override
   List<Object?> get props => [];
 }
+
+///
+class FormValidationAuthState extends AuthState {
+  final String id;
+
+  FormValidationAuthState(this.id);
+  @override
+  List<Object?> get props => [id];
+}

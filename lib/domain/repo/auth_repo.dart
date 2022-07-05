@@ -1,9 +1,9 @@
-import 'package:chess_flutter/models/register_credential.dart';
+import 'package:chess_flutter/domain/entity/credential_entity.dart';
 
 import '../../models/auth_response.dart';
 
 abstract class AuthRepo {
-  Future<AuthResponse> register(RegisterCredential registerCredential);
-  Future<AuthResponse> login(String email, String password);
-  Future<AuthResponse> logout();
+  Future<AuthResponse> signUp(CredentialEntity entity);
+  Future<AuthResponse> login(CredentialEntity entity);
+  Future<AuthResponse> logout(CredentialEntity entity);
 }

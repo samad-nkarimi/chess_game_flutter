@@ -1,6 +1,7 @@
 import 'package:chess_flutter/models/enums/remote_play_status.dart';
+import 'package:equatable/equatable.dart';
 
-class RemotePlayEntity {
+class RemotePlayEntity extends Equatable {
   final String targetUsername;
   final String targetScore;
   RemotePlayStatus status;
@@ -12,4 +13,7 @@ class RemotePlayEntity {
     this.status,
     this.startDate,
   );
+
+  @override
+  List<Object?> get props => [targetUsername, targetScore, status, startDate];
 }

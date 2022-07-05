@@ -2,8 +2,9 @@ import 'dart:convert';
 
 import 'package:chess_flutter/domain/entity/remote_play_entity.dart';
 import 'package:chess_flutter/models/enums/remote_play_status.dart';
+import 'package:equatable/equatable.dart';
 
-class RemotePlayModel {
+class RemotePlayModel extends Equatable {
   final String targetUsername;
   final String targetScore;
   final String status;
@@ -30,7 +31,7 @@ class RemotePlayModel {
   RemotePlayModel.fromJson(Map<String, dynamic> json)
       : targetUsername = json["targetUsername"],
         targetScore = json["targetScore"],
-        status = getStringifyPlayStatus(json["status"]),
+        status = json["status"],
         startDate = json["startDate"];
 
   String toJson() {
@@ -77,4 +78,7 @@ class RemotePlayModel {
         return RemotePlayStatus.wating;
     }
   }
+
+  @override
+  List<Object?> get props => [targetUsername, targetScore, status, startDate];
 }

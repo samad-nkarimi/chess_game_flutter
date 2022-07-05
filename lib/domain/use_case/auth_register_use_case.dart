@@ -1,6 +1,7 @@
 import 'package:chess_flutter/domain/entity/credential_entity.dart';
 import 'package:chess_flutter/domain/helper/credential_validation_helper.dart';
 import 'package:chess_flutter/domain/repo/auth_repo.dart';
+import 'package:chess_flutter/models/enums/auth_filed_type.dart';
 
 import '../../models/auth_response.dart';
 
@@ -19,6 +20,10 @@ class AuthRegisterUseCase {
 
   Future<AuthResponse> logout(CredentialEntity entity) async {
     return authRepo.logout(entity);
+  }
+
+  bool singleFiledValidationFor(AuthFiledType filed, CredentialEntity entity) {
+    return CredentialValidationHelper().singleFiledValidationFor(filed, entity);
   }
 
   bool credentialValidationForSignUp(CredentialEntity entity) {

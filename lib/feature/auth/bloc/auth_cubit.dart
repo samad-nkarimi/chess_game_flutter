@@ -1,6 +1,8 @@
 import 'package:chess_flutter/domain/entity/credential_entity.dart';
 import 'package:chess_flutter/domain/use_case/auth_register_use_case.dart';
 import 'package:chess_flutter/feature/auth/bloc/auth_state.dart';
+import 'package:chess_flutter/feature/auth/widget/auth_input_field.dart';
+import 'package:chess_flutter/models/enums/auth_filed_type.dart';
 import 'package:chess_flutter/models/enums/auth_type.dart';
 import 'package:chess_flutter/service/sse_service.dart';
 import 'package:chess_flutter/service_locator.dart';
@@ -16,9 +18,17 @@ class AuthCubit extends Cubit<AuthState> {
   AuthCubit({required this.authRegisterUseCase})
       : super(InitialAuthState(AuthType.signup));
 
-  void formContentChanged() {
+  void formContentChanged(AuthFiledType filed, CredentialEntity entity) {
+    bool isFiledValid =
+        authRegisterUseCase.singleFiledValidationFor(filed, entity);
+    print(isFiledValid);
+    emit(FiledValidationAuthState(
+        filed, isFiledValid, DateTime.now().millisecondsSinceEpoch.toString()));
+    Future.delayed(Duration.zero);
+    bool isFormValid =
+        authRegisterUseCase.credentialValidationForSignUp(entity);
     emit(FormValidationAuthState(
-        DateTime.now().millisecondsSinceEpoch.toString()));
+        isFormValid, DateTime.now().millisecondsSinceEpoch.toString()));
   }
 
   void signUp(CredentialEntity entity) async {
@@ -67,10 +77,16 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
-  void authTypePressedEvent(AuthType authType) {
+  void authTypePressedEvent(AuthType authType, CredentialEntity entity) {
     emit(AuthTypeChangedState(authType));
     Future.delayed(Duration.zero);
+    bool isFormValid = false;
+    if (authType == AuthType.signup) {
+      isFormValid = authRegisterUseCase.credentialValidationForSignUp(entity);
+    } else {
+      isFormValid = authRegisterUseCase.credentialValidationForLogin(entity);
+    }
     emit(FormValidationAuthState(
-        DateTime.now().millisecondsSinceEpoch.toString()));
+        isFormValid, DateTime.now().millisecondsSinceEpoch.toString()));
   }
 }

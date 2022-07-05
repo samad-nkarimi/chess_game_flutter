@@ -68,7 +68,7 @@ void main() {
       expect(isThere, true);
     });
     test("delete play", () async {
-      print(5);
+      print(6);
       await Hive.initFlutter();
       await remotePlaysStorage.deletePlayPlaywith("samad");
       Box box = await remotePlaysStorage.getBox();

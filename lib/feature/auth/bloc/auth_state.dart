@@ -1,3 +1,4 @@
+import 'package:chess_flutter/models/enums/auth_filed_type.dart';
 import 'package:equatable/equatable.dart';
 
 import '../../../models/enums/auth_type.dart';
@@ -45,9 +46,21 @@ class AuthSucceedState extends AuthState {
 
 ///
 class FormValidationAuthState extends AuthState {
+  final bool isValid;
   final String id;
 
-  FormValidationAuthState(this.id);
+  FormValidationAuthState(this.isValid, this.id);
   @override
-  List<Object?> get props => [id];
+  List<Object?> get props => [isValid, id];
+}
+
+///
+class FiledValidationAuthState extends AuthState {
+  final AuthFiledType filedType;
+  final bool isValid;
+  final String id;
+
+  FiledValidationAuthState(this.filedType, this.isValid, this.id);
+  @override
+  List<Object?> get props => [filedType, isValid, id];
 }

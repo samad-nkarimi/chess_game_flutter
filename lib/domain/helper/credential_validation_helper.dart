@@ -1,4 +1,5 @@
 import 'package:chess_flutter/domain/entity/credential_entity.dart';
+import 'package:chess_flutter/models/enums/auth_filed_type.dart';
 
 class CredentialValidationHelper {
   static final CredentialValidationHelper _singleton =
@@ -7,6 +8,23 @@ class CredentialValidationHelper {
     return _singleton;
   }
   CredentialValidationHelper._internal();
+
+  bool singleFiledValidationFor(AuthFiledType filed, CredentialEntity entity) {
+    switch (filed) {
+      case AuthFiledType.username:
+        return nameValidation(entity.username);
+      case AuthFiledType.email:
+        return emailValidation(entity.email);
+      case AuthFiledType.password:
+        return passwordValidation(entity.password);
+      case AuthFiledType.confirmPassword:
+        return confirmPasswordValidation(
+            entity.confirmPassword, entity.password);
+
+      default:
+        return false;
+    }
+  }
 
   bool nameValidation(String name) {
     return name.isNotEmpty && name.length < 20;

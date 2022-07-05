@@ -11,12 +11,12 @@ import '../../../common_widgets/cw_elevated_button.dart';
 class AuthConfirmButtonWidget extends StatefulWidget {
   final AuthType authType;
   final bool isFormValid;
-  final CredentialEntity registerCredential;
+  final CredentialEntity credentialEntity;
   const AuthConfirmButtonWidget({
     Key? key,
     this.authType = AuthType.signup,
     required this.isFormValid,
-    required this.registerCredential,
+    required this.credentialEntity,
   }) : super(key: key);
 
   @override
@@ -44,11 +44,9 @@ class _AuthConfirmButtonWidgetState extends State<AuthConfirmButtonWidget> {
         if (widget.isFormValid) {
           print("form is validate");
           if (widget.authType == AuthType.signup) {
-            BlocProvider.of<AuthCubit>(context)
-                .signUp(widget.registerCredential);
+            BlocProvider.of<AuthCubit>(context).signUp(widget.credentialEntity);
           } else {
-            BlocProvider.of<AuthCubit>(context)
-                .login(widget.registerCredential);
+            BlocProvider.of<AuthCubit>(context).login(widget.credentialEntity);
           }
         } else {
           //tell bloc the errors
@@ -74,8 +72,8 @@ class _AuthConfirmButtonWidgetState extends State<AuthConfirmButtonWidget> {
               children: [
                 ElevatedButton(
                   onPressed: () {
-                    BlocProvider.of<AuthCubit>(context)
-                        .authTypePressedEvent(AuthType.login);
+                    BlocProvider.of<AuthCubit>(context).authTypePressedEvent(
+                        AuthType.login, widget.credentialEntity);
                     Navigator.pop(ctx);
                   },
                   child: const Text("login"),

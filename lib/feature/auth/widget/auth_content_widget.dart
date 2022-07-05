@@ -9,9 +9,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../common_widgets/cw_text.dart';
+import '../../../models/enums/auth_filed_type.dart';
 import '../../players/widget/user_search_field.dart';
 
 class StringWrapper {
+  AuthFiledType filed;
   String value;
   String hint;
   IconData icon;
@@ -19,6 +21,7 @@ class StringWrapper {
   String guideText;
   String labelText;
   StringWrapper({
+    required this.filed,
     required this.value,
     required this.hint,
     required this.icon,
@@ -41,6 +44,7 @@ class AuthContentWidget extends StatefulWidget {
 }
 
 class _AuthContentWidgetState extends State<AuthContentWidget> {
+  late CredentialEntity credentialEntity;
   final formKey = GlobalKey<FormState>();
 
   late StringWrapper nameWrapper;
@@ -97,6 +101,7 @@ class _AuthContentWidgetState extends State<AuthContentWidget> {
 
   void initializeStringWrappers() {
     nameWrapper = StringWrapper(
+      filed: AuthFiledType.username,
       value: '',
       hint: 'username',
       icon: Icons.verified_user,
@@ -105,6 +110,7 @@ class _AuthContentWidgetState extends State<AuthContentWidget> {
       guideText: "نام کاربری",
     );
     emailWrapper = StringWrapper(
+      filed: AuthFiledType.email,
       value: '',
       hint: 'google.site@gmail.com',
       icon: Icons.email,
@@ -113,6 +119,7 @@ class _AuthContentWidgetState extends State<AuthContentWidget> {
       guideText: "ایمیل",
     );
     passwordWrapper = StringWrapper(
+      filed: AuthFiledType.password,
       value: '',
       hint: 'SnGoogle4321',
       icon: Icons.lock,
@@ -121,6 +128,7 @@ class _AuthContentWidgetState extends State<AuthContentWidget> {
       guideText: "رمز شامل حروف یزرگ و کوچک و اعداد باشد و طول آن حداقل 8 باشد",
     );
     confrimPasswordWrapper = StringWrapper(
+      filed: AuthFiledType.confirmPassword,
       value: '',
       hint: 'SnGoogle4321',
       icon: Icons.lock,
@@ -134,6 +142,12 @@ class _AuthContentWidgetState extends State<AuthContentWidget> {
   void initState() {
     super.initState();
     initializeStringWrappers();
+    credentialEntity = CredentialEntity(
+      nameWrapper.value,
+      emailWrapper.value,
+      passwordWrapper.value,
+      confrimPasswordWrapper.value,
+    );
   }
 
   @override
@@ -155,12 +169,19 @@ class _AuthContentWidgetState extends State<AuthContentWidget> {
           ),
           Form(
             key: formKey,
+            onChanged: () {
+              credentialEntity.username = nameWrapper.value;
+              credentialEntity.email = emailWrapper.value;
+              credentialEntity.password = passwordWrapper.value;
+              credentialEntity.confirmPassword = confrimPasswordWrapper.value;
+            },
             child: Column(
               children: [
                 //
                 if (widget.authType == AuthType.signup)
                   AuthInputField(
                     inputValue: nameWrapper,
+                    credentialEntity: credentialEntity,
                     key: Key(nameWrapper.labelText),
                   ),
                 if (widget.authType == AuthType.signup)
@@ -168,12 +189,14 @@ class _AuthContentWidgetState extends State<AuthContentWidget> {
                 //
                 AuthInputField(
                   inputValue: emailWrapper,
+                  credentialEntity: credentialEntity,
                   key: Key(emailWrapper.labelText),
                 ),
                 const SizedBox(height: 10),
                 //
                 AuthInputField(
                   inputValue: passwordWrapper,
+                  credentialEntity: credentialEntity,
                   key: Key(passwordWrapper.labelText),
                 ),
                 //
@@ -182,6 +205,7 @@ class _AuthContentWidgetState extends State<AuthContentWidget> {
                 if (widget.authType == AuthType.signup)
                   AuthInputField(
                     inputValue: confrimPasswordWrapper,
+                    credentialEntity: credentialEntity,
                     key: Key(confrimPasswordWrapper.labelText),
                   ),
                 //
@@ -193,17 +217,16 @@ class _AuthContentWidgetState extends State<AuthContentWidget> {
                   }
                   return false;
                 }, builder: (context, state) {
-                  bool isFormValid = isFormValidate(widget.authType);
+                  // bool isFormValid = isFormValidate(widget.authType);
+                  bool isFormValid = false;
+                  if (state is FormValidationAuthState) {
+                    isFormValid = state.isValid;
+                  }
 
                   return AuthConfirmButtonWidget(
                     authType: widget.authType,
                     isFormValid: isFormValid,
-                    registerCredential: CredentialEntity(
-                      nameWrapper.value,
-                      emailWrapper.value,
-                      passwordWrapper.value,
-                      confrimPasswordWrapper.value,
-                    ),
+                    credentialEntity: credentialEntity,
                   );
                 }),
                 if (widget.authType == AuthType.login)
@@ -237,10 +260,12 @@ class _AuthContentWidgetState extends State<AuthContentWidget> {
           ),
           TextButton(
             onPressed: () {
+              nameWrapper.setValue("");
+              confrimPasswordWrapper.setValue("");
+              credentialEntity.confirmPassword = '';
               BlocProvider.of<AuthCubit>(context).authTypePressedEvent(
-                  authType == AuthType.login
-                      ? AuthType.signup
-                      : AuthType.login);
+                  authType == AuthType.login ? AuthType.signup : AuthType.login,
+                  credentialEntity);
             },
             child: Text(authType == AuthType.login ? 'sign up' : 'login'),
           )

@@ -4,14 +4,14 @@ import 'package:chess_flutter/models/chess_board.dart';
 import 'package:chess_flutter/models/chess_character.dart';
 import 'package:hive/hive.dart';
 
-class PlayStorage {
-  static final PlayStorage _singleton = PlayStorage._internal();
-  factory PlayStorage() {
+class ChessPlayStorage {
+  static final ChessPlayStorage _singleton = ChessPlayStorage._internal();
+  factory ChessPlayStorage() {
     return _singleton;
   }
-  PlayStorage._internal();
+  ChessPlayStorage._internal();
 
-  final String playsBox = "plays_box";
+  final String playsBox = "chess_play_box";
 
   String getItemIndex(String id) {
     return "play_$id";

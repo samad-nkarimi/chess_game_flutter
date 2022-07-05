@@ -147,8 +147,10 @@ class _PlayersScreenState extends State<PlayersScreen> {
                                   onPressed: () {
                                     BlocProvider.of<UserCubit>(context)
                                         .sendPlayRequestTo(
-                                            ServiceLocator().username,
-                                            state.users[index].name);
+                                      ServiceLocator().username,
+                                      state.users[index].name,
+                                      state.users[index].score,
+                                    );
                                     BlocProvider.of<HomeCubit>(context)
                                         .addNewRemotePlayRequest(
                                             state.users[index].name);

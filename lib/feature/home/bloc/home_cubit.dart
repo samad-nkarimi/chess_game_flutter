@@ -73,8 +73,6 @@ class HomeCubit extends Cubit<HomeState> {
         '0',
         RemotePlayStatus.wating,
         DateTime.now(),
-        DateTime(
-            DateTime.now().year, DateTime.now().month, DateTime.now().day + 1),
       ),
     );
     // emit(NewRemotePlayHomeState(targetUsername));
@@ -90,8 +88,6 @@ class HomeCubit extends Cubit<HomeState> {
         '0',
         RemotePlayStatus.active,
         DateTime.now(),
-        DateTime(
-            DateTime.now().year, DateTime.now().month, DateTime.now().day + 1),
       ),
     );
     emit(PlaysListHomeState(

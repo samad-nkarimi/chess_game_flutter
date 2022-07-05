@@ -5,13 +5,11 @@ class RemotePlayEntity {
   final String targetScore;
   RemotePlayStatus status;
   final DateTime startDate;
-  final DateTime endDate;
 
   RemotePlayEntity(
     this.targetUsername,
     this.targetScore,
     this.status,
     this.startDate,
-    this.endDate,
   );
 }

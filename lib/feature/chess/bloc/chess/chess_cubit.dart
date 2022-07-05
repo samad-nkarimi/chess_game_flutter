@@ -13,7 +13,7 @@ import 'package:chess_flutter/models/chess_player.dart';
 import 'package:chess_flutter/models/remote_move_details.dart';
 import 'package:chess_flutter/service/sse_service.dart';
 import 'package:chess_flutter/service_locator.dart';
-import 'package:chess_flutter/storage/play_storage.dart';
+import 'package:chess_flutter/storage/chess_play_storage.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ChessCubit extends Cubit<ChessState> {
@@ -43,7 +43,7 @@ class ChessCubit extends Cubit<ChessState> {
 
     //TODO
     //load data from data if necessary
-    ChessBoard chessBoard = await PlayStorage().getBoard("name");
+    ChessBoard chessBoard = await ChessPlayStorage().getBoard("name");
     PlayerWhite().characters = [];
     PlayerBlack().characters = [];
 
@@ -248,7 +248,7 @@ class ChessCubit extends Cubit<ChessState> {
           scc!.player,
           kingBox: kingBox,
         ));
-        PlayStorage().addChessBoard("name", ChessBoard().toJson());
+        ChessPlayStorage().addChessBoard("name", ChessBoard().toJson());
 
         //TODO
         //send to server

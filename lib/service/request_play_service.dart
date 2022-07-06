@@ -59,4 +59,22 @@ class RequestPlayService {
       return false;
     }
   }
+
+  Future<bool> cancellPlay(
+      String requestUsername, String targetUsername) async {
+    var url = Uri.parse('http://$hostIp:3000/api/remote-play/cancell-play');
+    try {
+      var response = await http.post(url,
+          headers: {"Content-Type": "application/json"},
+          body: json.encode({
+            "request_username": requestUsername,
+            "target_username": targetUsername,
+          }));
+
+      print(response.body);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
 }

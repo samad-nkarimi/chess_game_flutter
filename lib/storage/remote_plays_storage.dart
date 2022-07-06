@@ -1,3 +1,4 @@
+import 'dart:collection';
 import 'dart:convert';
 
 import 'package:chess_flutter/domain/entity/remote_play_entity.dart';
@@ -56,10 +57,11 @@ class RemotePlaysStorage {
 
   Future<List<RemotePlayModel>> loadAllPlays() async {
     List<RemotePlayModel> plays = [];
-    Box box = await getBox();
-    plays =
-        box.values.map((e) => RemotePlayModel.fromJson(jsonDecode(e))).toList();
-    await box.close();
+    // Box box = await getBox();
+    Iterable<dynamic> values = (await Hive.openBox(playsBox)).values;
+    // Iterable<dynamic> values = box.values;
+    plays = values.map((e) => RemotePlayModel.fromJson(jsonDecode(e))).toList();
+    // await box.close();
     return plays;
   }
 

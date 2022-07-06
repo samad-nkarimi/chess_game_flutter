@@ -47,7 +47,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
       body: CWContainer(
-        color: Colors.black12,
+        color: Colors.lime,
         w: double.infinity,
         h: double.infinity,
         child: SingleChildScrollView(
@@ -82,7 +82,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   w: double.infinity,
                   mar: const [10, 30, 10, 30],
                   brAll: 5,
-                  color: Colors.black38,
+                  color: Colors.white70,
                   child: Stack(
                     children: [
                       const CWText("user"),

@@ -1,6 +1,7 @@
 import 'package:chess_flutter/common_widgets/cw_elevated_button.dart';
 import 'package:chess_flutter/feature/chess/screen/chess_screen.dart';
 import 'package:chess_flutter/feature/home/bloc/home_cubit.dart';
+import 'package:chess_flutter/models/enums/remote_play_status.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -17,13 +18,21 @@ class RemotePlayItemWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Navigator.pushNamed(context, ChessScreen.routeName, arguments: true);
+        switch (remotePlay.status) {
+          case RemotePlayStatus.active:
+          case RemotePlayStatus.cancelled:
+          case RemotePlayStatus.finished:
+            Navigator.pushNamed(context, ChessScreen.routeName,
+                arguments: true);
+            break;
+          default:
+        }
       },
       child: CWContainer(
         w: double.infinity,
         mar: const [5, 5, 5, 5],
         brAll: 5,
-        color: Colors.black38,
+        color: Colors.white70,
         child: ClipRRect(
           child: Column(
             mainAxisSize: MainAxisSize.max,
@@ -38,6 +47,7 @@ class RemotePlayItemWidget extends StatelessWidget {
                       h: 50,
                       color: Colors.black12,
                       al: Alignment.center,
+                      br: [5, 5, 0, 0],
                       child: Column(
                         children: [
                           CWText(
@@ -75,7 +85,8 @@ class RemotePlayItemWidget extends StatelessWidget {
               ),
               CWContainer(
                 h: 30,
-                color: Colors.green,
+                br: [0, 0, 5, 5],
+                color: getStatusColor(remotePlay.status),
                 al: Alignment.center,
                 child: CWText(
                   remotePlay.status.name,
@@ -87,5 +98,23 @@ class RemotePlayItemWidget extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Color getStatusColor(RemotePlayStatus status) {
+    switch (status) {
+      case RemotePlayStatus.active:
+        return Colors.green;
+      case RemotePlayStatus.wating:
+        return Colors.orange;
+      case RemotePlayStatus.finished:
+        return Colors.blue;
+      case RemotePlayStatus.cancelled:
+        return Colors.yellow;
+      case RemotePlayStatus.rejected:
+        return Colors.red;
+
+      default:
+        return Colors.orange;
+    }
   }
 }

@@ -22,4 +22,10 @@ class RemoteRequestPlayRepoImpl extends RemoteRequestPLayRepo {
       String requestUsername, String targetUsername) async {
     return await playService.rejectPlayRequest(requestUsername, targetUsername);
   }
+
+  @override
+  Future<bool> cancellPlay(
+      String requestUsername, String targetUsername) async {
+    return await playService.cancellPlay(requestUsername, targetUsername);
+  }
 }

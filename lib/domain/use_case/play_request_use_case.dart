@@ -22,4 +22,9 @@ class PlayRequestUseCase {
     return await remotePLayRepo.rejectPlayRequestFrom(
         requestUsername, targetUsername);
   }
+
+  Future<bool> cancellPlay(
+      String requestUsername, String targetUsername) async {
+    return await remotePLayRepo.cancellPlay(requestUsername, targetUsername);
+  }
 }

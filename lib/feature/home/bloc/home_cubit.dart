@@ -15,7 +15,9 @@ class HomeCubit extends Cubit<HomeState> {
   List<RemotePlayEntity> remotePlays = [];
   final PlaysStorageUseCase playsStorageUseCase;
   final PlayRequestsStorageUseCase playRequestsStorageUseCase;
-  HomeCubit(this.playsStorageUseCase, this.playRequestsStorageUseCase)
+  final PlayRequestUseCase playRequestUseCase;
+  HomeCubit(this.playsStorageUseCase, this.playRequestsStorageUseCase,
+      this.playRequestUseCase)
       : super(InitialHomeState([], []));
 
   //
@@ -52,6 +54,17 @@ class HomeCubit extends Cubit<HomeState> {
                 //   DateTime.now().millisecondsSinceEpoch.toString(),
                 // ));
                 break;
+              case "cancelled":
+                RemotePlayEntity remotePlayEntity = remotePlays.singleWhere(
+                    (play) => play.targetUsername == requestUsername);
+                remotePlayEntity.status = RemotePlayStatus.cancelled;
+                await playsStorageUseCase.updatePlay(remotePlayEntity);
+                emit(PlaysListHomeState(remotePlays));
+                // emit(PlayRequestsHomeState(
+                //   remotePlayRequests,
+                //   DateTime.now().millisecondsSinceEpoch.toString(),
+                // ));
+                break;
               default:
             }
           }
@@ -80,8 +93,15 @@ class HomeCubit extends Cubit<HomeState> {
   // }
 
   void deleteRemotePlay(String username) async {
-    await playsStorageUseCase.deletePlay(username);
-    remotePlays.removeWhere((element) => element.targetUsername == username);
-    emit(PlaysListHomeState(remotePlays));
+    //send delete to server
+    bool isSent = await playRequestUseCase.cancellPlay(
+        ServiceLocator().username, username);
+    if (isSent) {
+      await playsStorageUseCase.deletePlay(username);
+      remotePlays.removeWhere((element) => element.targetUsername == username);
+      emit(PlaysListHomeState(remotePlays));
+    } else {
+      //network problem
+    }
   }
 }

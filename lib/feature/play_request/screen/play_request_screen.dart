@@ -1,6 +1,7 @@
 import 'package:chess_flutter/common_widgets/cw_container.dart';
 import 'package:chess_flutter/common_widgets/cw_elevated_button.dart';
 import 'package:chess_flutter/common_widgets/cw_text.dart';
+import 'package:chess_flutter/feature/home/bloc/home_cubit.dart';
 import 'package:chess_flutter/feature/play_request/bloc/play_request_cubit.dart';
 import 'package:chess_flutter/feature/play_request/bloc/play_request_state.dart';
 import 'package:chess_flutter/models/play_request.dart';
@@ -18,30 +19,36 @@ class PlayRequestScreen extends StatefulWidget {
 class _PlayRequestScreenState extends State<PlayRequestScreen> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const CWText("requests")),
-      body: BlocBuilder<PlayRequestCubit, PlayRequestState>(
-        buildWhen: (previous, current) {
-          return true;
-        },
-        builder: (context, state) {
-          List<PlayRequest> requests = [];
-          if (state is PlayRequestsListState) {
-            requests = state.remotePlayRequest;
-          }
-          if (state is InitialPlayRequestState) {
+    return WillPopScope(
+      onWillPop: () async {
+        print("onwillpop");
+        BlocProvider.of<HomeCubit>(context).init();
+        return true;
+      },
+      child: Scaffold(
+        appBar: AppBar(title: const CWText("requests")),
+        body: BlocBuilder<PlayRequestCubit, PlayRequestState>(
+          buildWhen: (previous, current) {
+            return true;
+          },
+          builder: (context, state) {
+            List<PlayRequest> requests = [];
+            if (state is PlayRequestsListState) {
+              requests = state.remotePlayRequest;
+            }
+            if (state is InitialPlayRequestState) {}
             BlocProvider.of<PlayRequestCubit>(context).init();
-          }
-          return CWContainer(
-            pad: const [10, 0, 10, 0],
-            child: ListView.builder(
-              itemCount: requests.length,
-              itemBuilder: (context, index) {
-                return requestPlayItem(requests[index].username);
-              },
-            ),
-          );
-        },
+            return CWContainer(
+              pad: const [10, 0, 10, 0],
+              child: ListView.builder(
+                itemCount: requests.length,
+                itemBuilder: (context, index) {
+                  return requestPlayItem(requests[index].username);
+                },
+              ),
+            );
+          },
+        ),
       ),
     );
   }

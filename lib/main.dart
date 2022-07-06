@@ -77,13 +77,16 @@ void main() async {
             ),
             BlocProvider(
               create: (context) => HomeCubit(
-                PlaysStorageUseCase(
-                  PlaysStorageRepoImpl(RemotePlaysStorage()),
-                ),
-                PlayRequestsStorageUseCase(
-                  PlayRequestStorageRepoImpl(PlayRequestsStorage()),
-                ),
-              )..init(),
+                  PlaysStorageUseCase(
+                    PlaysStorageRepoImpl(RemotePlaysStorage()),
+                  ),
+                  PlayRequestsStorageUseCase(
+                    PlayRequestStorageRepoImpl(PlayRequestsStorage()),
+                  ),
+                  PlayRequestUseCase(
+                    RemoteRequestPlayRepoImpl(RequestPlayService()),
+                  ))
+                ..init(),
             ),
             BlocProvider(
               create: (context) => PlayRequestCubit(

@@ -10,14 +10,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../common_widgets/cw_text.dart';
 import '../../../models/enums/auth_filed_type.dart';
-import '../../players/widget/user_search_field.dart';
 
 class StringWrapper {
   AuthFiledType filed;
   String value;
   String hint;
   IconData icon;
-  Function validaton;
+  Function? validaton;
   String guideText;
   String labelText;
   StringWrapper({
@@ -25,7 +24,7 @@ class StringWrapper {
     required this.value,
     required this.hint,
     required this.icon,
-    required this.validaton,
+    this.validaton,
     required this.labelText,
     required this.guideText,
   });
@@ -52,60 +51,12 @@ class _AuthContentWidgetState extends State<AuthContentWidget> {
   late StringWrapper passwordWrapper;
   late StringWrapper confrimPasswordWrapper;
 
-  bool nameValidation(String name) {
-    return name.isNotEmpty && name.length < 20;
-  }
-
-  bool emailValidation(String email) {
-    return RegExp(
-            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-        .hasMatch(email);
-  }
-
-  bool passwordValidation(String password) {
-    if (password.length > 8 &&
-        password.contains(RegExp(r'[A-Z]')) &&
-        password.contains(RegExp(r'[a-z]')) &&
-        password.contains(RegExp(r'[0-9]'))) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  bool confirmPasswordValidation(String value) {
-    if (value == passwordWrapper.value && passwordValidation(value)) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  bool isFormValidate(AuthType authType) {
-    print(nameWrapper.value);
-    print(emailWrapper.value);
-    print(passwordWrapper.value);
-    print(confrimPasswordWrapper.value);
-    if (emailValidation(emailWrapper.value) &&
-        passwordValidation(passwordWrapper.value)) {
-      if (authType == AuthType.signup) {
-        return nameValidation(nameWrapper.value) &&
-            confirmPasswordValidation(confrimPasswordWrapper.value);
-      } else {
-        return true;
-      }
-    } else {
-      return false;
-    }
-  }
-
   void initializeStringWrappers() {
     nameWrapper = StringWrapper(
       filed: AuthFiledType.username,
       value: '',
       hint: 'username',
       icon: Icons.verified_user,
-      validaton: nameValidation,
       labelText: "username",
       guideText: "نام کاربری",
     );
@@ -114,7 +65,6 @@ class _AuthContentWidgetState extends State<AuthContentWidget> {
       value: '',
       hint: 'google.site@gmail.com',
       icon: Icons.email,
-      validaton: emailValidation,
       labelText: "email",
       guideText: "ایمیل",
     );
@@ -123,7 +73,6 @@ class _AuthContentWidgetState extends State<AuthContentWidget> {
       value: '',
       hint: 'SnGoogle4321',
       icon: Icons.lock,
-      validaton: passwordValidation,
       labelText: "password",
       guideText: "رمز شامل حروف یزرگ و کوچک و اعداد باشد و طول آن حداقل 8 باشد",
     );
@@ -132,7 +81,6 @@ class _AuthContentWidgetState extends State<AuthContentWidget> {
       value: '',
       hint: 'SnGoogle4321',
       icon: Icons.lock,
-      validaton: confirmPasswordValidation,
       labelText: "confirm password",
       guideText: "مطابق رمز بالا باشد",
     );
@@ -263,9 +211,10 @@ class _AuthContentWidgetState extends State<AuthContentWidget> {
               nameWrapper.setValue("");
               confrimPasswordWrapper.setValue("");
               credentialEntity.confirmPassword = '';
-              BlocProvider.of<AuthCubit>(context).authTypePressedEvent(
-                  authType == AuthType.login ? AuthType.signup : AuthType.login,
-                  credentialEntity);
+              credentialEntity.authType =
+                  authType == AuthType.login ? AuthType.signup : AuthType.login;
+              BlocProvider.of<AuthCubit>(context)
+                  .authTypePressedEvent(credentialEntity);
             },
             child: Text(authType == AuthType.login ? 'sign up' : 'login'),
           )

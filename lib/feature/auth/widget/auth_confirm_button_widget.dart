@@ -72,8 +72,8 @@ class _AuthConfirmButtonWidgetState extends State<AuthConfirmButtonWidget> {
               children: [
                 ElevatedButton(
                   onPressed: () {
-                    BlocProvider.of<AuthCubit>(context).authTypePressedEvent(
-                        AuthType.login, widget.credentialEntity);
+                    BlocProvider.of<AuthCubit>(context)
+                        .authTypePressedEvent(widget.credentialEntity);
                     Navigator.pop(ctx);
                   },
                   child: const Text("login"),

@@ -41,6 +41,8 @@ dependencies:
   http: ^0.13.4
   hive: ^2.2.2
   hive_flutter: ^1.1.0
+  # bloc_test: ^9.0.0
+  # mocktail: ^0.3.0
 
   
 

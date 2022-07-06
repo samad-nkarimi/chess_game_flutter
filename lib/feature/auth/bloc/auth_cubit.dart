@@ -25,8 +25,12 @@ class AuthCubit extends Cubit<AuthState> {
     emit(FiledValidationAuthState(
         filed, isFiledValid, DateTime.now().millisecondsSinceEpoch.toString()));
     Future.delayed(Duration.zero);
-    bool isFormValid =
-        authRegisterUseCase.credentialValidationForSignUp(entity);
+    bool isFormValid = false;
+    if (entity.authType == AuthType.signup) {
+      isFormValid = authRegisterUseCase.credentialValidationForSignUp(entity);
+    } else {
+      isFormValid = authRegisterUseCase.credentialValidationForLogin(entity);
+    }
     emit(FormValidationAuthState(
         isFormValid, DateTime.now().millisecondsSinceEpoch.toString()));
   }
@@ -77,11 +81,11 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
-  void authTypePressedEvent(AuthType authType, CredentialEntity entity) {
-    emit(AuthTypeChangedState(authType));
+  void authTypePressedEvent(CredentialEntity entity) {
+    emit(AuthTypeChangedState(entity.authType));
     Future.delayed(Duration.zero);
     bool isFormValid = false;
-    if (authType == AuthType.signup) {
+    if (entity.authType == AuthType.signup) {
       isFormValid = authRegisterUseCase.credentialValidationForSignUp(entity);
     } else {
       isFormValid = authRegisterUseCase.credentialValidationForLogin(entity);

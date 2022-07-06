@@ -21,10 +21,10 @@ class UserCubit extends Cubit<UserState> {
   }) : super(const InitialUserState([]));
 
   //
-  void searchFeedChanged(String feed) async {
+  void searchForFeed(String feed) async {
     print(feed);
     emit(const SearchingUserState([]));
-    await Future.delayed(const Duration(seconds: 2));
+    await Future.delayed(const Duration(seconds: 2)); //TODO remove
     try {
       List<User> users = await findUsernameUseCase.execute(feed);
       emit(ResultUserState(users));
@@ -42,7 +42,7 @@ class UserCubit extends Cubit<UserState> {
     if (playAlreadyExist) {
       print("already have a play");
     } else {
-      playRequestUseCase.sendPlayRequestTo(requestUsername, targetUsername);
+      playRequestUseCase.sendPlayRequestFromTo(requestUsername, targetUsername);
       //TODO, if failed, do not save it
       playsStorageUseCase.saveNewPlay(RemotePlayEntity(
         targetUsername,

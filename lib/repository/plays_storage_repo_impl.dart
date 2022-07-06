@@ -15,7 +15,24 @@ class PlaysStorageRepoImpl extends PlaysStorageRepo {
   }
 
   @override
+  Future<void> updatePlay(RemotePlayEntity entity) async {
+    RemotePlayModel remotePlayModel = RemotePlayModel.fromEntity(entity);
+    await remotePlaysStorage.updatePlay(remotePlayModel);
+  }
+
+  @override
+  Future<void> deletePlay(String username) async {
+    await remotePlaysStorage.deletePlay(username);
+  }
+
+  @override
   Future<bool> isPlayExists(String username) async {
     return await remotePlaysStorage.isThereAPlaywith(username);
+  }
+
+  @override
+  Future<List<RemotePlayEntity>> fetchAllPLays() async {
+    List<RemotePlayModel> plays = await remotePlaysStorage.loadAllPlays();
+    return plays.map((e) => e.toEntity()).toList();
   }
 }

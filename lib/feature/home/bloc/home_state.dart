@@ -31,15 +31,4 @@ class PlaysListHomeState extends HomeState {
   List<Object?> get props => [remotePlays, id];
 }
 
-//
-class PlayRequestsHomeState extends HomeState {
-  final List<String> remotePlayRequest;
-  final String id;
 
-  PlayRequestsHomeState(this.remotePlayRequest, this.id);
-  @override
-  List<Object?> get props => [
-        remotePlayRequest,
-        id,
-      ];
-}

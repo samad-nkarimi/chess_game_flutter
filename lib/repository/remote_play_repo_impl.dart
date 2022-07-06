@@ -6,17 +6,20 @@ class RemoteRequestPlayRepoImpl extends RemoteRequestPLayRepo {
 
   RemoteRequestPlayRepoImpl(this.playService);
   @override
-  void sendPlayRequestTo(String requestUsername, String targetUsername) {
-    playService.sendPlayRequest(requestUsername, targetUsername);
+  Future<bool> sendPlayRequestTo(
+      String requestUsername, String targetUsername) async {
+    return await playService.sendPlayRequest(requestUsername, targetUsername);
   }
 
   @override
-  void acceptPlayRequestFrom(String requestUsername, String targetUsername) {
-    playService.acceptPlayRequest(requestUsername, targetUsername);
+  Future<bool> acceptPlayRequestFrom(
+      String requestUsername, String targetUsername) async {
+    return await playService.acceptPlayRequest(requestUsername, targetUsername);
   }
 
   @override
-  void rejectPlayRequestFrom(String requestUsername, String targetUsername) {
-    playService.rejectPlayRequest(requestUsername, targetUsername);
+  Future<bool> rejectPlayRequestFrom(
+      String requestUsername, String targetUsername) async {
+    return await playService.rejectPlayRequest(requestUsername, targetUsername);
   }
 }

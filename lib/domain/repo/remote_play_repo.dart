@@ -1,5 +1,5 @@
 abstract class RemoteRequestPLayRepo {
-  void sendPlayRequestTo(String requestUsername, String targetUsername);
-  void acceptPlayRequestFrom(String requestUsername, String targetUsername);
-  void rejectPlayRequestFrom(String requestUsername, String targetUsername);
+  Future<bool> sendPlayRequestTo(String requestUsername, String targetUsername);
+  Future<bool> acceptPlayRequestFrom(String requestUsername, String targetUsername);
+  Future<bool> rejectPlayRequestFrom(String requestUsername, String targetUsername);
 }

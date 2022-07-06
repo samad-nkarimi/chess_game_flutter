@@ -1,47 +1,33 @@
 import 'package:chess_flutter/common_widgets/cw_container.dart';
 import 'package:chess_flutter/common_widgets/cw_elevated_button.dart';
 import 'package:chess_flutter/common_widgets/cw_text.dart';
-import 'package:chess_flutter/feature/home/bloc/home_cubit.dart';
-import 'package:chess_flutter/feature/home/bloc/home_state.dart';
-import 'package:chess_flutter/feature/home/screen/home_screen.dart';
+import 'package:chess_flutter/feature/play_request/bloc/play_request_cubit.dart';
+import 'package:chess_flutter/feature/play_request/bloc/play_request_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class RequestPlaysScreen extends StatefulWidget {
+class PlayRequestScreen extends StatefulWidget {
   static const routeName = "/request_plays_screen";
-  const RequestPlaysScreen({Key? key}) : super(key: key);
+  const PlayRequestScreen({Key? key}) : super(key: key);
 
   @override
-  State<RequestPlaysScreen> createState() => _RequestPlaysScreenState();
+  State<PlayRequestScreen> createState() => _PlayRequestScreenState();
 }
 
-class _RequestPlaysScreenState extends State<RequestPlaysScreen> {
-  List<String> requestPlays = [
-    "samad",
-    "maria",
-    "hassan",
-    "pizza",
-    "hamburger"
-  ];
+class _PlayRequestScreenState extends State<PlayRequestScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const CWText("requests")),
-      body: BlocBuilder<HomeCubit, HomeState>(
-        
+      body: BlocBuilder<PlayRequestCubit, PlayRequestState>(
         buildWhen: (previous, current) {
-          if (current is PlayRequestsHomeState) {
-            return true;
-          }
-
-          return false;
+          return true;
         },
         builder: (context, state) {
-          print(state);
           List<String> requests = [];
-          if (state is PlayRequestsHomeState) {
+          if (state is NewPlayRequest) {
             requests = state.remotePlayRequest;
-          } 
+          }
           return CWContainer(
             pad: const [10, 0, 10, 0],
             child: ListView.builder(
@@ -60,8 +46,8 @@ class _RequestPlaysScreenState extends State<RequestPlaysScreen> {
     return CWContainer(
       h: 60,
       w: double.infinity,
-      mar: [2, 15, 2, 15],
-      pad: [2, 15, 2, 15],
+      mar: const [2, 15, 2, 15],
+      pad: const [2, 15, 2, 15],
       brAll: 5,
       al: Alignment.centerLeft,
       brColor: Colors.orange.shade800,
@@ -92,11 +78,9 @@ class _RequestPlaysScreenState extends State<RequestPlaysScreen> {
             padding: const EdgeInsets.all(4.0),
             child: CWElevatedButton(
               onPressed: () {
-                BlocProvider.of<HomeCubit>(context).acceptRemotePlay(username);
+                BlocProvider.of<PlayRequestCubit>(context)
+                    .acceptRemotePlayRequest(username);
                 //TODO
-                setState(() {
-                  requestPlays.remove(username);
-                });
               },
               primary: Colors.green,
               bRadius: 5,
@@ -110,11 +94,9 @@ class _RequestPlaysScreenState extends State<RequestPlaysScreen> {
             padding: const EdgeInsets.all(4.0),
             child: CWElevatedButton(
               onPressed: () {
-                BlocProvider.of<HomeCubit>(context).rejectRemotePlay(username);
+                BlocProvider.of<PlayRequestCubit>(context)
+                    .rejectRemotePlayRequest(username);
                 //TODO
-                setState(() {
-                  requestPlays.remove(username);
-                });
               },
               primary: Colors.orange,
               bRadius: 5,

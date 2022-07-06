@@ -8,6 +8,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 void main() {
+  setUpAll(() async {
+    await Hive.initFlutter();
+  });
   group("plays storage test", () {
     RemotePlaysStorage remotePlaysStorage = RemotePlaysStorage();
     RemotePlayModel remotePlayModel = RemotePlayModel(
@@ -25,7 +28,7 @@ void main() {
         RemotePlayModel.fromEntity(remotePlayEntity);
     test("save play", () async {
       print(1);
-      await Hive.initFlutter();
+
       Box box = await remotePlaysStorage.getBox();
       box.clear();
       await remotePlaysStorage.savePlayWith(remotePlayModel);
@@ -36,7 +39,7 @@ void main() {
     });
     test("save play from entity", () async {
       print(2);
-      await Hive.initFlutter();
+
       await remotePlaysStorage.savePlayWith(remotePlayModel2);
       Box box = await remotePlaysStorage.getBox();
       expect(box.containsKey("negar"), true);
@@ -45,7 +48,7 @@ void main() {
     });
     test("load play", () async {
       print(3);
-      await Hive.initFlutter();
+
       RemotePlayModel loadedPlay =
           await remotePlaysStorage.loadPlayWith(remotePlayModel.targetUsername);
       // Box box = await remotePlaysStorage.getBox();
@@ -54,7 +57,7 @@ void main() {
     });
     test("load play from entity", () async {
       print(4);
-      await Hive.initFlutter();
+
       RemotePlayModel loadedPlay = await remotePlaysStorage
           .loadPlayWith(remotePlayModel2.targetUsername);
       // Box box = await remotePlaysStorage.getBox();
@@ -63,14 +66,28 @@ void main() {
     });
     test("check if play exists", () async {
       print(5);
-      await Hive.initFlutter();
       bool isThere = await remotePlaysStorage.isThereAPlaywith("samad");
       expect(isThere, true);
     });
+    test("load all plays", () async {
+      List<RemotePlayModel> plays = await remotePlaysStorage.loadAllPlays();
+      expect(plays, [remotePlayModel2, remotePlayModel]);
+    });
+    test("update play", () async {
+      remotePlayModel = RemotePlayModel(
+          targetUsername: "samad",
+          targetScore: "35",
+          status: "active",
+          startDate: DateTime.now().toString());
+      await remotePlaysStorage.updatePlay(remotePlayModel);
+      Box box = await remotePlaysStorage.getBox();
+      expect(box.containsKey("samad"), true);
+      expect(box.get("samad"), remotePlayModel.toJson());
+    });
     test("delete play", () async {
       print(6);
-      await Hive.initFlutter();
-      await remotePlaysStorage.deletePlayPlaywith("samad");
+
+      await remotePlaysStorage.deletePlay("samad");
       Box box = await remotePlaysStorage.getBox();
       expect(box.containsKey("samad"), false);
     });

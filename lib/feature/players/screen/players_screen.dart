@@ -46,18 +46,18 @@ class _PlayersScreenState extends State<PlayersScreen> {
                   flex: 10,
                   child: UserSearchField(),
                 ),
-                Flexible(
-                  flex: 3,
-                  child: Center(
-                    child: CWElevatedButton(
-                      onPressed: () async {
-                        users = await UserRepoImpl(UserService()).getUsers();
-                        setState(() {});
-                      },
-                      child: const CWText("fetch all"),
-                    ),
-                  ),
-                ),
+                // Flexible(
+                //   flex: 3,
+                //   child: Center(
+                //     child: CWElevatedButton(
+                //       onPressed: () async {
+                //         users = await UserRepoImpl(UserService()).getUsers();
+                //         setState(() {});
+                //       },
+                //       child: const CWText("fetch all"),
+                //     ),
+                //   ),
+                // ),
                 Flexible(
                   flex: 3,
                   child: Center(
@@ -99,8 +99,8 @@ class _PlayersScreenState extends State<PlayersScreen> {
               color: Colors.blueGrey,
               child: SingleChildScrollView(
                 child: searching
-                    ? Center(
-                        child: const CWText(
+                    ? const Center(
+                        child:  CWText(
                         "searching...",
                         color: Colors.white,
                       ))
@@ -180,18 +180,3 @@ class _PlayersScreenState extends State<PlayersScreen> {
 }
 
 
-//  ListView.builder(
-//             shrinkWrap: true,
-//             scrollDirection: Axis.vertical,
-//             itemCount: 20,
-//             padding: EdgeInsets.symmetric(vertical: 10),
-//             itemBuilder: (context, index) {
-//               return CWContainer(
-//                 h: 50,
-//                 mar: [1, 10, 1, 10],
-//                 w: double.infinity,
-//                 brAll: 5,
-//                 color: Colors.white24,
-//               );
-//             },
-//           ),

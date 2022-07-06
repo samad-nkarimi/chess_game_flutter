@@ -4,47 +4,59 @@ import 'package:chess_flutter/config/network_url.dart';
 import 'package:http/http.dart' as http;
 
 class RequestPlayService {
-  void sendPlayRequest(String requestUsername, String targetUsername) async {
+  Future<bool> sendPlayRequest(
+      String requestUsername, String targetUsername) async {
     var url = Uri.parse('http://$hostIp:3000/api/remote-play/request');
+    try {
+      var response = await http.post(url,
+          headers: {"Content-Type": "application/json"},
+          body: json.encode({
+            "request_username": requestUsername,
+            "target_username": targetUsername,
+          }));
 
-    var response = await http.post(url,
-        headers: {"Content-Type": "application/json"},
-        body: json.encode({
-          "request_username": requestUsername,
-          "target_username": targetUsername,
-        }));
-
-    print(response.body);
-    // users = User.usersFromJson(jsonDecode(response.body));
-    // print(users);
-    // return users;
+      print(response.body);
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 
   //
-  void acceptPlayRequest(String requestUsername, String targetUsername) async {
+  Future<bool> acceptPlayRequest(
+      String requestUsername, String targetUsername) async {
     var url = Uri.parse('http://$hostIp:3000/api/remote-play/accept-request');
+    try {
+      var response = await http.post(url,
+          headers: {"Content-Type": "application/json"},
+          body: json.encode({
+            "request_username": requestUsername,
+            "target_username": targetUsername,
+          }));
 
-    var response = await http.post(url,
-        headers: {"Content-Type": "application/json"},
-        body: json.encode({
-          "request_username": requestUsername,
-          "target_username": targetUsername,
-        }));
-
-    print(response.body);
+      print(response.body);
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 
   //
-  void rejectPlayRequest(String requestUsername, String targetUsername) async {
+  Future<bool> rejectPlayRequest(
+      String requestUsername, String targetUsername) async {
     var url = Uri.parse('http://$hostIp:3000/api/remote-play/reject-request');
+    try {
+      var response = await http.post(url,
+          headers: {"Content-Type": "application/json"},
+          body: json.encode({
+            "request_username": requestUsername,
+            "target_username": targetUsername,
+          }));
 
-    var response = await http.post(url,
-        headers: {"Content-Type": "application/json"},
-        body: json.encode({
-          "request_username": requestUsername,
-          "target_username": targetUsername,
-        }));
-
-    print(response.body);
+      print(response.body);
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 }

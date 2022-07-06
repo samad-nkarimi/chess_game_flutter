@@ -29,6 +29,21 @@ class RemotePlaysStorage {
     await box.close();
   }
 
+  Future<void> updatePlay(RemotePlayModel remotePlayModel) async {
+    Box box = await getBox();
+    await box.put(remotePlayModel.targetUsername, remotePlayModel.toJson());
+    await box.close();
+  }
+
+  Future<void> deletePlay(String username) async {
+    Box box = await getBox();
+    bool isTherePlay = box.containsKey(username);
+    if (isTherePlay) {
+      await box.delete(username);
+    }
+    await box.close();
+  }
+
   Future<RemotePlayModel> loadPlayWith(String username) async {
     Box box = await getBox();
     String json = await box.get(username);
@@ -39,19 +54,19 @@ class RemotePlaysStorage {
     return remotePlayModel;
   }
 
+  Future<List<RemotePlayModel>> loadAllPlays() async {
+    List<RemotePlayModel> plays = [];
+    Box box = await getBox();
+    plays =
+        box.values.map((e) => RemotePlayModel.fromJson(jsonDecode(e))).toList();
+    await box.close();
+    return plays;
+  }
+
   Future<bool> isThereAPlaywith(String username) async {
     Box box = await getBox();
     bool isTherePlay = box.containsKey(username);
     await box.close();
     return isTherePlay;
-  }
-
-  Future<void> deletePlayPlaywith(String username) async {
-    Box box = await getBox();
-    bool isTherePlay = box.containsKey(username);
-    if (isTherePlay) {
-      await box.delete(username);
-    }
-    await box.close();
   }
 }

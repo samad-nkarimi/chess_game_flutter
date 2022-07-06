@@ -13,4 +13,16 @@ class PlaysStorageUseCase {
   Future<void> saveNewPlay(RemotePlayEntity remotePlayEntity) async {
     await playsStorageRepo.saveNewPlay(remotePlayEntity);
   }
+
+  Future<void> updatePlay(RemotePlayEntity remotePlayEntity) async {
+    await playsStorageRepo.updatePlay(remotePlayEntity);
+  }
+
+  Future<void> deletePlay(String username) async {
+    await playsStorageRepo.deletePlay(username);
+  }
+
+  Future<List<RemotePlayEntity>> fetchAllPlays() async {
+    return await playsStorageRepo.fetchAllPLays();
+  }
 }

@@ -24,11 +24,9 @@ class NewRemotePlayHomeState extends HomeState {
 //
 class PlaysListHomeState extends HomeState {
   final List<RemotePlayEntity> remotePlays;
-  final String id;
+  // final String id;
 
-  PlaysListHomeState(this.remotePlays, this.id);
+  PlaysListHomeState(this.remotePlays);
   @override
-  List<Object?> get props => [remotePlays, id];
+  List<Object?> get props => [remotePlays];
 }
-
-

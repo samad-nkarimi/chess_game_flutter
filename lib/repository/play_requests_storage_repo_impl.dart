@@ -1,4 +1,5 @@
 import 'package:chess_flutter/domain/repo/play_requests_storage_repo.dart';
+import 'package:chess_flutter/models/play_request.dart';
 import 'package:chess_flutter/storage/play_requests_storage.dart';
 
 class PlayRequestStorageRepoImpl extends PlayRequestStorageRepo {
@@ -11,8 +12,8 @@ class PlayRequestStorageRepoImpl extends PlayRequestStorageRepo {
   }
 
   @override
-  Future<void> fetchAllRequests() async {
-    playRequestsStorage.fetchAllRequests();
+  Future<List<PlayRequest>> fetchAllRequests() async {
+    return await playRequestsStorage.fetchAllRequests();
   }
 
   @override

@@ -3,6 +3,7 @@ import 'package:chess_flutter/common_widgets/cw_elevated_button.dart';
 import 'package:chess_flutter/common_widgets/cw_text.dart';
 import 'package:chess_flutter/feature/play_request/bloc/play_request_cubit.dart';
 import 'package:chess_flutter/feature/play_request/bloc/play_request_state.dart';
+import 'package:chess_flutter/models/play_request.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -24,16 +25,19 @@ class _PlayRequestScreenState extends State<PlayRequestScreen> {
           return true;
         },
         builder: (context, state) {
-          List<String> requests = [];
-          if (state is NewPlayRequest) {
+          List<PlayRequest> requests = [];
+          if (state is PlayRequestsListState) {
             requests = state.remotePlayRequest;
+          }
+          if (state is InitialPlayRequestState) {
+            BlocProvider.of<PlayRequestCubit>(context).init();
           }
           return CWContainer(
             pad: const [10, 0, 10, 0],
             child: ListView.builder(
               itemCount: requests.length,
               itemBuilder: (context, index) {
-                return requestPlayItem(requests[index]);
+                return requestPlayItem(requests[index].username);
               },
             ),
           );

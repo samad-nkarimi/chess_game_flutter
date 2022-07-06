@@ -1,5 +1,8 @@
+import 'package:chess_flutter/common_widgets/cw_elevated_button.dart';
 import 'package:chess_flutter/feature/chess/screen/chess_screen.dart';
+import 'package:chess_flutter/feature/home/bloc/home_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../common_widgets/cw_container.dart';
 import '../../../common_widgets/cw_text.dart';
@@ -27,24 +30,48 @@ class RemotePlayItemWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              CWContainer(
-                h: 50,
-                color: Colors.black12,
-                al: Alignment.center,
-                child: Column(
-                  children: [
-                    CWText(
-                      remotePlay.targetUsername,
-                      color: Colors.white,
-                      fontSize: 20,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: CWContainer(
+                      h: 50,
+                      color: Colors.black12,
+                      al: Alignment.center,
+                      child: Column(
+                        children: [
+                          CWText(
+                            remotePlay.targetUsername,
+                            color: Colors.white,
+                            fontSize: 20,
+                          ),
+                          CWText(
+                            remotePlay.targetScore,
+                            color: Colors.white,
+                            fontSize: 10,
+                          ),
+                        ],
+                      ),
                     ),
-                    CWText(
-                      remotePlay.targetScore,
-                      color: Colors.white,
-                      fontSize: 10,
+                  ),
+                  CWContainer(
+                    h: 50,
+                    w: 30,
+                    color: Colors.black12,
+                    child: CWElevatedButton(
+                      onPressed: () {
+                        BlocProvider.of<HomeCubit>(context)
+                            .deleteRemotePlay(remotePlay.targetUsername);
+                      },
+                      primary: Colors.red,
+                      bRadius: 5,
+                      child: const Icon(
+                        Icons.delete,
+                        color: Colors.white,
+                      ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
               CWContainer(
                 h: 30,

@@ -52,17 +52,18 @@ class _HomeScreenState extends State<HomeScreen> {
         h: double.infinity,
         child: SingleChildScrollView(
           child: BlocBuilder<HomeCubit, HomeState>(
-          //     buildWhen: ((previous, current) {
-          //   if (current is PlaysListHomeState) {
-          //     return true;
-          //   }
-          //   if (current is InitialHomeState) {
-          //     return true;
-          //   }
+              //     buildWhen: ((previous, current) {
+              //   if (current is PlaysListHomeState) {
+              //     return true;
+              //   }
+              //   if (current is InitialHomeState) {
+              //     return true;
+              //   }
 
-          //   return false;
-          // }),
-           builder: (context, state) {
+              //   return false;
+              // }),
+              builder: (context, state) {
+            BlocProvider.of<HomeCubit>(context).init();
             int playCount = 0;
             List<RemotePlayEntity> remotePlays = [];
             if (state is PlaysListHomeState) {
@@ -73,6 +74,7 @@ class _HomeScreenState extends State<HomeScreen> {
               playCount = state.remotePlays.length;
               remotePlays = state.remotePlays;
             }
+            print(state);
             return Column(
               children: [
                 CWContainer(

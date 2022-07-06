@@ -100,7 +100,7 @@ class _PlayersScreenState extends State<PlayersScreen> {
               child: SingleChildScrollView(
                 child: searching
                     ? const Center(
-                        child:  CWText(
+                        child: CWText(
                         "searching...",
                         color: Colors.white,
                       ))
@@ -151,9 +151,6 @@ class _PlayersScreenState extends State<PlayersScreen> {
                                       state.users[index].name,
                                       state.users[index].score,
                                     );
-                                    BlocProvider.of<HomeCubit>(context)
-                                        .addNewRemotePlayRequest(
-                                            state.users[index].name);
                                   },
                                   vPadding: 20,
                                   hPadding: 20,
@@ -178,5 +175,3 @@ class _PlayersScreenState extends State<PlayersScreen> {
     );
   }
 }
-
-

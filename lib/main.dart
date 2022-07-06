@@ -80,6 +80,9 @@ void main() async {
                 PlaysStorageUseCase(
                   PlaysStorageRepoImpl(RemotePlaysStorage()),
                 ),
+                PlayRequestsStorageUseCase(
+                  PlayRequestStorageRepoImpl(PlayRequestsStorage()),
+                ),
               )..init(),
             ),
             BlocProvider(

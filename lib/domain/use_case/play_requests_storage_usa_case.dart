@@ -1,4 +1,5 @@
 import 'package:chess_flutter/domain/repo/play_requests_storage_repo.dart';
+import 'package:chess_flutter/models/play_request.dart';
 
 class PlayRequestsStorageUseCase {
   final PlayRequestStorageRepo playRequestStorageRepo;
@@ -13,7 +14,7 @@ class PlayRequestsStorageUseCase {
     return await playRequestStorageRepo.deleteRequest(username);
   }
 
-  Future<void> fetchAllRequests() async {
-    playRequestStorageRepo.fetchAllRequests();
+  Future<List<PlayRequest>> fetchAllRequests() async {
+    return await playRequestStorageRepo.fetchAllRequests();
   }
 }

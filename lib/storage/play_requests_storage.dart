@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:chess_flutter/domain/entity/remote_play_entity.dart';
+import 'package:chess_flutter/models/play_request.dart';
 import 'package:chess_flutter/models/remote_play_model.dart';
 import 'package:hive/hive.dart';
 
@@ -46,12 +47,16 @@ class PlayRequestsStorage {
     }
   }
 
-  Future<void> fetchAllRequests() async {
+  Future<List<PlayRequest>> fetchAllRequests() async {
+    List<PlayRequest> playRequests = [];
     try {
       Box box = await getBox();
-      box.values;
+      playRequests =
+          box.values.map((e) => PlayRequest.fromJson(jsonDecode(e))).toList();
       await box.close();
+      return playRequests;
     } catch (e) {
+      return playRequests;
       //
     }
   }

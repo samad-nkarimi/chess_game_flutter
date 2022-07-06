@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:chess_flutter/domain/entity/remote_play_entity.dart';
 import 'package:chess_flutter/domain/use_case/play_request_use_case.dart';
+import 'package:chess_flutter/domain/use_case/play_requests_storage_usa_case.dart';
 import 'package:chess_flutter/domain/use_case/plays_storage_use_case.dart';
 import 'package:chess_flutter/service/sse_service.dart';
 import 'package:chess_flutter/service_locator.dart';
@@ -13,13 +14,14 @@ import 'home_state.dart';
 class HomeCubit extends Cubit<HomeState> {
   List<RemotePlayEntity> remotePlays = [];
   final PlaysStorageUseCase playsStorageUseCase;
-  HomeCubit(this.playsStorageUseCase) : super(InitialHomeState([], []));
+  final PlayRequestsStorageUseCase playRequestsStorageUseCase;
+  HomeCubit(this.playsStorageUseCase, this.playRequestsStorageUseCase)
+      : super(InitialHomeState([], []));
 
   //
   void init() async {
     remotePlays = await playsStorageUseCase.fetchAllPlays();
-    emit(PlaysListHomeState(
-        remotePlays, DateTime.now().millisecondsSinceEpoch.toString()));
+    emit(PlaysListHomeState(remotePlays));
     SSEService().streamController.stream.listen((data) async {
       try {
         var map = jsonDecode(data) as Map<String, dynamic>;
@@ -34,8 +36,7 @@ class HomeCubit extends Cubit<HomeState> {
                 remotePlayEntity.status = RemotePlayStatus.active;
                 await playsStorageUseCase.updatePlay(remotePlayEntity);
                 remotePlays = await playsStorageUseCase.fetchAllPlays();
-                emit(PlaysListHomeState(remotePlays,
-                    DateTime.now().millisecondsSinceEpoch.toString()));
+                emit(PlaysListHomeState(remotePlays));
 
                 break;
               case "rejected":
@@ -44,6 +45,8 @@ class HomeCubit extends Cubit<HomeState> {
               case "new_request":
                 //TODO
                 emit(NewRemotePlayHomeState(requestUsername));
+                await playRequestsStorageUseCase.saveNewRequest(
+                    requestUsername, "0");
                 // emit(PlayRequestsHomeState(
                 //   remotePlayRequests,
                 //   DateTime.now().millisecondsSinceEpoch.toString(),
@@ -67,12 +70,18 @@ class HomeCubit extends Cubit<HomeState> {
   //   ));
   // }
 
-  //what we send to target
-  void addNewRemotePlayRequest(String targetUsername) {
-    remotePlays.add(RemotePlayEntity(
-        targetUsername, '0', RemotePlayStatus.wating, DateTime.now()));
-    // emit(NewRemotePlayHomeState(targetUsername));
-    emit(PlaysListHomeState(
-        remotePlays, DateTime.now().millisecondsSinceEpoch.toString()));
+  // //what we send to target
+  // void addNewRemotePlayRequest(String targetUsername) {
+  //   remotePlays.add(RemotePlayEntity(
+  //       targetUsername, '0', RemotePlayStatus.wating, DateTime.now()));
+  //   // emit(NewRemotePlayHomeState(targetUsername));
+  //   emit(PlaysListHomeState(
+  //       remotePlays, DateTime.now().millisecondsSinceEpoch.toString()));
+  // }
+
+  void deleteRemotePlay(String username) async {
+    await playsStorageUseCase.deletePlay(username);
+    remotePlays.removeWhere((element) => element.targetUsername == username);
+    emit(PlaysListHomeState(remotePlays));
   }
 }

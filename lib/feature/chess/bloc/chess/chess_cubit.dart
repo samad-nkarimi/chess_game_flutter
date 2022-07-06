@@ -30,6 +30,7 @@ class ChessCubit extends Cubit<ChessState> {
   bool letsDoCastlingLeft = false;
   ChessBox moveFromBox = const ChessBox(0, 0);
   ChessBox moveToBox = const ChessBox(0, 0);
+  String competitorUsername = "offline";
 
   //clean arc
   final RemotePlayMoveUseCase remotePlayMoveUseCase;
@@ -38,24 +39,31 @@ class ChessCubit extends Cubit<ChessState> {
   ChessCubit(this.remotePlayMoveUseCase) : super(ChessInitialState());
 
   //
-  void init(bool isOnline) async {
+  void init(bool isOnline, String username) async {
+    competitorUsername = username;
     emit(ChessInitialState());
 
     //TODO
     //load data from data if necessary
-    ChessBoard chessBoard = await ChessPlayStorage().getBoard("name");
-    PlayerWhite().characters = [];
-    PlayerBlack().characters = [];
+    // try {
+    //   ChessBoard chessBoard =
+    //       await ChessPlayStorage().getBoard(competitorUsername);
 
-    chessBoard.boardMap.forEach(
-      (key, value) {
-        if (value.player == Player.white) {
-          PlayerWhite().characters.add(value);
-        } else {
-          PlayerBlack().characters.add(value);
-        }
-      },
-    );
+    //   PlayerWhite().characters = [];
+    //   PlayerBlack().characters = [];
+
+    //   chessBoard.boardMap.forEach(
+    //     (key, value) {
+    //       if (value.player == Player.white) {
+    //         PlayerWhite().characters.add(value);
+    //       } else {
+    //         PlayerBlack().characters.add(value);
+    //       }
+    //     },
+    //   );
+    // } catch (e) {
+    //   print("no board saved");
+    // }
 
     //emit state
     emit(ResumePlayState(DateTime.now().microsecondsSinceEpoch.toString()));
@@ -63,18 +71,22 @@ class ChessCubit extends Cubit<ChessState> {
     // if (!SSEService().streamController.hasListener && isOnline) {
     if (isOnline) {
       SSEService().streamController.stream.listen((data) {
+        print(data);
         try {
           var map = jsonDecode(data) as Map<String, dynamic>;
+          print(map);
           if (map.containsKey("type")) {
             if (map["type"] == "move") {
-              RemoteMoveDetails rmd = RemoteMoveDetails.fromJson(
-                  jsonDecode(data) as Map<String, dynamic>);
-              handleRemoteMove(
-                rmd.fromBox.columnNumber,
-                rmd.fromBox.rowNumber,
-                rmd.toBox.columnNumber,
-                rmd.toBox.rowNumber,
-              );
+              if (map['request_username'] == competitorUsername) {
+                RemoteMoveDetails rmd = RemoteMoveDetails.fromJson(
+                    jsonDecode(data) as Map<String, dynamic>);
+                handleRemoteMove(
+                  rmd.fromBox.columnNumber,
+                  rmd.fromBox.rowNumber,
+                  rmd.toBox.columnNumber,
+                  rmd.toBox.rowNumber,
+                );
+              }
             }
           }
         } catch (e) {
@@ -86,10 +98,20 @@ class ChessCubit extends Cubit<ChessState> {
 
   //
   void handleRemoteMove(int fromCol, int fromRow, int toCol, int toRow) {
+    /**
+     turn player
+     save board
+
+    
+     */
     characterClicked(fromCol, fromRow, true, true);
+    print(1);
     if (ChessBoard().hasCharacterAt(toCol, toRow)) {
       characterClicked(toCol, toRow, true, true);
+
+      print(2);
     } else {
+      print(3);
       boxClicked(toCol, toRow, true, true);
     }
   }
@@ -125,13 +147,15 @@ class ChessCubit extends Cubit<ChessState> {
         scc!.player,
         kingBox: kingBox,
       ));
+      ChessPlayStorage()
+          .addChessBoard(competitorUsername, ChessBoard().toJson());
 
       //TODO
       //send to server
       if (!isRomuteMove && isOnline) {
         remotePlayMoveUseCase.sendMoveToServer(RemoteMoveDetails(
           ServiceLocator().username,
-          "",
+          competitorUsername,
           moveFromBox,
           moveToBox,
         ));
@@ -248,14 +272,15 @@ class ChessCubit extends Cubit<ChessState> {
           scc!.player,
           kingBox: kingBox,
         ));
-        ChessPlayStorage().addChessBoard("name", ChessBoard().toJson());
+        ChessPlayStorage()
+            .addChessBoard(competitorUsername, ChessBoard().toJson());
 
         //TODO
         //send to server
         if (!isRemuteMove && isOnline) {
           remotePlayMoveUseCase.sendMoveToServer(RemoteMoveDetails(
             ServiceLocator().username,
-            "",
+            competitorUsername,
             moveFromBox,
             moveToBox,
           ));

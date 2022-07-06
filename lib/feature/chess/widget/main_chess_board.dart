@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'dart:ui';
 
 import 'package:chess_flutter/feature/chess/bloc/chess/chess_cubit.dart';
@@ -26,70 +27,78 @@ class MainChessBoard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CWContainer(
-      color: const Color.fromARGB(255, 177, 145, 5),
-      h: squareLength,
-      w: squareLength,
-      mar: const [10, 10, 10, 10],
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          for (int columnNumber = 1; columnNumber <= 8; columnNumber++)
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                for (int rowNumber = 1; rowNumber <= 8; rowNumber++)
-                  Flexible(
-                    flex: 1,
-                    child: InkWell(
-                      onTap: () {
-                        if (playerTurn != Player.white) {
-                          return;
-                        }
-                        if (ChessBoard()
-                            .hasCharacterAt(columnNumber, rowNumber)) {
-                          context.read<ChessCubit>().characterClicked(
-                              columnNumber, rowNumber, false, isOnline);
-                        } else {
-                          context.read<ChessCubit>().boxClicked(
-                              columnNumber, rowNumber, false, isOnline);
-                        }
-                      },
-                      child: ClipRRect(
-                        clipBehavior: Clip.antiAlias,
-                        child: ImageFiltered(
-                          imageFilter: ImageFilter.blur(
-                            sigmaX: 0.2,
-                            sigmaY: 0.2,
-                            tileMode: TileMode.mirror,
-                          ),
-                          child: ClipRRect(
-                            clipBehavior: Clip.antiAlias,
-                            child: CWContainer(
-                                color: getBackgroundBoxColor(
-                                    columnNumber, rowNumber),
-                                blendMode: BlendMode.difference,
-                                brAll: 10,
-                                // brWidth: 1,
-                                // brColor: Colors.white,
-                                // mar: [1, 1, 1, 1],
-                                w: squareLength / 8.3,
-                                h: squareLength / 8.3,
-                                gradient: getBoxGradient(
-                                    chessState, columnNumber, rowNumber),
-                                pad: const [5, 5, 5, 5],
-                                // shape: BoxShape.circle,
-                                child: getChessChar(columnNumber, rowNumber)),
+    return Transform.rotate(
+      angle: pi,
+      alignment: Alignment.center,
+      child: CWContainer(
+        color: const Color.fromARGB(255, 177, 145, 5),
+        h: squareLength,
+        w: squareLength,
+        mar: const [10, 10, 10, 10],
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            for (int columnNumber = 1; columnNumber <= 8; columnNumber++)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  for (int rowNumber = 1; rowNumber <= 8; rowNumber++)
+                    Flexible(
+                      flex: 1,
+                      child: InkWell(
+                        onTap: () {
+                          if (playerTurn != Player.white) {
+                            return;
+                          }
+                          if (ChessBoard()
+                              .hasCharacterAt(columnNumber, rowNumber)) {
+                            context.read<ChessCubit>().characterClicked(
+                                columnNumber, rowNumber, false, isOnline);
+                          } else {
+                            context.read<ChessCubit>().boxClicked(
+                                columnNumber, rowNumber, false, isOnline);
+                          }
+                        },
+                        child: ClipRRect(
+                          clipBehavior: Clip.antiAlias,
+                          child: ImageFiltered(
+                            imageFilter: ImageFilter.blur(
+                              sigmaX: 0.2,
+                              sigmaY: 0.2,
+                              tileMode: TileMode.mirror,
+                            ),
+                            child: ClipRRect(
+                              clipBehavior: Clip.antiAlias,
+                              child: CWContainer(
+                                  color: getBackgroundBoxColor(
+                                      columnNumber, rowNumber),
+                                  blendMode: BlendMode.difference,
+                                  brAll: 10,
+                                  // brWidth: 1,
+                                  // brColor: Colors.white,
+                                  // mar: [1, 1, 1, 1],
+                                  w: squareLength / 8.3,
+                                  h: squareLength / 8.3,
+                                  gradient: getBoxGradient(
+                                      chessState, columnNumber, rowNumber),
+                                  pad: const [5, 5, 5, 5],
+                                  // shape: BoxShape.circle,
+                                  child: Transform.rotate(
+                                      angle: -pi,
+                                      alignment: Alignment.center,
+                                      child: getChessChar(
+                                          columnNumber, rowNumber))),
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-              ],
-            ),
-        ],
+                ],
+              ),
+          ],
+        ),
       ),
     );
   }

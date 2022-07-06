@@ -1,15 +1,18 @@
 import 'dart:math' as math;
 import 'package:chess_flutter/common_widgets/cw_container.dart';
 import 'package:chess_flutter/common_widgets/cw_text.dart';
+import 'package:chess_flutter/domain/entity/remote_play_entity.dart';
 import 'package:chess_flutter/domain/use_case/remote_play_move_use_case.dart';
 import 'package:chess_flutter/feature/chess/bloc/chess/chess_cubit.dart';
 import 'package:chess_flutter/feature/chess/bloc/chess/chess_state.dart';
 import 'package:chess_flutter/feature/chess/widget/main_chess_board.dart';
+import 'package:chess_flutter/feature/home/widget/remote_play_item_widget.dart';
 
 import 'package:chess_flutter/models/chess_board.dart';
 import 'package:chess_flutter/models/chess_character.dart';
 import 'package:chess_flutter/models/enums/player.dart';
 import 'package:chess_flutter/models/chess_player.dart';
+import 'package:chess_flutter/models/enums/remote_play_status.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -18,10 +21,12 @@ import '../widget/competite_title_widget.dart';
 
 class ChessScreen extends StatefulWidget {
   static const routeName = "/chess_screen";
-  final bool isOnlineGame;
   final RemotePlayMoveUseCase? usecase;
-  const ChessScreen({Key? key, this.isOnlineGame = false, this.usecase})
-      : super(key: key);
+
+  const ChessScreen({
+    Key? key,
+    this.usecase,
+  }) : super(key: key);
 
   @override
   State<ChessScreen> createState() => _ChessScreenState();
@@ -31,6 +36,12 @@ class _ChessScreenState extends State<ChessScreen> {
   double squareLength = 350; // min(width , height)
   Player playerTurn = Player.white;
   bool isOnline = false;
+  late RemotePlayEntity entity = RemotePlayEntity(
+    "offline",
+    "0",
+    RemotePlayStatus.active,
+    DateTime.now(),
+  );
 
   // void setBoard(int col, int row) {
   //   //form board
@@ -109,6 +120,9 @@ class _ChessScreenState extends State<ChessScreen> {
   void initState() {
     PlayerWhite().initialize();
     PlayerBlack().initialize();
+
+    print("www: ${PlayerWhite().getCharacter(1, 1)}");
+
     // PlayerWhite().testinitialize();
     // PlayerBlack().testinitialize();
 
@@ -118,8 +132,15 @@ class _ChessScreenState extends State<ChessScreen> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    isOnline = ModalRoute.of(context)!.settings.arguments as bool;
-    print("online: $isOnline");
+    try {
+      ChessArguments arguments =
+          ModalRoute.of(context)!.settings.arguments as ChessArguments;
+      isOnline = arguments.isOnline;
+      entity = arguments.entity;
+      print("online: $isOnline");
+    } catch (e) {
+      print(e);
+    }
   }
 
   bool clicked = false;
@@ -142,7 +163,8 @@ class _ChessScreenState extends State<ChessScreen> {
         ),
       ),
       body: BlocProvider(
-        create: (context) => ChessCubit(widget.usecase!)..init(isOnline),
+        create: (context) =>
+            ChessCubit(widget.usecase!)..init(isOnline, entity.targetUsername),
         child: Stack(
           children: [
             // for (int i = 0; i < 30; i++)
@@ -168,9 +190,9 @@ class _ChessScreenState extends State<ChessScreen> {
                     Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const CompetitetitleWidget(
+                        CompetitetitleWidget(
                             myUsername: "my name",
-                            competitorUsername: "competitor"),
+                            competitorUsername: entity.targetUsername),
                         // outCharsWidget(Player.white),
                         // outCharsWidget(Player.black),
                         BlocBuilder<ChessCubit, ChessState>(
@@ -193,7 +215,9 @@ class _ChessScreenState extends State<ChessScreen> {
                             }
                             print("state: $state");
 
+                            print(ChessBoard().boardMap);
                             ChessBoard().createMap();
+                            print(ChessBoard().boardMap);
 
                             if (state is PlayerWonState) {
                               print("winner ==> ${state.winner}");

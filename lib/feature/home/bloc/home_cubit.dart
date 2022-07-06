@@ -6,6 +6,7 @@ import 'package:chess_flutter/domain/use_case/play_requests_storage_usa_case.dar
 import 'package:chess_flutter/domain/use_case/plays_storage_use_case.dart';
 import 'package:chess_flutter/service/sse_service.dart';
 import 'package:chess_flutter/service_locator.dart';
+import 'package:chess_flutter/storage/chess_play_storage.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../models/enums/remote_play_status.dart';
@@ -99,6 +100,8 @@ class HomeCubit extends Cubit<HomeState> {
     if (isSent) {
       await playsStorageUseCase.deletePlay(username);
       remotePlays.removeWhere((element) => element.targetUsername == username);
+      //TODO
+      await ChessPlayStorage().deleteBoard(username);
       emit(PlaysListHomeState(remotePlays));
     } else {
       //network problem

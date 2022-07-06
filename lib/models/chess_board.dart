@@ -52,6 +52,7 @@ class ChessBoard {
         }
 
         if (!c.isNone) {
+          // print("$col $row $c");
           boardMap[ChessBox(col, row)] = c;
         }
       }

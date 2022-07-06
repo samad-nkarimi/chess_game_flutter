@@ -12,7 +12,7 @@ class RemoteMoveService {
         headers: {"Content-Type": "application/json"},
         body: json.encode({
           "request_username": remoteMoveDetails.requestUsername,
-          "terget_username": remoteMoveDetails.targetUsername,
+          "target_username": remoteMoveDetails.targetUsername,
           "move_from_col": remoteMoveDetails.fromBox.columnNumber,
           "move_from_row": remoteMoveDetails.fromBox.rowNumber,
           "move_to_col": remoteMoveDetails.toBox.columnNumber,

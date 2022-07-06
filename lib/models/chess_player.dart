@@ -8,8 +8,8 @@ import 'package:chess_flutter/models/move_options.dart';
 abstract class ChessPlayer {
   List<ChessCharacter> characters = [];
   final Player player;
-  int _firstColumn = 0;
-  int _secondColumn = 0;
+  int _firstColumn = 1;
+  int _secondColumn = 2;
 
   ChessPlayer(this.player) {
     if (player == Player.white) {

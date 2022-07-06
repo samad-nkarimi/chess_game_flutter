@@ -9,6 +9,12 @@ import '../../../common_widgets/cw_container.dart';
 import '../../../common_widgets/cw_text.dart';
 import '../../../domain/entity/remote_play_entity.dart';
 
+class ChessArguments {
+  final bool isOnline;
+  final RemotePlayEntity entity;
+  ChessArguments(this.isOnline, this.entity);
+}
+
 class RemotePlayItemWidget extends StatelessWidget {
   final RemotePlayEntity remotePlay;
   const RemotePlayItemWidget({Key? key, required this.remotePlay})
@@ -23,7 +29,7 @@ class RemotePlayItemWidget extends StatelessWidget {
           case RemotePlayStatus.cancelled:
           case RemotePlayStatus.finished:
             Navigator.pushNamed(context, ChessScreen.routeName,
-                arguments: true);
+                arguments: ChessArguments(true, remotePlay));
             break;
           default:
         }

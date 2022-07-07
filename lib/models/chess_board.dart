@@ -14,19 +14,32 @@ class ChessBoard {
 
   final Map<ChessBox, ChessCharacter> boardMap = {};
 
+  Player playerTurn = Player.white;
+
+  set setPlayerTurn(Player player) {
+    playerTurn = player;
+  }
+
   String toJson() {
     Map<String, dynamic> map = {};
     for (var element in boardMap.entries) {
       map[element.key.toKey()] = element.value.toJson();
     }
+    map["player_turn"] = playerTurn.name;
     return jsonEncode(map);
   }
 
   ChessBoard.fromJson(dynamic json) {
     Map<String, dynamic> map = json as Map<String, dynamic>;
     for (var element in map.entries) {
-      boardMap[ChessBox.fromKey(element.key)] =
-          ChessCharacter.fromJson((jsonDecode(element.value)));
+      if (element.key == "player_turn") {
+        print(map['player_turn']);
+        playerTurn =
+            map['player_turn'] == "white" ? Player.white : Player.black;
+      } else {
+        boardMap[ChessBox.fromKey(element.key)] =
+            ChessCharacter.fromJson((jsonDecode(element.value)));
+      }
     }
   }
 

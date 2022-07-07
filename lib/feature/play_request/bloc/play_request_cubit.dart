@@ -29,8 +29,8 @@ class PlayRequestCubit extends Cubit<PlayRequestState> {
         ServiceLocator().username, commingUsername);
     if (isSent) {
       //save play to storage, if sendding was successful
-      await playsStorageUseCase.saveNewPlay(RemotePlayEntity(
-          commingUsername, '0', RemotePlayStatus.active, DateTime.now()));
+      await playsStorageUseCase.saveNewPlay(RemotePlayEntity(commingUsername,
+          '0', RemotePlayStatus.active, DateTime.now(), false));
       //remove request from list
       await playRequestsStorageUseCase.deleteRequest(commingUsername);
       //notify ui

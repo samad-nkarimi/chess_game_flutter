@@ -17,18 +17,20 @@ class MainChessBoard extends StatelessWidget {
   final double squareLength;
   final Player playerTurn;
   final bool isOnline;
+  final bool amIHost;
   const MainChessBoard({
     Key? key,
     required this.chessState,
     required this.squareLength,
     required this.playerTurn,
     required this.isOnline,
+    required this.amIHost,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Transform.rotate(
-      angle: pi,
+      angle: amIHost ? 0 : pi,
       alignment: Alignment.center,
       child: CWContainer(
         color: const Color.fromARGB(255, 177, 145, 5),
@@ -49,9 +51,9 @@ class MainChessBoard extends StatelessWidget {
                       flex: 1,
                       child: InkWell(
                         onTap: () {
-                          if (playerTurn != Player.white) {
-                            return;
-                          }
+                          // if (playerTurn != Player.white) {
+                          //   return;
+                          // }
                           if (ChessBoard()
                               .hasCharacterAt(columnNumber, rowNumber)) {
                             context.read<ChessCubit>().characterClicked(
@@ -86,7 +88,7 @@ class MainChessBoard extends StatelessWidget {
                                   pad: const [5, 5, 5, 5],
                                   // shape: BoxShape.circle,
                                   child: Transform.rotate(
-                                      angle: -pi,
+                                      angle: amIHost ? 0 : -pi,
                                       alignment: Alignment.center,
                                       child: getChessChar(
                                           columnNumber, rowNumber))),
@@ -111,7 +113,7 @@ class MainChessBoard extends StatelessWidget {
       return const SizedBox();
     } else {
       return SvgPicture.asset(c.photoId,
-          color: c.player == Player.white ? Colors.white : Colors.amber
+          color: c.player == Player.white ? Colors.white : Colors.purple
           // // fit: BoxFit.fill,
           );
     }

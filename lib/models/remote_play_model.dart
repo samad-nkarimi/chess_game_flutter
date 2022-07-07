@@ -9,30 +9,34 @@ class RemotePlayModel extends Equatable {
   final String targetScore;
   final String status;
   final String startDate;
+  final bool amIHost;
 
-  RemotePlayModel({
+  const RemotePlayModel({
     required this.targetUsername,
     required this.targetScore,
     required this.status,
     required this.startDate,
+    required this.amIHost,
   });
 
   RemotePlayEntity toEntity() {
     return RemotePlayEntity(targetUsername, targetScore, getPlayStatus(status),
-        DateTime.parse(startDate));
+        DateTime.parse(startDate), amIHost);
   }
 
   RemotePlayModel.fromEntity(RemotePlayEntity entity)
       : targetUsername = entity.targetUsername,
         targetScore = entity.targetScore,
         status = getStringifyPlayStatus(entity.status),
-        startDate = entity.startDate.toString();
+        startDate = entity.startDate.toString(),
+        amIHost = entity.amIHost;
 
   RemotePlayModel.fromJson(Map<String, dynamic> json)
       : targetUsername = json["targetUsername"],
         targetScore = json["targetScore"],
         status = json["status"],
-        startDate = json["startDate"];
+        startDate = json["startDate"],
+        amIHost = json['host'];
 
   String toJson() {
     return jsonEncode({
@@ -40,6 +44,7 @@ class RemotePlayModel extends Equatable {
       "targetScore": targetScore,
       "status": status,
       "startDate": startDate,
+      'host': amIHost,
     });
   }
 

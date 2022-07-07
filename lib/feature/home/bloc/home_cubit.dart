@@ -24,6 +24,7 @@ class HomeCubit extends Cubit<HomeState> {
   //
   void init() async {
     remotePlays = await playsStorageUseCase.fetchAllPlays();
+    print(remotePlays);
     emit(PlaysListHomeState(remotePlays));
     SSEService().streamController.stream.listen((data) async {
       try {

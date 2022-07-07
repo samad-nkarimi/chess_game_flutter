@@ -12,6 +12,7 @@ import '../../../domain/entity/remote_play_entity.dart';
 class ChessArguments {
   final bool isOnline;
   final RemotePlayEntity entity;
+
   ChessArguments(this.isOnline, this.entity);
 }
 

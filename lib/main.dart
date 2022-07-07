@@ -45,6 +45,7 @@ import 'feature/players/screen/players_screen.dart';
 void main() async {
   ServiceLocator serviceLocator = ServiceLocator();
   await Hive.initFlutter();
+  await Hive.deleteFromDisk();
   // PlayStorage().createBox();
   serviceLocator.setUsername(await UserStorage().getUsername());
   SSEService().subscribe();

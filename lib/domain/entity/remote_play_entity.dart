@@ -6,14 +6,17 @@ class RemotePlayEntity extends Equatable {
   final String targetScore;
   RemotePlayStatus status;
   final DateTime startDate;
+  final bool amIHost;
 
   RemotePlayEntity(
     this.targetUsername,
     this.targetScore,
     this.status,
     this.startDate,
+    this.amIHost,
   );
 
   @override
-  List<Object?> get props => [targetUsername, targetScore, status, startDate];
+  List<Object?> get props =>
+      [targetUsername, targetScore, status, startDate, amIHost];
 }

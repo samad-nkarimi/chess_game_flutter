@@ -49,6 +49,7 @@ class UserCubit extends Cubit<UserState> {
         score,
         RemotePlayStatus.wating,
         DateTime.now(),
+        true,
       ));
     }
   }

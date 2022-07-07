@@ -17,13 +17,10 @@ void main() {
         targetUsername: "samad",
         targetScore: "0",
         status: "wating",
-        startDate: DateTime.now().toString());
+        startDate: DateTime.now().toString(),
+        amIHost: false);
     RemotePlayEntity remotePlayEntity = RemotePlayEntity(
-      "negar",
-      "0",
-      RemotePlayStatus.finished,
-      DateTime.now(),
-    );
+        "negar", "0", RemotePlayStatus.finished, DateTime.now(), false);
     RemotePlayModel remotePlayModel2 =
         RemotePlayModel.fromEntity(remotePlayEntity);
     test("save play", () async {
@@ -78,7 +75,8 @@ void main() {
           targetUsername: "samad",
           targetScore: "35",
           status: "active",
-          startDate: DateTime.now().toString());
+          startDate: DateTime.now().toString(),
+          amIHost: false);
       await remotePlaysStorage.updatePlay(remotePlayModel);
       Box box = await remotePlaysStorage.getBox();
       expect(box.containsKey("samad"), true);

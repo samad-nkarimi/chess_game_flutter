@@ -20,10 +20,10 @@ class RemoteMoveDetails extends Equatable {
   RemoteMoveDetails.fromJson(Map<String, dynamic> json)
       : requestUsername = "",
         targetUsername = "",
-        fromBox = ChessBox((9 - json["move_from_col"]).toInt(),
-            (9 - json["move_from_row"]).toInt()),
-        toBox = ChessBox((9 - json["move_to_col"]).toInt(),
-            (9 - json["move_to_row"]).toInt());
+        fromBox = ChessBox(
+            (json["move_from_col"]).toInt(), (json["move_from_row"]).toInt()),
+        toBox = ChessBox(
+            (json["move_to_col"]).toInt(), (json["move_to_row"]).toInt());
 
   // toJson(RemoteMoveDetails remoteMoveDetails) {
   //   {

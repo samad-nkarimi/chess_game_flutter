@@ -41,7 +41,7 @@ class ChessPlayStorage {
       // print(board);
       Box box = await getBox();
       // box.clear();
-      await box.delete(competitorUsername);
+      // await box.delete(competitorUsername);
       print(box.keys);
       await box.close();
     } catch (e) {
@@ -49,9 +49,10 @@ class ChessPlayStorage {
     }
   }
 
-  Future<ChessBoard> getBoard(String playId) async {
+  Future<ChessBoard> getBoard(String competitorUsername) async {
     Box box = await getBox();
-    String boardJson = await box.get(playId);
+    String boardJson = await box.get(competitorUsername);
+    // print(boardJson);
     ChessBoard chessBoard = ChessBoard.fromJson(jsonDecode(boardJson));
     // print(box.keys);
     await box.close();

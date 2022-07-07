@@ -31,6 +31,7 @@ class ChessCubit extends Cubit<ChessState> {
   ChessBox moveFromBox = const ChessBox(0, 0);
   ChessBox moveToBox = const ChessBox(0, 0);
   String competitorUsername = "offline";
+  Player onlinePlayer = Player.white;
 
   //clean arc
   final RemotePlayMoveUseCase remotePlayMoveUseCase;
@@ -39,32 +40,38 @@ class ChessCubit extends Cubit<ChessState> {
   ChessCubit(this.remotePlayMoveUseCase) : super(ChessInitialState());
 
   //
-  void init(bool isOnline, String username) async {
+  void init(bool isOnline, bool amIHost, String username) async {
+    if (!amIHost) {
+      onlinePlayer = Player.black;
+    }
     competitorUsername = username;
     emit(ChessInitialState());
 
     //TODO
     //load data from data if necessary
-    // try {
-    //   ChessBoard chessBoard =
-    //       await ChessPlayStorage().getBoard(competitorUsername);
+    try {
+      ChessBoard chessBoard =
+          await ChessPlayStorage().getBoard(competitorUsername);
+      print(chessBoard);
+      playerTurn = chessBoard.playerTurn;
+      PlayerWhite().characters = [];
+      PlayerBlack().characters = [];
 
-    //   PlayerWhite().characters = [];
-    //   PlayerBlack().characters = [];
+      chessBoard.boardMap.forEach(
+        (key, value) {
+          if (value.player == Player.white) {
+            PlayerWhite().characters.add(value);
+          } else {
+            PlayerBlack().characters.add(value);
+          }
+        },
+      );
+    } catch (e) {
+      print("no board saved");
+    }
 
-    //   chessBoard.boardMap.forEach(
-    //     (key, value) {
-    //       if (value.player == Player.white) {
-    //         PlayerWhite().characters.add(value);
-    //       } else {
-    //         PlayerBlack().characters.add(value);
-    //       }
-    //     },
-    //   );
-    // } catch (e) {
-    //   print("no board saved");
-    // }
-
+    emit(PlayerTurnedState(playerTurn));
+    Future.delayed(Duration.zero);
     //emit state
     emit(ResumePlayState(DateTime.now().microsecondsSinceEpoch.toString()));
 
@@ -118,7 +125,12 @@ class ChessCubit extends Cubit<ChessState> {
 
   //the event when we click on a char
   void characterClicked(
-      int col, int row, bool isRomuteMove, bool isOnline) async {
+      int col, int row, bool isRemoteMove, bool isOnline) async {
+    if (isOnline && playerTurn != onlinePlayer && !isRemoteMove) {
+      print("not you");
+      return;
+    }
+    print(" you");
     letsDoCastlingRight = false;
     letsDoCastlingLeft = false;
     if (scc != null) {
@@ -152,7 +164,7 @@ class ChessCubit extends Cubit<ChessState> {
 
       //TODO
       //send to server
-      if (!isRomuteMove && isOnline) {
+      if (!isRemoteMove && isOnline) {
         remotePlayMoveUseCase.sendMoveToServer(RemoteMoveDetails(
           ServiceLocator().username,
           competitorUsername,
@@ -165,8 +177,12 @@ class ChessCubit extends Cubit<ChessState> {
       turnThePlayer();
       moveOptions.clear();
     } else {
+      print(playerTurn);
+      print(ChessBoard().getcharacter(col, row).player);
+      print(playerTurn == ChessBoard().getcharacter(col, row).player);
       //check if the player is in turn or not
-      if (playerTurn == ChessBoard().getcharacter(col, row).player) {
+      if (playerTurn == ChessBoard().getcharacter(col, row).player ||
+          isRemoteMove) {
         //the clicked char
         scc = ChessBoard().getcharacter(col, row);
         moveOptions = ChessBoard().getcharacter(col, row).preMove();
@@ -243,6 +259,10 @@ class ChessCubit extends Cubit<ChessState> {
   //the event when we click on an empty box
   void boxClicked(int col, int row, bool isRemuteMove, bool isOnline) async {
     print("box clicked");
+    if (isOnline && playerTurn != onlinePlayer && !isRemuteMove) {
+      print("not you");
+      return;
+    }
     if (scc != null) {
       moveFromBox = ChessBox(scc!.columnNumber, scc!.rowNumber);
       moveToBox = ChessBox(col, row);
@@ -300,6 +320,7 @@ class ChessCubit extends Cubit<ChessState> {
 
   void turnThePlayer() async {
     await Future.delayed(Duration.zero);
+    ChessBoard().setPlayerTurn = playerTurn;
     playerTurn = playerTurn == Player.white ? Player.black : Player.white;
     emit(PlayerTurnedState(playerTurn));
   }

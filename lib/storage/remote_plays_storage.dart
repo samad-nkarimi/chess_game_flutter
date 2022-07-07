@@ -57,7 +57,8 @@ class RemotePlaysStorage {
 
   Future<List<RemotePlayModel>> loadAllPlays() async {
     List<RemotePlayModel> plays = [];
-    // Box box = await getBox();
+    Box box = await getBox();
+    // box.clear();
     Iterable<dynamic> values = (await Hive.openBox(playsBox)).values;
     // Iterable<dynamic> values = box.values;
     plays = values.map((e) => RemotePlayModel.fromJson(jsonDecode(e))).toList();

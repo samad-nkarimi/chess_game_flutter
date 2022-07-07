@@ -36,11 +36,12 @@ class _ChessScreenState extends State<ChessScreen> {
   double squareLength = 350; // min(width , height)
   Player playerTurn = Player.white;
   bool isOnline = false;
-  late RemotePlayEntity entity = RemotePlayEntity(
+  RemotePlayEntity entity = RemotePlayEntity(
     "offline",
     "0",
     RemotePlayStatus.active,
     DateTime.now(),
+    true,
   );
 
   // void setBoard(int col, int row) {
@@ -163,8 +164,8 @@ class _ChessScreenState extends State<ChessScreen> {
         ),
       ),
       body: BlocProvider(
-        create: (context) =>
-            ChessCubit(widget.usecase!)..init(isOnline, entity.targetUsername),
+        create: (context) => ChessCubit(widget.usecase!)
+          ..init(isOnline, entity.amIHost, entity.targetUsername),
         child: Stack(
           children: [
             // for (int i = 0; i < 30; i++)
@@ -215,9 +216,7 @@ class _ChessScreenState extends State<ChessScreen> {
                             }
                             print("state: $state");
 
-                            print(ChessBoard().boardMap);
                             ChessBoard().createMap();
-                            print(ChessBoard().boardMap);
 
                             if (state is PlayerWonState) {
                               print("winner ==> ${state.winner}");
@@ -227,6 +226,7 @@ class _ChessScreenState extends State<ChessScreen> {
                               squareLength: squareLength,
                               playerTurn: playerTurn,
                               isOnline: isOnline,
+                              amIHost: entity.amIHost,
                             );
                           },
                         ),

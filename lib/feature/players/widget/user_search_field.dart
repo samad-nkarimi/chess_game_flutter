@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:chess_flutter/feature/players/bloc/user_cubit.dart';
-import 'package:chess_flutter/feature/players/utils/serch_timer.dart';
+import 'package:chess_flutter/feature/players/utils/search_timer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -27,6 +27,7 @@ class _UserSearchFieldState extends State<UserSearchField> {
 
   @override
   Widget build(BuildContext context) {
+    print("search field");
     return Container(
       child: TextFormField(
         onChanged: (value) {
@@ -64,12 +65,12 @@ class _UserSearchFieldState extends State<UserSearchField> {
         style:
             const TextStyle(color: Colors.green, fontWeight: FontWeight.bold),
         decoration: InputDecoration(
-          contentPadding: EdgeInsets.symmetric(horizontal: 20),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 20),
           hintText: "@player_id",
           hintStyle: TextStyle(color: Colors.grey.withOpacity(.4)),
           fillColor: focus
-              ? Color.fromARGB(255, 255, 255, 255)
-              : Color.fromARGB(139, 255, 255, 255),
+              ? const Color.fromARGB(255, 255, 255, 255)
+              : const Color.fromARGB(139, 255, 255, 255),
           // errorText: "error",
           filled: true,
           // focusColor: onEmail ? Colors.red : Colors.white,
@@ -96,8 +97,8 @@ class _UserSearchFieldState extends State<UserSearchField> {
             ),
             borderRadius: BorderRadius.circular(5),
           ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: const BorderRadius.all(Radius.circular(5)),
+          enabledBorder: const OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(5)),
             borderSide: BorderSide(
               color: Colors.black26,
               width: .5,

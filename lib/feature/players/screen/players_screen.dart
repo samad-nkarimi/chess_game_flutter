@@ -16,6 +16,8 @@ import 'package:chess_flutter/service_locator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../widget/player_item_widget.dart';
+
 class PlayersScreen extends StatefulWidget {
   static const routeName = "/players_screen";
   const PlayersScreen({Key? key}) : super(key: key);
@@ -30,9 +32,10 @@ class _PlayersScreenState extends State<PlayersScreen> {
   @override
   Widget build(BuildContext context) {
     // print(MediaQuery.of(context).size.width);
+    print("players screen");
     return SafeArea(
       child: Scaffold(
-        resizeToAvoidBottomInset: false,
+        resizeToAvoidBottomInset: true,
         appBar: PreferredSize(
           preferredSize: const Size(double.infinity, 60),
           child: CWContainer(
@@ -96,13 +99,14 @@ class _PlayersScreenState extends State<PlayersScreen> {
             return CWContainer(
               h: double.infinity,
               w: double.infinity,
-              color: Colors.blueGrey,
+              color: Colors.amber,
               child: SingleChildScrollView(
                 child: searching
                     ? const Center(
                         child: CWText(
                         "searching...",
                         color: Colors.white,
+                        fontSize: 20,
                       ))
                     : GridView.builder(
                         itemCount: state.users.length,
@@ -114,56 +118,9 @@ class _PlayersScreenState extends State<PlayersScreen> {
                           childAspectRatio: 5,
                         ),
                         itemBuilder: (context, index) {
-                          return CWContainer(
-                            h: 50,
-                            mar: const [1, 10, 1, 10],
-                            pad: const [5, 20, 5, 20],
-                            w: double.infinity,
-                            brAll: 5,
-                            color: Colors.white24,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                Column(
-                                  mainAxisSize: MainAxisSize.max,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    CWText(
-                                      "name: ${state.users[index].name}",
-                                      color: Colors.white,
-                                      fontSize: 18,
-                                    ),
-                                    CWText(
-                                      "score: ${state.users[index].score}",
-                                      color: Colors.white60,
-                                      fontSize: 14,
-                                    ),
-                                  ],
-                                ),
-                                const Expanded(child: SizedBox()),
-                                CWElevatedButton(
-                                  onPressed: () {
-                                    BlocProvider.of<UserCubit>(context)
-                                        .sendPlayRequestTo(
-                                      ServiceLocator().username,
-                                      state.users[index].name,
-                                      state.users[index].score,
-                                    );
-                                  },
-                                  vPadding: 20,
-                                  hPadding: 20,
-                                  bRadius: 5,
-                                  primary: Colors.green,
-                                  onPrimary: Colors.white,
-                                  child: const CWText(
-                                    "request",
-                                    color: Colors.white,
-                                  ),
-                                )
-                              ],
-                            ),
+                          return PlayerItemWidget(
+                            username: state.users[index].name,
+                            score: state.users[index].score,
                           );
                         },
                       ),

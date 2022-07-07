@@ -27,27 +27,32 @@ class _PlayRequestScreenState extends State<PlayRequestScreen> {
       },
       child: Scaffold(
         appBar: AppBar(title: const CWText("requests")),
-        body: BlocBuilder<PlayRequestCubit, PlayRequestState>(
-          buildWhen: (previous, current) {
-            return true;
-          },
-          builder: (context, state) {
-            List<PlayRequest> requests = [];
-            if (state is PlayRequestsListState) {
-              requests = state.remotePlayRequest;
-            }
-            if (state is InitialPlayRequestState) {}
+        body: RefreshIndicator(
+          onRefresh: () async {
             BlocProvider.of<PlayRequestCubit>(context).init();
-            return CWContainer(
-              pad: const [10, 0, 10, 0],
-              child: ListView.builder(
-                itemCount: requests.length,
-                itemBuilder: (context, index) {
-                  return requestPlayItem(requests[index].username);
-                },
-              ),
-            );
           },
+          child: BlocBuilder<PlayRequestCubit, PlayRequestState>(
+            buildWhen: (previous, current) {
+              return true;
+            },
+            builder: (context, state) {
+              List<PlayRequest> requests = [];
+              if (state is PlayRequestsListState) {
+                requests = state.remotePlayRequest;
+              }
+              if (state is InitialPlayRequestState) {}
+
+              return CWContainer(
+                pad: const [10, 0, 10, 0],
+                child: ListView.builder(
+                  itemCount: requests.length,
+                  itemBuilder: (context, index) {
+                    return requestPlayItem(requests[index].username);
+                  },
+                ),
+              );
+            },
+          ),
         ),
       ),
     );

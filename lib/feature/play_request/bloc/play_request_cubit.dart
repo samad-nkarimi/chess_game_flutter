@@ -49,6 +49,10 @@ class PlayRequestCubit extends Cubit<PlayRequestState> {
     //remove request from list
     if (isSent) {
       playRequestsStorageUseCase.deleteRequest(commingUsername);
+      //notify ui
+      playrequests = await playRequestsStorageUseCase.fetchAllRequests();
+      emit(PlayRequestsListState(
+          playrequests, DateTime.now().millisecondsSinceEpoch.toString()));
     }
   }
 }

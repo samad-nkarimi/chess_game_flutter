@@ -8,12 +8,12 @@ import 'package:chess_flutter/domain/entity/remote_play_entity.dart';
 import 'package:chess_flutter/feature/home/bloc/home_cubit.dart';
 import 'package:chess_flutter/feature/home/bloc/home_state.dart';
 import 'package:chess_flutter/feature/home/widget/remote_play_item_widget.dart';
+import 'package:chess_flutter/feature/play_request/bloc/play_request_cubit.dart';
 import 'package:chess_flutter/feature/play_request/screen/play_request_screen.dart';
 import 'package:chess_flutter/service_locator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
-
 
 class HomeScreen extends StatefulWidget {
   static const routeNAme = "/home_screen";
@@ -93,6 +93,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           onTap: () {
                             Navigator.pushNamed(
                                 context, PlayRequestScreen.routeName);
+                            BlocProvider.of<PlayRequestCubit>(context).init();
                           },
                           child: const CWContainer(
                             h: 40,

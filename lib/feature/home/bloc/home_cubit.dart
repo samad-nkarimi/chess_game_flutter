@@ -45,7 +45,12 @@ class HomeCubit extends Cubit<HomeState> {
 
                   break;
                 case "rejected":
-                  //TODO
+                  RemotePlayEntity remotePlayEntity = remotePlays.firstWhere(
+                      (play) => play.targetUsername == requestUsername);
+                  remotePlayEntity.status = RemotePlayStatus.rejected;
+                  await playsStorageUseCase.updatePlay(remotePlayEntity);
+                  remotePlays = await playsStorageUseCase.fetchAllPlays();
+                  emit(PlaysListHomeState(remotePlays));
                   break;
                 case "new_request":
                   //TODO

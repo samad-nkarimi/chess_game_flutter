@@ -39,6 +39,15 @@ class ChessCubit extends Cubit<ChessState> {
   //
   ChessCubit(this.remotePlayMoveUseCase) : super(ChessInitialState());
 
+  @override
+  Future<void> close() async {
+    if (SSEService().remotePlayStreamController.hasListener) {
+      await SSEService().remotePlayStreamController.close();
+    }
+    print("chess cubit closed");
+    return super.close();
+  }
+
   //
   void init(bool isOnline, bool amIHost, String username) async {
     if (!amIHost) {
@@ -75,9 +84,8 @@ class ChessCubit extends Cubit<ChessState> {
     //emit state
     emit(ResumePlayState(DateTime.now().microsecondsSinceEpoch.toString()));
 
-    // if (!SSEService().streamController.hasListener && isOnline) {
-    if (isOnline) {
-      SSEService().streamController.stream.listen((data) {
+    if (!SSEService().remotePlayStreamController.hasListener && isOnline) {
+      SSEService().remotePlayStreamController.stream.listen((data) {
         print(data);
         try {
           var map = jsonDecode(data) as Map<String, dynamic>;
@@ -111,8 +119,10 @@ class ChessCubit extends Cubit<ChessState> {
 
     
      */
+
     characterClicked(fromCol, fromRow, true, true);
     print(1);
+    print(ChessBoard().getcharacter(toCol, toRow));
     if (ChessBoard().hasCharacterAt(toCol, toRow)) {
       characterClicked(toCol, toRow, true, true);
 
@@ -351,6 +361,8 @@ class ChessCubit extends Cubit<ChessState> {
       if (winner != null) {
         print("winner ==> $winner");
         emit(PlayerWonState(winner!));
+        //finish online play
+
       }
     }
   }

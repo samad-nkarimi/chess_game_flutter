@@ -21,12 +21,8 @@ import '../widget/competite_title_widget.dart';
 
 class ChessScreen extends StatefulWidget {
   static const routeName = "/chess_screen";
-  final RemotePlayMoveUseCase? usecase;
 
-  const ChessScreen({
-    Key? key,
-    this.usecase,
-  }) : super(key: key);
+  const ChessScreen({Key? key}) : super(key: key);
 
   @override
   State<ChessScreen> createState() => _ChessScreenState();
@@ -163,82 +159,78 @@ class _ChessScreenState extends State<ChessScreen> {
           ),
         ),
       ),
-      body: BlocProvider(
-        create: (context) => ChessCubit(widget.usecase!)
-          ..init(isOnline, entity.amIHost, entity.targetUsername),
-        child: Stack(
-          children: [
-            // for (int i = 0; i < 30; i++)
-            //   for (int j = 0; j < 15; j++)
-            //     Container(
-            //       height: 50,
-            //       width: 50,
-            //       margin: EdgeInsets.only(left: 50.0 * i, top: 50.0 * j),
-            //       child: SvgPicture.asset(
-            //         "assets/images/svg/bg_pattern.svg",
-            //         height: 50,
-            //         width: 50,
-            //       ),
-            //     ),
-            Container(
-              color: Colors.white10,
-              child: Center(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    // outCharsWidget(Player.white),
+      body: Stack(
+        children: [
+          // for (int i = 0; i < 30; i++)
+          //   for (int j = 0; j < 15; j++)
+          //     Container(
+          //       height: 50,
+          //       width: 50,
+          //       margin: EdgeInsets.only(left: 50.0 * i, top: 50.0 * j),
+          //       child: SvgPicture.asset(
+          //         "assets/images/svg/bg_pattern.svg",
+          //         height: 50,
+          //         width: 50,
+          //       ),
+          //     ),
+          Container(
+            color: Colors.white10,
+            child: Center(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  // outCharsWidget(Player.white),
 
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        CompetitetitleWidget(
-                            myUsername: "my name",
-                            competitorUsername: entity.targetUsername),
-                        // outCharsWidget(Player.white),
-                        // outCharsWidget(Player.black),
-                        BlocBuilder<ChessCubit, ChessState>(
-                          buildWhen: (previous, current) {
-                            if (current is CharacterShottedState) {
-                              return false;
-                            }
-                            if (current is PlayerTurnedState) {
-                              return false;
-                            }
-                            return true;
-                          },
-                          builder: (context, state) {
-                            // setBoard(columnNumber, rowNumber);
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CompetitetitleWidget(
+                          myUsername: "my name",
+                          competitorUsername: entity.targetUsername),
+                      // outCharsWidget(Player.white),
+                      // outCharsWidget(Player.black),
+                      BlocBuilder<ChessCubit, ChessState>(
+                        buildWhen: (previous, current) {
+                          if (current is CharacterShottedState) {
+                            return false;
+                          }
+                          if (current is PlayerTurnedState) {
+                            return false;
+                          }
+                          return true;
+                        },
+                        builder: (context, state) {
+                          // setBoard(columnNumber, rowNumber);
 
-                            if (state is CharacterMovedState && isOnline) {
-                              playerTurn = state.player == Player.white
-                                  ? Player.black
-                                  : Player.white;
-                            }
-                            print("state: $state");
+                          if (state is CharacterMovedState && isOnline) {
+                            playerTurn = state.player == Player.white
+                                ? Player.black
+                                : Player.white;
+                          }
+                          print("state: $state");
 
-                            ChessBoard().createMap();
+                          ChessBoard().createMap();
 
-                            if (state is PlayerWonState) {
-                              print("winner ==> ${state.winner}");
-                            }
-                            return MainChessBoard(
-                              chessState: state,
-                              squareLength: squareLength,
-                              playerTurn: playerTurn,
-                              isOnline: isOnline,
-                              amIHost: entity.amIHost,
-                            );
-                          },
-                        ),
-                      ],
-                    ),
-                    // outCharsWidget(Player.black),
-                  ],
-                ),
+                          if (state is PlayerWonState) {
+                            print("winner ==> ${state.winner}");
+                          }
+                          return MainChessBoard(
+                            chessState: state,
+                            squareLength: squareLength,
+                            playerTurn: playerTurn,
+                            isOnline: isOnline,
+                            amIHost: entity.amIHost,
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                  // outCharsWidget(Player.black),
+                ],
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

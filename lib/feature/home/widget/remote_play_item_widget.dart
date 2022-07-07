@@ -1,4 +1,5 @@
 import 'package:chess_flutter/common_widgets/cw_elevated_button.dart';
+import 'package:chess_flutter/feature/chess/bloc/chess/chess_cubit.dart';
 import 'package:chess_flutter/feature/chess/screen/chess_screen.dart';
 import 'package:chess_flutter/feature/home/bloc/home_cubit.dart';
 import 'package:chess_flutter/models/enums/remote_play_status.dart';
@@ -31,6 +32,9 @@ class RemotePlayItemWidget extends StatelessWidget {
           case RemotePlayStatus.finished:
             Navigator.pushNamed(context, ChessScreen.routeName,
                 arguments: ChessArguments(true, remotePlay));
+            //initialize cubit
+            BlocProvider.of<ChessCubit>(context)
+                .init(true, remotePlay.amIHost, remotePlay.targetUsername);
             break;
           default:
         }

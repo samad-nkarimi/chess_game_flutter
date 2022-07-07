@@ -13,7 +13,8 @@ class SSEService {
   }
   SSEService._internal();
 
-  StreamController<String> streamController = StreamController.broadcast();
+  StreamController<String> remotePlayStreamController = StreamController();
+  StreamController<String> homeStreamController = StreamController();
 
   subscribe() async {
     String username = ServiceLocator().username;
@@ -34,7 +35,12 @@ class SSEService {
         print(event.statusCode);
         event.stream.listen((value) {
           print(utf8.decode(value));
-          streamController.sink.add(utf8.decode(value));
+          // if (remotePlayStreamController.isClosed) {
+          //   remotePlayStreamController = StreamController();
+          // } else {}
+
+          remotePlayStreamController.sink.add(utf8.decode(value));
+          homeStreamController.sink.add(utf8.decode(value));
         });
       });
     } catch (e) {
@@ -44,6 +50,7 @@ class SSEService {
 
   unsubscribe() {
     _client.close();
-    streamController.close();
+    homeStreamController.close();
+    remotePlayStreamController.close();
   }
 }

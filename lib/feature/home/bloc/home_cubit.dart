@@ -26,55 +26,57 @@ class HomeCubit extends Cubit<HomeState> {
     remotePlays = await playsStorageUseCase.fetchAllPlays();
     print(remotePlays);
     emit(PlaysListHomeState(remotePlays));
-    SSEService().streamController.stream.listen((data) async {
-      try {
-        var map = jsonDecode(data) as Map<String, dynamic>;
-        if (map.containsKey("type")) {
-          if (map["type"] == "play_request") {
-            String requestUsername = map['request_username'];
+    if (!SSEService().homeStreamController.hasListener) {
+      SSEService().homeStreamController.stream.listen((data) async {
+        try {
+          var map = jsonDecode(data) as Map<String, dynamic>;
+          if (map.containsKey("type")) {
+            if (map["type"] == "play_request") {
+              String requestUsername = map['request_username'];
 
-            switch (map["result"]) {
-              case "accepted":
-                RemotePlayEntity remotePlayEntity = remotePlays.firstWhere(
-                    (play) => play.targetUsername == requestUsername);
-                remotePlayEntity.status = RemotePlayStatus.active;
-                await playsStorageUseCase.updatePlay(remotePlayEntity);
-                remotePlays = await playsStorageUseCase.fetchAllPlays();
-                emit(PlaysListHomeState(remotePlays));
+              switch (map["result"]) {
+                case "accepted":
+                  RemotePlayEntity remotePlayEntity = remotePlays.firstWhere(
+                      (play) => play.targetUsername == requestUsername);
+                  remotePlayEntity.status = RemotePlayStatus.active;
+                  await playsStorageUseCase.updatePlay(remotePlayEntity);
+                  remotePlays = await playsStorageUseCase.fetchAllPlays();
+                  emit(PlaysListHomeState(remotePlays));
 
-                break;
-              case "rejected":
-                //TODO
-                break;
-              case "new_request":
-                //TODO
-                emit(NewRemotePlayHomeState(requestUsername));
-                await playRequestsStorageUseCase.saveNewRequest(
-                    requestUsername, "0");
-                // emit(PlayRequestsHomeState(
-                //   remotePlayRequests,
-                //   DateTime.now().millisecondsSinceEpoch.toString(),
-                // ));
-                break;
-              case "cancelled":
-                RemotePlayEntity remotePlayEntity = remotePlays.singleWhere(
-                    (play) => play.targetUsername == requestUsername);
-                remotePlayEntity.status = RemotePlayStatus.cancelled;
-                await playsStorageUseCase.updatePlay(remotePlayEntity);
-                emit(PlaysListHomeState(remotePlays));
-                // emit(PlayRequestsHomeState(
-                //   remotePlayRequests,
-                //   DateTime.now().millisecondsSinceEpoch.toString(),
-                // ));
-                break;
-              default:
+                  break;
+                case "rejected":
+                  //TODO
+                  break;
+                case "new_request":
+                  //TODO
+                  emit(NewRemotePlayHomeState(requestUsername));
+                  await playRequestsStorageUseCase.saveNewRequest(
+                      requestUsername, "0");
+                  // emit(PlayRequestsHomeState(
+                  //   remotePlayRequests,
+                  //   DateTime.now().millisecondsSinceEpoch.toString(),
+                  // ));
+                  break;
+                case "cancelled":
+                  RemotePlayEntity remotePlayEntity = remotePlays.singleWhere(
+                      (play) => play.targetUsername == requestUsername);
+                  remotePlayEntity.status = RemotePlayStatus.cancelled;
+                  await playsStorageUseCase.updatePlay(remotePlayEntity);
+                  emit(PlaysListHomeState(remotePlays));
+                  // emit(PlayRequestsHomeState(
+                  //   remotePlayRequests,
+                  //   DateTime.now().millisecondsSinceEpoch.toString(),
+                  // ));
+                  break;
+                default:
+              }
             }
           }
+        } catch (e) {
+          print(e);
         }
-      } catch (e) {
-        print(e);
-      }
-    });
+      });
+    }
   }
 
   // //

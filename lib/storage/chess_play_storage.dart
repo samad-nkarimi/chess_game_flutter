@@ -41,7 +41,7 @@ class ChessPlayStorage {
       // print(board);
       Box box = await getBox();
       // box.clear();
-      // await box.delete(competitorUsername);
+      await box.delete(competitorUsername);
       print(box.keys);
       await box.close();
     } catch (e) {

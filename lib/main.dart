@@ -54,7 +54,12 @@ void main() async {
       runApp(
         MultiBlocProvider(
           providers: [
-            // BlocProvider(create: (context) => ChessCubit()),
+            BlocProvider(
+              create: (context) => ChessCubit(
+                RemotePlayMoveUseCase(
+                    RemotePlayMoveRepoImpl(RemoteMoveService())),
+              ),
+            ),
             BlocProvider(
               create: (context) => UserCubit(
                   findUsernameUseCase: FindUsernameUseCase(
@@ -129,9 +134,7 @@ class MyApp extends StatelessWidget {
         HomeScreen.routeNAme: (context) => const HomeScreen(),
         "/1": (context) => const PlayersScreen(),
         AuthScreen.routeName: (context) => const AuthScreen(),
-        ChessScreen.routeName: (context) => ChessScreen(
-            usecase: RemotePlayMoveUseCase(
-                RemotePlayMoveRepoImpl(RemoteMoveService()))),
+        ChessScreen.routeName: (context) => const ChessScreen(),
         PlayRequestScreen.routeName: (context) => const PlayRequestScreen(),
       },
     );

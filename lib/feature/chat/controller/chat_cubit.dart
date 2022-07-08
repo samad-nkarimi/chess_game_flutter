@@ -41,4 +41,20 @@ class ChatCubit extends Cubit<ChatState> {
     emit(NewMessageChatState(
         messages, DateTime.now().millisecondsSinceEpoch.toString()));
   }
+
+  void deleteMessage(MessageEntity messageEntity) async {
+    bool isSent = await chatUseCase.deleteMessage(messageEntity);
+    if (isSent) {
+      await Future.delayed(const Duration(seconds: 2));
+      messages.removeWhere((m) => m.message == messageEntity.message);
+      emit(NewMessageChatState(
+          messages, DateTime.now().millisecondsSinceEpoch.toString()));
+    }
+  }
+
+  void deleteMessageFromServer(String text, String sender) async {
+    messages.removeWhere((m) => m.message == text);
+    emit(NewMessageChatState(
+        messages, DateTime.now().millisecondsSinceEpoch.toString()));
+  }
 }

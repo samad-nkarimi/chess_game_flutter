@@ -110,8 +110,18 @@ class ChessCubit extends Cubit<ChessState> {
             }
             if (map["type"] == "chat") {
               if (map['sender'] == competitorUsername) {
-                chatCubit.messageFromServer(map['message'], map['sender']);
-                print("received message: ${map['message']}");
+                switch (map["action"]) {
+                  case "new_message":
+                    chatCubit.messageFromServer(map['message'], map['sender']);
+                    print("received message: ${map['message']}");
+                    break;
+                  case "delete_message":
+                    chatCubit.deleteMessageFromServer(
+                        map['message'], map['sender']);
+                    print("received message: ${map['message']}");
+                    break;
+                  default:
+                }
               }
             }
           }

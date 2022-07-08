@@ -8,4 +8,8 @@ class ChatUseCase {
   Future<bool> sendMessage(MessageEntity messageEntity) async {
     return await chatRepo.sendMessage(messageEntity);
   }
+
+  Future<bool> deleteMessage(MessageEntity messageEntity) async {
+    return await chatRepo.deleteMessage(messageEntity);
+  }
 }

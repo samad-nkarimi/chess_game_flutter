@@ -10,4 +10,9 @@ class ChatRepoIml extends ChatRepo {
   Future<bool> sendMessage(MessageEntity messageEntity) async {
     return await chatService.sendMessage(messageEntity);
   }
+
+  @override
+  Future<bool> deleteMessage(MessageEntity messageEntity) async {
+    return await chatService.deleteMessage(messageEntity);
+  }
 }

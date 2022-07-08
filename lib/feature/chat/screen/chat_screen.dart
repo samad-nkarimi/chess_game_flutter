@@ -1,7 +1,11 @@
+import 'package:chess_flutter/common_widgets/cw_container.dart';
 import 'package:chess_flutter/domain/entity/message_entity.dart';
 import 'package:chess_flutter/feature/chat/controller/chat_cubit.dart';
+import 'package:chess_flutter/feature/chat/controller/chat_state.dart';
+import 'package:chess_flutter/service_locator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class ChatScreen extends StatefulWidget {
   static const routeName = "/chat_screen";
@@ -14,8 +18,19 @@ class ChatScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatScreen> {
   final controller = TextEditingController();
   final scrollController = ScrollController();
+  String competitorUsername = '';
 
-  final List<Widget> msgs = [];
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    String argument = ModalRoute.of(context)!.settings.arguments as String;
+    competitorUsername = argument;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,22 +46,43 @@ class _ChatScreenState extends State<ChatScreen> {
               color: Colors.grey.shade300,
               child: Column(
                 children: [
-                  Expanded(
+                  BlocBuilder<ChatCubit, ChatState>(
+                      buildWhen: (previous, current) {
+                    if (current is NewMessageChatState) {
+                      return true;
+                    }
+                    return false;
+                  }, builder: (context, state) {
+                    List<MessageEntity> messages = [];
+                    if (state is NewMessageChatState) {
+                      messages = state.messages;
+                    }
+                    if (state is MessageSentChatState) {
+                      messages = state.messages;
+                    }
+                    print(state);
+                    return Expanded(
                       child: Container(
-                    width: double.infinity,
-                    color: Colors.blue.shade100,
-                    alignment: Alignment.bottomCenter,
-                    child: SingleChildScrollView(
-                      controller: scrollController,
-                      reverse: true,
-                      padding: const EdgeInsets.only(
-                          bottom: 10, left: 10, right: 10),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [...msgs],
+                        width: double.infinity,
+                        color: Colors.blue.shade100,
+                        alignment: Alignment.bottomCenter,
+                        child: ListView.builder(
+                          reverse: true,
+                          controller: scrollController,
+                          itemCount: messages.length,
+                          itemBuilder: (context, index) {
+                            if (messages.reversed.toList()[index].fromMe) {
+                              return rightText(
+                                  messages.reversed.toList()[index]);
+                            } else {
+                              return leftText(
+                                  messages.reversed.toList()[index]);
+                            }
+                          },
+                        ),
                       ),
-                    ),
-                  )),
+                    );
+                  }),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 15),
                     child: Row(
@@ -62,19 +98,19 @@ class _ChatScreenState extends State<ChatScreen> {
                           flex: 8,
                           child: IconButton(
                             onPressed: () {
-                              msgs.add(rightText("me", controller.value.text));
+                              // msgs.add(controller.value.text);
                               // socket.write(controller.value.text);
                               MessageEntity messageEntity = MessageEntity(
                                 message: controller.value.text,
-                                senderName: "sas",
-                                receiverName: "sas",
+                                senderName: ServiceLocator().username,
+                                receiverName: competitorUsername,
+                                fromMe: true,
                                 isReceived: false,
                                 isSeen: false,
                               );
                               BlocProvider.of<ChatCubit>(context)
                                   .sendMessage(messageEntity);
                               scrollController.jumpTo(0);
-                              setState(() {});
                             },
                             icon: const Icon(
                               Icons.send,
@@ -107,34 +143,45 @@ class _ChatScreenState extends State<ChatScreen> {
     ));
   }
 
-  Widget rightText(String username, String text) {
-    return baseText(username, text, Alignment.bottomRight, Colors.lightGreen);
+  Widget rightText(MessageEntity message) {
+    return baseText(message, Alignment.bottomRight, Colors.lightGreen);
   }
 
-  Widget leftText(String username, String text) {
-    return baseText(username, text, Alignment.bottomLeft, Colors.amber);
+  Widget leftText(MessageEntity message) {
+    return baseText(message, Alignment.bottomLeft, Colors.amber);
   }
 
-  Widget baseText(String username, String text, Alignment alignment, color) {
+  Widget baseText(MessageEntity message, Alignment alignment, color) {
     return Align(
       alignment: alignment,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 6),
-        margin: const EdgeInsets.all(2),
-        decoration: BoxDecoration(
-          color: color,
-          borderRadius: BorderRadius.circular(10),
-        ),
+      child: CWContainer(
+        pad: const [6, 15, 6, 15],
+        mar: const [2, 2, 2, 2],
+        color: color,
+        br: [15, 15, message.fromMe ? 1 : 15, message.fromMe ? 15 : 1],
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.end,
           mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              text,
-              style: const TextStyle(fontSize: 12),
+            Container(
+              constraints: const BoxConstraints(maxWidth: 200),
+              child: Text(
+                message.message,
+                style: const TextStyle(fontSize: 16),
+                overflow: TextOverflow.clip,
+                softWrap: true,
+              ),
             ),
-            const SizedBox(height: 5),
-            const Icon(Icons.cloud_sync),
+            if (message.fromMe) const SizedBox(width: 10),
+            if (message.fromMe)
+              FaIcon(
+                message.isReceived
+                    ? FontAwesomeIcons.check
+                    : FontAwesomeIcons.clock,
+                size: 10,
+                color: Colors.white,
+              ),
           ],
         ),
       ),

@@ -41,6 +41,8 @@ dependencies:
   http: ^0.13.4
   hive: ^2.2.2
   hive_flutter: ^1.1.0
+  font_awesome_flutter: ^10.1.0
+  material_design_icons_flutter: ^5.0.6595
   # bloc_test: ^9.0.0
   # mocktail: ^0.3.0
 

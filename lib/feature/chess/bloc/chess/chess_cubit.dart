@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:chess_flutter/core/pre_move_methods.dart';
 import 'package:chess_flutter/domain/use_case/remote_play_move_use_case.dart';
+import 'package:chess_flutter/feature/chat/controller/chat_cubit.dart';
 import 'package:chess_flutter/feature/chess/bloc/chess/chess_state.dart';
 
 import 'package:chess_flutter/models/chess_board.dart';
@@ -36,8 +37,12 @@ class ChessCubit extends Cubit<ChessState> {
   //clean arc
   final RemotePlayMoveUseCase remotePlayMoveUseCase;
 
+  //Chat cubit
+  final ChatCubit chatCubit;
+
   //
-  ChessCubit(this.remotePlayMoveUseCase) : super(ChessInitialState());
+  ChessCubit(this.remotePlayMoveUseCase, this.chatCubit)
+      : super(ChessInitialState());
 
   @override
   Future<void> close() async {
@@ -105,6 +110,7 @@ class ChessCubit extends Cubit<ChessState> {
             }
             if (map["type"] == "chat") {
               if (map['sender'] == competitorUsername) {
+                chatCubit.messageFromServer(map['message'], map['sender']);
                 print("received message: ${map['message']}");
               }
             }
@@ -118,22 +124,10 @@ class ChessCubit extends Cubit<ChessState> {
 
   //
   void handleRemoteMove(int fromCol, int fromRow, int toCol, int toRow) {
-    /**
-     turn player
-     save board
-
-    
-     */
-
     characterClicked(fromCol, fromRow, true, true);
-    print(1);
-    print(ChessBoard().getcharacter(toCol, toRow));
     if (ChessBoard().hasCharacterAt(toCol, toRow)) {
       characterClicked(toCol, toRow, true, true);
-
-      print(2);
     } else {
-      print(3);
       boxClicked(toCol, toRow, true, true);
     }
   }

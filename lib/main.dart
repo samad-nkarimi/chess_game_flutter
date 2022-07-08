@@ -60,9 +60,15 @@ void main() async {
         MultiBlocProvider(
           providers: [
             BlocProvider(
+              create: (context) => ChatCubit(
+                ChatUseCase(ChatRepoIml(ChatService())),
+              ),
+            ),
+            BlocProvider(
               create: (context) => ChessCubit(
                 RemotePlayMoveUseCase(
                     RemotePlayMoveRepoImpl(RemoteMoveService())),
+                BlocProvider.of<ChatCubit>(context),
               ),
             ),
             BlocProvider(
@@ -110,11 +116,6 @@ void main() async {
                 PlayRequestsStorageUseCase(
                   PlayRequestStorageRepoImpl(PlayRequestsStorage()),
                 ),
-              ),
-            ),
-            BlocProvider(
-              create: (context) => ChatCubit(
-                ChatUseCase(ChatRepoIml(ChatService())),
               ),
             ),
           ],

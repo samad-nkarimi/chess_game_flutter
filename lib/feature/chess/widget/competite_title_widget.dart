@@ -51,7 +51,8 @@ class CompetitetitleWidget extends StatelessWidget {
             children: [
               CWElevatedButton(
                 onPressed: () {
-                  Navigator.pushNamed(context, ChatScreen.routeName);
+                  Navigator.pushNamed(context, ChatScreen.routeName,
+                      arguments: competitorUsername);
                 },
                 primary: Colors.orange,
                 bRadius: 50,

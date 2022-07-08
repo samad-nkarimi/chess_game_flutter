@@ -103,6 +103,11 @@ class ChessCubit extends Cubit<ChessState> {
                 );
               }
             }
+            if (map["type"] == "chat") {
+              if (map['sender'] == competitorUsername) {
+                print("received message: ${map['message']}");
+              }
+            }
           }
         } catch (e) {
           print(e);

@@ -5,6 +5,7 @@ import 'package:chess_flutter/common_widgets/cw_text.dart';
 import 'package:chess_flutter/domain/repo/auth_repo.dart';
 import 'package:chess_flutter/domain/repo/remote_play_move_repo.dart';
 import 'package:chess_flutter/domain/use_case/auth_register_use_case.dart';
+import 'package:chess_flutter/domain/use_case/chat_use_case.dart';
 import 'package:chess_flutter/domain/use_case/find_username_use_case.dart';
 import 'package:chess_flutter/domain/use_case/play_request_use_case.dart';
 import 'package:chess_flutter/domain/use_case/play_requests_storage_usa_case.dart';
@@ -12,6 +13,8 @@ import 'package:chess_flutter/domain/use_case/plays_storage_use_case.dart';
 import 'package:chess_flutter/domain/use_case/remote_play_move_use_case.dart';
 import 'package:chess_flutter/feature/auth/bloc/auth_cubit.dart';
 import 'package:chess_flutter/feature/bottom_nav/screen/vav_screen.dart';
+import 'package:chess_flutter/feature/chat/controller/chat_cubit.dart';
+import 'package:chess_flutter/feature/chat/screen/chat_screen.dart';
 import 'package:chess_flutter/feature/chess/bloc/chess/chess_cubit.dart';
 import 'package:chess_flutter/feature/chess/screen/chess_screen.dart';
 import 'package:chess_flutter/feature/home/bloc/home_cubit.dart';
@@ -20,12 +23,14 @@ import 'package:chess_flutter/feature/play_request/bloc/play_request_cubit.dart'
 import 'package:chess_flutter/feature/play_request/screen/play_request_screen.dart';
 
 import 'package:chess_flutter/repository/auth_repo_impl.dart';
+import 'package:chess_flutter/repository/chat_repo_impl.dart';
 import 'package:chess_flutter/repository/play_requests_storage_repo_impl.dart';
 import 'package:chess_flutter/repository/plays_storage_repo_impl.dart';
 import 'package:chess_flutter/repository/remote_play_move_repo_impl.dart';
 import 'package:chess_flutter/repository/remote_play_repo_impl.dart';
 import 'package:chess_flutter/repository/user_repo_impl.dart';
 import 'package:chess_flutter/service/auth_service.dart';
+import 'package:chess_flutter/service/chat_service.dart';
 import 'package:chess_flutter/service/remote_move_service.dart';
 import 'package:chess_flutter/service/request_play_service.dart';
 import 'package:chess_flutter/service/sse_service.dart';
@@ -107,6 +112,11 @@ void main() async {
                 ),
               ),
             ),
+            BlocProvider(
+              create: (context) => ChatCubit(
+                ChatUseCase(ChatRepoIml(ChatService())),
+              ),
+            ),
           ],
           child: const MyApp(),
         ),
@@ -136,6 +146,7 @@ class MyApp extends StatelessWidget {
         AuthScreen.routeName: (context) => const AuthScreen(),
         ChessScreen.routeName: (context) => const ChessScreen(),
         PlayRequestScreen.routeName: (context) => const PlayRequestScreen(),
+        ChatScreen.routeName: (context) => const ChatScreen(),
       },
     );
   }

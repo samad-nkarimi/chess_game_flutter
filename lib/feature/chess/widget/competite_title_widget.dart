@@ -1,7 +1,9 @@
 import 'dart:io';
 
+import 'package:chess_flutter/common_widgets/cw_elevated_button.dart';
 import 'package:chess_flutter/common_widgets/cw_text.dart';
 import 'package:chess_flutter/constants/constant_images.dart';
+import 'package:chess_flutter/feature/chat/screen/chat_screen.dart';
 import 'package:chess_flutter/feature/chess/bloc/chess/chess_cubit.dart';
 import 'package:chess_flutter/feature/chess/bloc/chess/chess_state.dart';
 import 'package:chess_flutter/models/enums/player.dart';
@@ -45,28 +47,50 @@ class CompetitetitleWidget extends StatelessWidget {
               ],
             ),
           ),
-          BlocBuilder<ChessCubit, ChessState>(
-            buildWhen: (previous, current) {
-              if (current is PlayerTurnedState) {
-                return true;
-              }
-              return false;
-            },
-            builder: (context, state) {
-              Player playerTurn = Player.white;
-              if (state is PlayerTurnedState) {
-                playerTurn = state.playerTurn;
-              }
-              return CWContainer(
-                w: 30,
-                h: 30,
-                color:
-                    playerTurn == Player.white ? Colors.white : Colors.black54,
-                brAll: 50,
-                brColor: Colors.green,
-                brWidth: 3,
-              );
-            },
+          Column(
+            children: [
+              CWElevatedButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, ChatScreen.routeName);
+                },
+                primary: Colors.orange,
+                bRadius: 50,
+                vPadding: 0,
+                hPadding: 0,
+                child: const Center(
+                  child: CWText(
+                    "chat",
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.purple,
+                  ),
+                ),
+              ),
+              BlocBuilder<ChessCubit, ChessState>(
+                buildWhen: (previous, current) {
+                  if (current is PlayerTurnedState) {
+                    return true;
+                  }
+                  return false;
+                },
+                builder: (context, state) {
+                  Player playerTurn = Player.white;
+                  if (state is PlayerTurnedState) {
+                    playerTurn = state.playerTurn;
+                  }
+                  return CWContainer(
+                    w: 30,
+                    h: 30,
+                    color: playerTurn == Player.white
+                        ? Colors.white
+                        : Colors.black54,
+                    brAll: 50,
+                    brColor: Colors.green,
+                    brWidth: 3,
+                  );
+                },
+              ),
+            ],
           ),
           Align(
             alignment: Alignment.bottomLeft,

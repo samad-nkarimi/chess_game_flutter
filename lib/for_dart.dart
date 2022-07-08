@@ -35,4 +35,9 @@
 //         super();
 // }
 
-void main(List<String> args) {}
+void main(List<String> args) {
+  var d = DateTime.now();
+  print(d.toString());
+  var dd = DateTime.parse(d.toString());
+  print(dd);
+}

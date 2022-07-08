@@ -29,11 +29,13 @@ class CharacterMovedState extends ChessState {
   final ChessBox kingBox;
   final ChessBox moveFrom;
   final ChessBox moveTo;
-  CharacterMovedState(this.isKingInCheck, this.moveFrom, this.moveTo,
+  final Player player;
+  CharacterMovedState(
+      this.isKingInCheck, this.moveFrom, this.moveTo, this.player,
       {this.kingBox = const ChessBox(0, 0)});
 
   @override
-  List<Object?> get props => [isKingInCheck, kingBox];
+  List<Object?> get props => [isKingInCheck, kingBox, player, moveFrom, moveTo];
 }
 
 //
@@ -58,4 +60,22 @@ class PlayerWonState extends ChessState {
 
   @override
   List<Object?> get props => [winner];
+}
+
+//
+class PlayerTurnedState extends ChessState {
+  final Player playerTurn;
+  PlayerTurnedState(this.playerTurn);
+
+  @override
+  List<Object?> get props => [playerTurn];
+}
+
+//
+class ResumePlayState extends ChessState {
+  final String id;
+  ResumePlayState(this.id);
+
+  @override
+  List<Object?> get props => [id];
 }

@@ -63,15 +63,19 @@ class PreMoveMethods {
        * promote to queen
        */
 
-      int index = chessPlayer.getEntityIndex(col, row);
-      String key = chessPlayer.characters.keys.toList()[index];
-      chessPlayer.characters[key] = ChessCharacter(
-        ConstantImages.svgWhiteQueen,
-        player,
-        rule: Rule.queen,
-        columnNumber: col,
-        rowNumber: row,
-      );
+      // int index = chessPlayer.getEntityIndex(col, row);
+      // String key = chessPlayer.characters.toList()[index];
+      chessPlayer.characters.singleWhere(
+          (char) => char.columnNumber == col && char.rowNumber == row)
+        ..rule = Rule.queen
+        ..photoId = ConstantImages.svgWhiteQueen;
+      // chessPlayer.characters[key] = ChessCharacter(
+      //   ConstantImages.svgWhiteQueen,
+      //   player,
+      //   rule: Rule.queen,
+      //   columnNumber: col,
+      //   rowNumber: row,
+      // );
 
       return preMoveQueen(player, col, row);
     }

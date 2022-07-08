@@ -7,7 +7,7 @@ import '../models/auth_response.dart';
 import '../models/enums/auth_response_status.dart';
 
 class AuthService {
-  Future<AuthResponse> signUp(CredentialModel credential) async {
+  Future<AuthResponse> register(CredentialModel credential) async {
     var url = Uri.parse('http://$hostIp:3000/api/auth/register/');
     http.Response response = await http.post(
       url,

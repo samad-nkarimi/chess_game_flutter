@@ -5,17 +5,17 @@ import 'package:chess_flutter/models/enums/auth_filed_type.dart';
 
 import '../../models/auth_response.dart';
 
-class AuthRegisterUseCase {
+class AuthUseCase {
   final AuthRepo authRepo;
 
-  AuthRegisterUseCase(this.authRepo);
+  AuthUseCase(this.authRepo);
 
-  Future<AuthResponse> signUp(CredentialEntity entity) async {
-    return authRepo.signUp(entity);
+  Future<AuthResponse> register(CredentialEntity entity) async {
+    return authRepo.register(entity);
   }
 
   Future<AuthResponse> login(CredentialEntity entity) async {
-    return authRepo.signUp(entity);
+    return authRepo.login(entity);
   }
 
   Future<AuthResponse> logout(CredentialEntity entity) async {

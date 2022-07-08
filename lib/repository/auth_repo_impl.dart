@@ -10,9 +10,9 @@ class AuthRepoImpl implements AuthRepo {
   AuthRepoImpl(this.authService);
 
   @override
-  Future<AuthResponse> signUp(CredentialEntity entity) async {
+  Future<AuthResponse> register(CredentialEntity entity) async {
     CredentialModel credentialModel = CredentialModel.fromEntity(entity);
-    return authService.signUp(credentialModel);
+    return authService.register(credentialModel);
   }
 
   @override

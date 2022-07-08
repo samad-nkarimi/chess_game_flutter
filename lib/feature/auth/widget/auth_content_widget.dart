@@ -95,6 +95,7 @@ class _AuthContentWidgetState extends State<AuthContentWidget> {
       emailWrapper.value,
       passwordWrapper.value,
       confrimPasswordWrapper.value,
+      widget.authType,
     );
   }
 

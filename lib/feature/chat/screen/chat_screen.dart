@@ -153,41 +153,57 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   Widget baseText(MessageEntity message, Alignment alignment, color) {
-    return InkWell(
-      onLongPress: () {
-        BlocProvider.of<ChatCubit>(context).deleteMessage(message);
+    return GestureDetector(
+      onHorizontalDragEnd: (details) {
+        print("object");
       },
-      child: Align(
-        alignment: alignment,
-        child: CWContainer(
-          pad: const [6, 15, 6, 15],
-          mar: const [2, 2, 2, 2],
-          color: color,
-          br: [15, 15, message.fromMe ? 1 : 15, message.fromMe ? 15 : 1],
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                constraints: const BoxConstraints(maxWidth: 200),
-                child: Text(
-                  message.message,
-                  style: const TextStyle(fontSize: 16),
-                  overflow: TextOverflow.clip,
-                  softWrap: true,
-                ),
+      child: Dismissible(
+        key: Key(message.message),
+        confirmDismiss: (direction) async {
+          print(direction.index);
+        },
+        direction: DismissDirection.endToStart,
+        dismissThresholds: {DismissDirection.endToStart: 0.4},
+        
+        child: InkWell(
+          onLongPress: () {
+            if (message.fromMe && message.isReceived) {
+              BlocProvider.of<ChatCubit>(context).deleteMessage(message);
+            }
+          },
+          child: Align(
+            alignment: alignment,
+            child: CWContainer(
+              pad: const [6, 15, 6, 15],
+              mar: const [2, 2, 2, 2],
+              color: color,
+              br: [15, 15, message.fromMe ? 1 : 15, message.fromMe ? 15 : 1],
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    constraints: const BoxConstraints(maxWidth: 200),
+                    child: Text(
+                      message.message,
+                      style: const TextStyle(fontSize: 16),
+                      overflow: TextOverflow.clip,
+                      softWrap: true,
+                    ),
+                  ),
+                  if (message.fromMe) const SizedBox(width: 10),
+                  if (message.fromMe)
+                    FaIcon(
+                      message.isReceived
+                          ? FontAwesomeIcons.check
+                          : FontAwesomeIcons.clock,
+                      size: 10,
+                      color: Colors.white,
+                    ),
+                ],
               ),
-              if (message.fromMe) const SizedBox(width: 10),
-              if (message.fromMe)
-                FaIcon(
-                  message.isReceived
-                      ? FontAwesomeIcons.check
-                      : FontAwesomeIcons.clock,
-                  size: 10,
-                  color: Colors.white,
-                ),
-            ],
+            ),
           ),
         ),
       ),

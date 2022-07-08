@@ -4,7 +4,7 @@ import 'package:chess_flutter/common_widgets/cw_elevated_button.dart';
 import 'package:chess_flutter/common_widgets/cw_text.dart';
 import 'package:chess_flutter/domain/repo/auth_repo.dart';
 import 'package:chess_flutter/domain/repo/remote_play_move_repo.dart';
-import 'package:chess_flutter/domain/use_case/auth_register_use_case.dart';
+import 'package:chess_flutter/domain/use_case/auth_use_case.dart';
 import 'package:chess_flutter/domain/use_case/chat_use_case.dart';
 import 'package:chess_flutter/domain/use_case/find_username_use_case.dart';
 import 'package:chess_flutter/domain/use_case/play_request_use_case.dart';
@@ -85,7 +85,7 @@ void main() async {
             ),
             BlocProvider(
               create: (context) => AuthCubit(
-                authRegisterUseCase: AuthRegisterUseCase(
+                authRegisterUseCase: AuthUseCase(
                   AuthRepoImpl(
                     AuthService(),
                   ),

@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:chess_flutter/domain/entity/credential_entity.dart';
-import 'package:chess_flutter/domain/use_case/auth_register_use_case.dart';
+import 'package:chess_flutter/domain/use_case/auth_use_case.dart';
 import 'package:chess_flutter/repository/auth_repo_impl.dart';
 import 'package:chess_flutter/service/auth_service.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -18,8 +18,7 @@ void main() {
         CredentialEntity("samad", "samad@gmail.com", "Sn12345678", "Sn1234567");
     CredentialEntity credentialEntity4 =
         CredentialEntity("samad", "samad@gmail.com", "Sn1234", "Sn1234");
-    AuthRegisterUseCase authRegisterUseCase =
-        AuthRegisterUseCase(AuthRepoImpl(AuthService()));
+    AuthUseCase authRegisterUseCase = AuthUseCase(AuthRepoImpl(AuthService()));
     test("sign up credential verification: ", () {
       bool isValid =
           authRegisterUseCase.credentialValidationForSignUp(credentialEntity);

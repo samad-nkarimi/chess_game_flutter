@@ -1,5 +1,5 @@
 import 'package:chess_flutter/domain/entity/remote_play_entity.dart';
-import 'package:chess_flutter/domain/use_case/auth_register_use_case.dart';
+import 'package:chess_flutter/domain/use_case/auth_use_case.dart';
 import 'package:chess_flutter/domain/use_case/find_username_use_case.dart';
 import 'package:chess_flutter/domain/use_case/play_request_use_case.dart';
 import 'package:chess_flutter/domain/use_case/plays_storage_use_case.dart';

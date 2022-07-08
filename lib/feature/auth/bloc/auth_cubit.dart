@@ -1,5 +1,5 @@
 import 'package:chess_flutter/domain/entity/credential_entity.dart';
-import 'package:chess_flutter/domain/use_case/auth_register_use_case.dart';
+import 'package:chess_flutter/domain/use_case/auth_use_case.dart';
 import 'package:chess_flutter/feature/auth/bloc/auth_state.dart';
 import 'package:chess_flutter/feature/auth/widget/auth_input_field.dart';
 import 'package:chess_flutter/models/enums/auth_filed_type.dart';
@@ -14,7 +14,7 @@ import '../../../models/auth_response.dart';
 import '../../../models/enums/auth_response_status.dart';
 
 class AuthCubit extends Cubit<AuthState> {
-  final AuthRegisterUseCase authRegisterUseCase;
+  final AuthUseCase authRegisterUseCase;
   AuthCubit({required this.authRegisterUseCase})
       : super(InitialAuthState(AuthType.signup));
 
@@ -37,7 +37,7 @@ class AuthCubit extends Cubit<AuthState> {
 
   void signUp(CredentialEntity entity) async {
     try {
-      AuthResponse response = await authRegisterUseCase.signUp(entity);
+      AuthResponse response = await authRegisterUseCase.register(entity);
 
       if (response.authResponseStatus == AuthResponseStatus.succeed) {
         // await ServerCrud().createUserDatabase();
